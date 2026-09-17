@@ -1,8 +1,10 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
 import * as Lucide from 'lucide-react';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { categories, tools } from '../lib/tools';
 
 function Icon({ name, className }) {
@@ -41,21 +43,7 @@ const FAQS = [
 
 export default function HomePage() {
   const [query, setQuery] = useState('');
-  const [dark, setDark] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
-
-  useEffect(() => {
-    setDark(document.documentElement.classList.contains('dark'));
-  }, []);
-
-  function toggleTheme() {
-    const next = !document.documentElement.classList.contains('dark');
-    document.documentElement.classList.toggle('dark', next);
-    try {
-      localStorage.setItem('craftora-theme', next ? 'dark' : 'light');
-    } catch (e) {}
-    setDark(next);
-  }
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -69,35 +57,7 @@ export default function HomePage() {
 
   return (
     <div>
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b surface" style={{ background: 'var(--surface)' }}>
-        <div className="editorial-width px-4 sm:px-7 h-14 flex items-center gap-3">
-          <Link href="/" className="font-extrabold tracking-tight text-lg" style={{ color: 'var(--ink)' }}>
-            Craftora
-          </Link>
-          <div className="ml-auto hidden md:block w-full max-w-xs">
-            <div className="relative">
-              <Lucide.Search className="absolute left-3 top-2.5 w-4 h-4 muted" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                className="w-full rounded-lg border surface pl-9 pr-3 py-1.5 text-sm bg-transparent"
-                style={{ color: 'var(--ink)' }}
-                placeholder="Search tools"
-                aria-label="Search tools"
-              />
-            </div>
-          </div>
-          <button
-            onClick={toggleTheme}
-            className="border surface rounded-lg w-9 h-9 inline-flex items-center justify-center shrink-0 ml-auto md:ml-0"
-            style={{ color: 'var(--ink)' }}
-            aria-label="Toggle dark mode"
-          >
-            {dark ? <Lucide.Sun className="w-4 h-4" /> : <Lucide.Moon className="w-4 h-4" />}
-          </button>
-        </div>
-      </header>
+      <Header />
 
       <main>
         {/* Hero */}
@@ -159,10 +119,15 @@ export default function HomePage() {
               if (!catTools.length) return null;
               return (
                 <section key={cat.key} id={cat.slug} className="mb-14 pt-10 section-rule">
-                  <div className="mb-6">
-                    <p className="brand-text text-xs font-extrabold tracking-[.14em] uppercase mb-2">Category</p>
-                    <h2 className="font-extrabold text-2xl" style={{ color: 'var(--ink)' }}>{cat.name}</h2>
-                    <p className="muted text-sm mt-2 max-w-2xl">{cat.description}</p>
+                  <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+                    <div>
+                      <p className="brand-text text-xs font-extrabold tracking-[.14em] uppercase mb-2">Category</p>
+                      <h2 className="font-extrabold text-2xl" style={{ color: 'var(--ink)' }}>{cat.name}</h2>
+                      <p className="muted text-sm mt-2 max-w-2xl">{cat.description}</p>
+                    </div>
+                    <Link href={`/${cat.slug}`} className="text-sm font-bold brand-text shrink-0">
+                      View all
+                    </Link>
                   </div>
                   <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                     {catTools.map((t) => (
@@ -225,39 +190,7 @@ export default function HomePage() {
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t surface" style={{ background: 'var(--surface)' }}>
-        <div className="editorial-width px-4 sm:px-7 py-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-9">
-          <div>
-            <strong className="text-xl font-extrabold" style={{ color: 'var(--ink)' }}>Craftora</strong>
-            <p className="muted text-sm leading-6 mt-3">Free online tools that just work.</p>
-          </div>
-          <div>
-            <h2 className="font-bold text-lg" style={{ color: 'var(--ink)' }}>Popular tools</h2>
-            <div className="mt-4 space-y-2 text-sm muted">
-              <button onClick={() => setQuery('Merge PDF')} className="block hover:underline">Merge PDF</button>
-              <button onClick={() => setQuery('Compress Image')} className="block hover:underline">Compress Image</button>
-              <button onClick={() => setQuery('JSON Formatter')} className="block hover:underline">JSON Formatter</button>
-            </div>
-          </div>
-          <div>
-            <h2 className="font-bold text-lg" style={{ color: 'var(--ink)' }}>Categories</h2>
-            <div className="mt-4 space-y-2 text-sm muted">
-              {categories.slice(0, 4).map((c) => (
-                <a key={c.key} href={`#${c.slug}`} className="block hover:underline">{c.name}</a>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h2 className="font-bold text-lg" style={{ color: 'var(--ink)' }}>Craftora</h2>
-            <div className="mt-4 space-y-2 text-sm muted">
-              <span className="block">About</span>
-              <span className="block">Privacy Policy</span>
-              <span className="block">Contact</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
@@ -266,7 +199,7 @@ function ToolCard({ tool }) {
   const catClass = `category-${tool.category}`;
   const inner = (
     <>
-      <span className={`tool-icon`}>
+      <span className="tool-icon">
         <Icon name={tool.icon} className="w-5 h-5" />
       </span>
       <span className="flex items-center gap-2 mt-5">
