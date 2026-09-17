@@ -1,0 +1,25 @@
+services:
+  craftora:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: craftora:latest
+    container_name: craftora
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+    networks:
+      - craftora-web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=craftora-web"
+      - "traefik.http.routers.craftora.rule=Host(`craftora.dev`) || Host(`www.craftora.dev`)"
+      - "traefik.http.routers.craftora.entrypoints=websecure"
+      - "traefik.http.routers.craftora.tls=true"
+      - "traefik.http.routers.craftora.tls.certresolver=letsencrypt"
+      - "traefik.http.services.craftora.loadbalancer.server.port=3000"
+
+networks:
+  craftora-web:
+    name: craftora-web
