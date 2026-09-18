@@ -26,7 +26,6 @@ export default function Footer() {
     <footer className="border-t surface" style={{ background: 'var(--surface)' }}>
       <div className="editorial-width px-4 sm:px-7 py-14">
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-9">
-          {/* Brand + donate */}
           <div>
             <strong className="text-xl font-extrabold" style={{ color: 'var(--ink)' }}>Craftora</strong>
             <p className="muted text-sm leading-6 mt-3 max-w-xs">
@@ -44,7 +43,6 @@ export default function Footer() {
             </a>
           </div>
 
-          {/* Categories */}
           <div>
             <h2 className="font-bold text-sm uppercase tracking-wide" style={{ color: 'var(--ink)' }}>Categories</h2>
             <div className="mt-4 space-y-2 text-sm">
@@ -56,7 +54,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Popular tools */}
           <div>
             <h2 className="font-bold text-sm uppercase tracking-wide" style={{ color: 'var(--ink)' }}>Popular tools</h2>
             <div className="mt-4 space-y-2 text-sm">
@@ -68,7 +65,6 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Company */}
           <div>
             <h2 className="font-bold text-sm uppercase tracking-wide" style={{ color: 'var(--ink)' }}>Craftora</h2>
             <div className="mt-4 space-y-2 text-sm">
@@ -80,7 +76,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="section-rule mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p className="muted text-xs">© {year} Craftora. All rights reserved.</p>
           <p className="muted text-xs">Free online tools that just work.</p>
