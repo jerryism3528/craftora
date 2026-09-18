@@ -21,7 +21,6 @@ export default function Header() {
     setDark(document.documentElement.classList.contains('dark'));
   }, []);
 
-  // Close the categories dropdown when clicking outside it.
   useEffect(() => {
     function onClick(e) {
       if (catRef.current && !catRef.current.contains(e.target)) setCatOpen(false);
@@ -49,18 +48,15 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b surface" style={{ background: 'var(--surface)' }}>
       <div className="editorial-width px-4 sm:px-7 h-14 flex items-center gap-3">
-        {/* Wordmark */}
         <Link href="/" className="font-extrabold tracking-tight text-lg shrink-0" style={{ color: 'var(--ink)' }}>
           Craftora
         </Link>
 
-        {/* Desktop nav */}
         <nav className="hidden lg:flex items-center gap-1 ml-4">
           <Link href="/all-tools" className="px-3 py-1.5 text-sm font-semibold rounded-lg hover:soft-surface" style={{ color: 'var(--ink)' }}>
             All Tools
           </Link>
 
-          {/* Categories dropdown */}
           <div className="relative" ref={catRef}>
             <button
               onClick={() => setCatOpen((v) => !v)}
@@ -98,7 +94,6 @@ export default function Header() {
           </Link>
         </nav>
 
-        {/* Search (desktop) */}
         <form onSubmit={submitSearch} className="ml-auto hidden md:block w-full max-w-xs">
           <div className="relative">
             <Lucide.Search className="absolute left-3 top-2.5 w-4 h-4 muted" />
@@ -113,7 +108,6 @@ export default function Header() {
           </div>
         </form>
 
-        {/* Donate (desktop) */}
         
           href={DONATE_URL}
           target="_blank"
@@ -125,7 +119,6 @@ export default function Header() {
           Donate
         </a>
 
-        {/* Dark toggle */}
         <button
           onClick={toggleTheme}
           className="border surface rounded-lg w-9 h-9 inline-flex items-center justify-center shrink-0"
@@ -135,7 +128,6 @@ export default function Header() {
           {dark ? <Lucide.Sun className="w-4 h-4" /> : <Lucide.Moon className="w-4 h-4" />}
         </button>
 
-        {/* Mobile hamburger */}
         <button
           onClick={() => setMobileOpen((v) => !v)}
           className="lg:hidden border surface rounded-lg w-9 h-9 inline-flex items-center justify-center shrink-0"
@@ -147,7 +139,6 @@ export default function Header() {
         </button>
       </div>
 
-      {/* Mobile menu panel */}
       {mobileOpen && (
         <div className="lg:hidden border-t surface" style={{ background: 'var(--surface)' }}>
           <div className="editorial-width px-4 sm:px-7 py-4 space-y-4">
