@@ -64,7 +64,8 @@ export default function Header() {
               </div>
             )}
           </div>
-          <Link href="/about" className="px-3 py-1.5 text-sm font-semibold rounded-lg hover:soft-surface" style={{ color: 'var(--ink)' }}>About</Link>
+ <Link href="/insights" className="px-3 py-1.5 text-sm font-semibold rounded-lg hover:soft-surface" style={{ color: 'var(--ink)' }}>Insights</Link>
+ <Link href="/about" className="px-3 py-1.5 text-sm font-semibold rounded-lg hover:soft-surface" style={{ color: 'var(--ink)' }}>About</Link>
         </nav>
         <form onSubmit={submitSearch} className="ml-auto hidden md:block w-full max-w-xs">
           <div className="relative">
@@ -101,6 +102,7 @@ export default function Header() {
                 ))}
               </div>
             </div>
+            <Link href="/insights" onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm font-semibold" style={{ color: 'var(--ink)' }}>Insights</Link>
             <Link href="/about" onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm font-semibold" style={{ color: 'var(--ink)' }}>About</Link>
             <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold" style={{ background: 'var(--brand)', color: '#ffffff' }}>
               <Lucide.Heart className="w-4 h-4" />

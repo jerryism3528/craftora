@@ -53,6 +53,7 @@ export default function Footer() {
             <h2 className="font-bold text-sm uppercase tracking-wide" style={{ color: 'var(--ink)' }}>Craftora</h2>
             <div className="mt-4 space-y-2 text-sm">
               <Link href="/all-tools" className="block muted hover:underline">All Tools</Link>
+              <Link href="/insights" className="block muted hover:underline">Insights</Link>
               <Link href="/about" className="block muted hover:underline">About</Link>
               <Link href="/privacy" className="block muted hover:underline">Privacy Policy</Link>
               <Link href="/contact" className="block muted hover:underline">Contact</Link>
