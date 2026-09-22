@@ -15,7 +15,8 @@
     "lucide-react": "0.454.0",
     "pdf-lib": "1.17.1",
     "jszip": "3.10.1",
-    "pdfjs-dist": "3.11.174"
+    "pdfjs-dist": "3.11.174",
+    "mupdf": "1.28.1"
   },
   "devDependencies": {
     "autoprefixer": "10.4.20",
