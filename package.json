@@ -16,7 +16,8 @@
     "pdf-lib": "1.17.1",
     "jszip": "3.10.1",
     "pdfjs-dist": "3.11.174",
-    "mupdf": "1.28.1"
+    "mupdf": "1.28.1",
+    "tesseract.js": "5.1.1"
   },
   "devDependencies": {
     "autoprefixer": "10.4.20",
