@@ -1,0 +1,49 @@
+# Craftora
+
+> Craftora (craftora.dev) is a free online tools suite. Most tools run entirely in the visitor's browser, so files are never uploaded to a server. No signup, no watermarks, and no daily limits on the browser-based tools.
+
+Craftora is built for privacy and speed. PDF, image, text, and developer tools process files on the user's own device. There are no ads getting in the way, and every tool is free.
+
+## PDF Tools
+- [Merge PDF](https://craftora.dev/merge-pdf): Combine multiple PDF files into one document.
+- [Split PDF](https://craftora.dev/split-pdf): Split a PDF into pages or extract a page range.
+- [Compress PDF](https://craftora.dev/compress-pdf): Reduce PDF file size while keeping quality.
+- [PDF to JPG](https://craftora.dev/pdf-to-jpg): Convert PDF pages into JPG images.
+- [JPG to PDF](https://craftora.dev/jpg-to-pdf): Turn JPG and PNG images into a single PDF.
+- [Rotate PDF](https://craftora.dev/rotate-pdf): Rotate PDF pages and save the orientation.
+- [Organize PDF](https://craftora.dev/organize-pdf): Reorder, rotate, and delete PDF pages visually.
+- [Add Page Numbers](https://craftora.dev/add-page-numbers): Add page numbers to a PDF.
+- [Add Watermark](https://craftora.dev/watermark-pdf): Add a text watermark to PDF pages.
+- [Protect PDF](https://craftora.dev/protect-pdf): Add a password to encrypt a PDF.
+- [Unlock PDF](https://craftora.dev/unlock-pdf): Remove a known password from a PDF.
+- [Sign PDF](https://craftora.dev/sign-pdf): Draw or type a signature and place it on a PDF.
+
+## Image Tools
+- [Compress Image](https://craftora.dev/compress-image): Reduce JPG, PNG, and WebP image size.
+- [Resize Image](https://craftora.dev/resize-image): Change image width and height.
+- [Crop Image](https://craftora.dev/crop-image): Crop images with aspect ratio presets.
+- [Convert Image](https://craftora.dev/convert-image): Convert between JPG, PNG, and WebP.
+- [Rotate and Flip Image](https://craftora.dev/rotate-image): Rotate or flip images.
+- [Image to Text (OCR)](https://craftora.dev/image-to-text): Extract text from an image with OCR.
+- [Favicon Generator](https://craftora.dev/favicon-generator): Create a favicon set from any image.
+
+## Developer Tools
+- [JSON Formatter](https://craftora.dev/json-formatter): Format, validate, and minify JSON.
+- [Base64 Encode/Decode](https://craftora.dev/base64): Encode text to Base64 or decode it back.
+- [URL Encode/Decode](https://craftora.dev/url-encode-decode): Encode or decode URLs and query strings.
+- [Hash Generator](https://craftora.dev/hash-generator): Generate MD5, SHA-1, SHA-256, and SHA-512 hashes.
+- [UUID Generator](https://craftora.dev/uuid-generator): Generate random UUID v4 identifiers.
+- [QR Code Generator](https://craftora.dev/qr-code-generator): Create a QR code from any link or text.
+
+## Convert Tools
+- [Unit Converter](https://craftora.dev/unit-converter): Convert length, weight, temperature, and more.
+
+## Guides
+- [How to Merge PDF Files for Free](https://craftora.dev/insights/how-to-merge-pdf-files-free)
+- [How to Compress a PDF Without Losing Quality](https://craftora.dev/insights/how-to-compress-pdf-without-losing-quality)
+- [JPG vs PNG vs WebP: Which Image Format Should You Use?](https://craftora.dev/insights/jpg-vs-png-vs-webp)
+
+## About
+- Site: https://craftora.dev
+- All tools: https://craftora.dev/all-tools
+- More tools are added regularly, including document converters, video and audio converters, SEO tools, text tools, and an email verifier.
