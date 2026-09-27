@@ -6,6 +6,15 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  async redirects() {
+    return [
+      { source: '/verify', destination: '/email-verifier', permanent: true },
+      { source: '/card-tools', destination: '/card-bin-tools', permanent: true },
+      { source: '/tools', destination: '/all-tools', permanent: true },
+      { source: '/tools/image-converter', destination: '/convert-image', permanent: true },
+      { source: '/tools/:path*', destination: '/all-tools', permanent: true },
+    ];
+  },
   webpack: (config, { isServer }) => {
     // pdf.js references an optional Node-only 'canvas' module we don't use in the browser.
     config.resolve.alias = { ...config.resolve.alias, canvas: false };
