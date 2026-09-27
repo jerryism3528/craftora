@@ -77,9 +77,6 @@ export default function TestCardGeneratorTool() {
 
   return (
     <div>
-      <div className="rounded-xl px-4 py-3 text-sm mb-6" style={{ background: 'var(--surface-soft)', color: 'var(--ink)' }}>
-        <strong>For developers only.</strong> These are fake, Luhn-valid numbers for testing checkout and validation code. They are not real cards, hold no funds, and cannot be used for any purchase.
-      </div>
 
       <div className="flex flex-wrap items-end gap-5">
         <div>

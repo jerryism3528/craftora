@@ -2,17 +2,17 @@ import ToolPage from '../../components/ToolPage';
 import TestCardGeneratorTool from '../../components/TestCardGeneratorTool';
 import { getTool } from '../../lib/tools';
 
-const tool = getTool('test-card-generator');
+const tool = getTool('credit-card-generator');
 
 export const metadata = {
-  title: 'Test Card Generator: Free Luhn-Valid Test Cards',
+  title: 'Credit Card Generator: Free Card Numbers for Testing',
   description:
-    'Free test card generator for developers. Create Luhn-valid fake credit card numbers with expiry and CVV to test checkout and payment forms. Visa, Mastercard, Amex, Discover, JCB. Runs in your browser, no signup.',
-  alternates: { canonical: '/test-card-generator' },
+    'Free credit card generator. Create valid credit and debit card numbers with expiry and CVV for checkout and payment form testing. Visa, Mastercard, Amex, Discover, JCB. Runs in your browser, no signup.',
+  alternates: { canonical: '/credit-card-generator' },
   openGraph: {
-    title: 'Test Card Generator: Free Luhn-Valid Test Cards | Craftora',
-    description: 'Generate fake, Luhn-valid test card numbers for checkout testing. Visa, Mastercard, Amex, and more. Free, no signup.',
-    url: 'https://craftora.dev/test-card-generator',
+    title: 'Credit Card Generator: Free Card Numbers for Testing | Craftora',
+    description: 'Generate credit and debit card numbers for checkout testing. Visa, Mastercard, Amex, and more. Free, no signup.',
+    url: 'https://craftora.dev/credit-card-generator',
     type: 'website',
   },
 };
