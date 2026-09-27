@@ -12,7 +12,7 @@ function Icon({ name, className }) {
   return <Cmp className={className} />;
 }
 
-const POPULAR = ['Merge PDF', 'Compress Image', 'Email Verifier', 'SEO Audit', 'JSON Formatter', 'Invoice Generator'];
+const POPULAR = ['Merge PDF', 'Compress Image', 'QR Code Generator', 'JSON Formatter', 'Unit Converter', 'Hash Generator'];
 
 const FAQS = [
   [
@@ -55,24 +55,23 @@ export default function HomePage() {
     );
   }, [query]);
 
+  const liveCount = tools.filter((t) => t.status === 'live').length;
+
   return (
     <div>
       <Header />
 
       <main>
         {/* Hero */}
-        <section className="editorial-width px-4 sm:px-7 py-10 sm:py-16">
-          <div className="soft-surface rounded-[28px] p-7 sm:p-10 lg:p-12">
-            <div className="inline-flex px-3 py-1.5 rounded-full text-sm font-bold mb-6" style={{ background: 'var(--surface)', color: 'var(--brand)' }}>
-              craftora.dev
-            </div>
-            <h1 className="font-extrabold tracking-tight leading-tight max-w-3xl text-4xl sm:text-5xl" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>
+        <section className="editorial-width px-4 sm:px-7 pt-6 pb-8 sm:pt-8 sm:pb-10">
+          <div className="soft-surface rounded-[28px] p-6 sm:p-10 lg:p-12">
+            <h1 className="font-extrabold tracking-tight leading-tight max-w-3xl text-3xl sm:text-5xl" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>
               Free online tools that just work
             </h1>
-            <p className="muted text-base sm:text-lg leading-8 max-w-2xl mt-5">
-              Privacy-first tools with no signup, no watermarks, and fast browser-based processing where possible. Merge PDFs, compress images, convert files, verify emails, and more.
+            <p className="muted text-base sm:text-lg leading-8 max-w-2xl mt-4">
+              Privacy-first tools with no signup, no watermarks, and fast browser-based processing where possible. Merge PDFs, compress images, convert files, generate QR codes, and more.
             </p>
-            <div className="mt-8 max-w-2xl">
+            <div className="mt-6 max-w-2xl">
               <div className="surface border rounded-2xl p-2 flex gap-2 shadow-sm">
                 <Lucide.Search className="w-5 h-5 mt-3 ml-3 muted shrink-0" />
                 <input
@@ -81,12 +80,12 @@ export default function HomePage() {
                   className="flex-1 min-w-0 bg-transparent outline-none py-3"
                   style={{ color: 'var(--ink)' }}
                   type="search"
-                  placeholder="Search 100+ free tools"
+                  placeholder={`Search ${liveCount}+ free tools`}
                   aria-label="Search all tools"
                 />
               </div>
             </div>
-            <div className="mt-6 flex flex-wrap items-center gap-2">
+            <div className="mt-5 flex flex-wrap items-center gap-2">
               <span className="muted text-sm py-1 mr-1 font-semibold">Popular:</span>
               {POPULAR.map((p) => (
                 <button
@@ -102,12 +101,37 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* Category quick-nav (hidden while searching) */}
+        {!results && (
+          <section className="editorial-width px-4 sm:px-7 pb-2">
+            <p className="brand-text text-xs font-extrabold tracking-[.14em] uppercase mb-3">Browse by category</p>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3">
+              {categories.map((cat) => {
+                const count = tools.filter((t) => t.category === cat.key).length;
+                return (
+                  <a
+                    key={cat.key}
+                    href={`#${cat.slug}`}
+                    className={`category-chip category-${cat.key} border surface rounded-2xl p-4 flex flex-col gap-2`}
+                  >
+                    <span className="tool-icon">
+                      <Icon name={cat.icon || 'Wrench'} className="w-5 h-5" />
+                    </span>
+                    <span className="font-bold text-sm leading-tight" style={{ color: 'var(--ink)' }}>{cat.name}</span>
+                    <span className="muted text-xs">{count} tools</span>
+                  </a>
+                );
+              })}
+            </div>
+          </section>
+        )}
+
         {/* Results (when searching) OR full library */}
-        <section className="editorial-width px-4 sm:px-7 pb-4">
+        <section className="editorial-width px-4 sm:px-7 pt-6 pb-4">
           {results ? (
             <div>
               <p className="muted text-sm mb-6">{results.length} tool{results.length === 1 ? '' : 's'} found</p>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                 {results.map((t) => (
                   <ToolCard key={t.slug} tool={t} />
                 ))}
@@ -118,18 +142,18 @@ export default function HomePage() {
               const catTools = tools.filter((t) => t.category === cat.key);
               if (!catTools.length) return null;
               return (
-                <section key={cat.key} id={cat.slug} className="mb-14 pt-10 section-rule">
-                  <div className="mb-6 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+                <section key={cat.key} id={cat.slug} className="mb-12 pt-8 section-rule scroll-mt-20">
+                  <div className="mb-5 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                     <div>
                       <p className="brand-text text-xs font-extrabold tracking-[.14em] uppercase mb-2">Category</p>
-                      <h2 className="font-extrabold text-2xl" style={{ color: 'var(--ink)' }}>{cat.name}</h2>
+                      <h2 className="font-extrabold text-xl sm:text-2xl" style={{ color: 'var(--ink)' }}>{cat.name}</h2>
                       <p className="muted text-sm mt-2 max-w-2xl">{cat.description}</p>
                     </div>
                     <Link href={`/${cat.slug}`} className="text-sm font-bold brand-text shrink-0">
                       View all
                     </Link>
                   </div>
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
                     {catTools.map((t) => (
                       <ToolCard key={t.slug} tool={t} />
                     ))}
@@ -202,7 +226,7 @@ function ToolCard({ tool }) {
       <span className="tool-icon">
         <Icon name={tool.icon} className="w-5 h-5" />
       </span>
-      <span className="flex items-center gap-2 mt-5">
+      <span className="flex items-center gap-1.5 mt-4 flex-wrap">
         <strong className="block text-sm" style={{ color: 'var(--ink)' }}>{tool.name}</strong>
         {tool.status !== 'live' && (
           <span className="text-[10px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-md" style={{ background: 'var(--surface-soft)', color: 'var(--muted)' }}>Soon</span>

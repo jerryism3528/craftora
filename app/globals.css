@@ -140,3 +140,21 @@ html.dark .category-media .tool-icon { background:#4d2a33; color:#ffb8c6; }
   border-color: var(--violet);
   background: var(--surface-soft);
 }
+
+/* Smaller tool cards + category chips (mobile-friendly) */
+.tool-card {
+  min-height: 0;
+  padding: 1rem;
+}
+.tool-card .tool-icon {
+  width: 2.1rem;
+  height: 2.1rem;
+}
+.category-chip {
+  transition: border-color .16s ease, box-shadow .16s ease, background .16s ease;
+}
+.category-chip:hover {
+  border-color: var(--violet);
+  box-shadow: var(--card-shadow);
+  background: var(--surface-soft);
+}
