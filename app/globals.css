@@ -158,3 +158,47 @@ html.dark .category-media .tool-icon { background:#4d2a33; color:#ffb8c6; }
   box-shadow: var(--card-shadow);
   background: var(--surface-soft);
 }
+
+/* ---- Rich text editor + published article body ---- */
+.tiptap-content {
+  min-height: 380px;
+  padding: 1rem 1.25rem;
+  outline: none;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.tiptap-content:focus { outline: none; }
+.tiptap-content p { margin: 0 0 1rem; }
+.tiptap-content h2 { font-size: 1.5rem; font-weight: 800; margin: 1.6rem 0 0.8rem; color: var(--ink); letter-spacing: -0.02em; }
+.tiptap-content h3 { font-size: 1.2rem; font-weight: 700; margin: 1.3rem 0 0.6rem; color: var(--ink); }
+.tiptap-content ul, .tiptap-content ol { margin: 0 0 1rem 1.4rem; }
+.tiptap-content ul { list-style: disc; }
+.tiptap-content ol { list-style: decimal; }
+.tiptap-content li { margin: 0.3rem 0; }
+.tiptap-content a { color: var(--brand); font-weight: 600; text-decoration: underline; }
+.tiptap-content blockquote { border-left: 3px solid var(--brand); padding-left: 1rem; margin: 1rem 0; color: var(--muted); font-style: italic; }
+.tiptap-content pre { background: var(--surface-soft); border-radius: 10px; padding: 1rem; overflow-x: auto; font-size: 0.85rem; margin: 1rem 0; }
+.tiptap-content code { font-family: monospace; }
+.tiptap-content img, .article-img { max-width: 100%; border-radius: 12px; margin: 1rem 0; }
+.tiptap-content p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: var(--muted);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* Published article body (same look, rendered from stored HTML) */
+.article-body { color: var(--ink); line-height: 1.8; font-size: 1.05rem; }
+.article-body p { margin: 0 0 1.15rem; }
+.article-body h2 { font-size: 1.6rem; font-weight: 800; margin: 2rem 0 0.9rem; letter-spacing: -0.02em; }
+.article-body h3 { font-size: 1.25rem; font-weight: 700; margin: 1.5rem 0 0.7rem; }
+.article-body ul, .article-body ol { margin: 0 0 1.15rem 1.5rem; }
+.article-body ul { list-style: disc; }
+.article-body ol { list-style: decimal; }
+.article-body li { margin: 0.4rem 0; }
+.article-body a { color: var(--brand); font-weight: 600; text-decoration: underline; }
+.article-body blockquote { border-left: 3px solid var(--brand); padding-left: 1.1rem; margin: 1.2rem 0; color: var(--muted); font-style: italic; }
+.article-body pre { background: var(--surface-soft); border-radius: 10px; padding: 1rem; overflow-x: auto; margin: 1.2rem 0; }
+.article-body table { width: 100%; border-collapse: collapse; margin: 1.2rem 0; }
+.article-body th, .article-body td { border: 1px solid var(--line); padding: 0.6rem 0.8rem; text-align: left; }

@@ -3,12 +3,15 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: craftora:latest
     container_name: craftora
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       - NODE_ENV=production
       - PORT=3000
+    volumes:
+      - craftora_uploads:/app/public/uploads
     networks:
       - craftora-web
     labels:
@@ -23,3 +26,6 @@ services:
 networks:
   craftora-web:
     name: craftora-web
+
+volumes:
+  craftora_uploads:

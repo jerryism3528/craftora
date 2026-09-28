@@ -2,6 +2,9 @@ import Link from 'next/link';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import { getAllPosts } from '../../lib/posts';
+import { query } from '../../lib/db';
+
+export const dynamic = 'force-dynamic';
 
 const SITE_URL = 'https://craftora.dev';
 
@@ -18,8 +21,36 @@ export const metadata = {
   },
 };
 
-export default function InsightsPage() {
-  const posts = getAllPosts();
+// Merge published DB articles + legacy code posts, newest first, no duplicate slugs.
+async function getMergedPosts() {
+  let dbPosts = [];
+  try {
+    const rows = await query(
+      'SELECT slug, title, excerpt, author, published_at, updated_at, cover_image, image_alt FROM articles WHERE published = true ORDER BY published_at DESC NULLS LAST'
+    );
+    dbPosts = rows.map((r) => ({
+      slug: r.slug,
+      title: r.title,
+      excerpt: r.excerpt || '',
+      author: r.author || 'Craftora',
+      date: r.published_at || r.updated_at,
+      coverImage: r.cover_image || null,
+      imageAlt: r.image_alt || '',
+    }));
+  } catch (e) {
+    console.error('insights db load error:', e);
+  }
+
+  const dbSlugs = new Set(dbPosts.map((p) => p.slug));
+  const codePosts = getAllPosts()
+    .filter((p) => !dbSlugs.has(p.slug))
+    .map((p) => ({ slug: p.slug, title: p.title, excerpt: p.excerpt, author: p.author, date: p.date, coverImage: null }));
+
+  return [...dbPosts, ...codePosts].sort((a, b) => new Date(b.date) - new Date(a.date));
+}
+
+export default async function InsightsPage() {
+  const posts = await getMergedPosts();
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -54,15 +85,21 @@ export default function InsightsPage() {
             <Link
               key={post.slug}
               href={`/insights/${post.slug}`}
-              className="border surface rounded-2xl p-6 block transition-colors"
+              className="border surface rounded-2xl overflow-hidden block transition-colors"
               style={{ background: 'var(--surface)' }}
             >
-              <p className="muted text-xs mb-3">
-                {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })} · {post.author}
-              </p>
-              <h2 className="font-bold text-xl leading-tight" style={{ color: 'var(--ink)' }}>{post.title}</h2>
-              <p className="muted text-sm leading-6 mt-3">{post.excerpt}</p>
-              <span className="brand-text text-sm font-bold inline-block mt-4">Read guide →</span>
+              {post.coverImage && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={post.coverImage} alt={post.imageAlt || post.title} className="w-full h-44 object-cover" />
+              )}
+              <div className="p-6">
+                <p className="muted text-xs mb-3">
+                  {post.date ? new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : ''} · {post.author}
+                </p>
+                <h2 className="font-bold text-xl leading-tight" style={{ color: 'var(--ink)' }}>{post.title}</h2>
+                <p className="muted text-sm leading-6 mt-3">{post.excerpt}</p>
+                <span className="brand-text text-sm font-bold inline-block mt-4">Read guide →</span>
+              </div>
             </Link>
           ))}
         </div>
@@ -76,4 +113,3 @@ export default function InsightsPage() {
     </div>
   );
 }
-
