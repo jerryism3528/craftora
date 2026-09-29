@@ -157,7 +157,16 @@ export default function InvoiceGeneratorTool() {
       <div className="grid sm:grid-cols-3 gap-4 mb-6">
         <div>
           <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ink)' }}>Currency</label>
-          <input value={inv.currency} onChange={(e) => set('currency', e.target.value)} className={inputCls} style={{ color: 'var(--ink)' }} />
+          <select value={inv.currency} onChange={(e) => set('currency', e.target.value)} className={inputCls} style={{ color: 'var(--ink)' }}>
+            <option value="$">$ USD</option>
+            <option value="EUR ">EUR</option>
+            <option value="GBP ">GBP</option>
+            <option value="Rs ">Rs (PKR)</option>
+            <option value="INR ">INR</option>
+            <option value="AED ">AED</option>
+            <option value="CAD $">CAD</option>
+            <option value="AUD $">AUD</option>
+          </select>
         </div>
         <div>
           <label className="block text-sm font-semibold mb-1.5" style={{ color: 'var(--ink)' }}>Tax rate (%)</label>
