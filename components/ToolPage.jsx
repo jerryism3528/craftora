@@ -3,6 +3,8 @@ import * as Lucide from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
 import { getCategory, getRelatedTools } from '../lib/tools';
+import { getAllPosts } from '../lib/posts';
+import { query } from '../lib/db';
 
 function Icon({ name, className }) {
   const Cmp = Lucide[name] || Lucide.Wrench;
@@ -11,9 +13,21 @@ function Icon({ name, className }) {
 
 const SITE_URL = 'https://craftora.dev';
 
-export default function ToolPage({ tool, howItWorks = [], features = [], faqs = [], children }) {
+async function getRecentPosts() {
+  let dbPosts = [];
+  try {
+    const rows = await query('SELECT slug, title, excerpt, published_at, updated_at FROM articles WHERE published = true ORDER BY published_at DESC NULLS LAST LIMIT 3');
+    dbPosts = rows.map((r) => ({ slug: r.slug, title: r.title, excerpt: r.excerpt || '', date: r.published_at || r.updated_at }));
+  } catch (e) {}
+  const dbSlugs = new Set(dbPosts.map((p) => p.slug));
+  const codePosts = getAllPosts().filter((p) => !dbSlugs.has(p.slug)).map((p) => ({ slug: p.slug, title: p.title, excerpt: p.excerpt, date: p.date }));
+  return [...dbPosts, ...codePosts].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
+}
+
+export default async function ToolPage({ tool, howItWorks = [], features = [], faqs = [], children }) {
   const category = getCategory(tool.category);
   const related = getRelatedTools(tool.slug, 4);
+  const recentPosts = await getRecentPosts();
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -130,6 +144,21 @@ export default function ToolPage({ tool, howItWorks = [], features = [], faqs = 
                   ? <Link key={t.slug} href={`/${t.slug}`} className={`tool-card category-${t.category}`}>{inner}</Link>
                   : <div key={t.slug} className={`tool-card category-${t.category}`} style={{ opacity: 0.85 }}>{inner}</div>;
               })}
+            </div>
+          </section>
+        )}
+
+        {recentPosts.length > 0 && (
+          <section className="mt-16 section-rule pt-14">
+            <h2 className="font-extrabold text-2xl" style={{ color: 'var(--ink)' }}>Recent from the blog</h2>
+            <div className="grid sm:grid-cols-3 gap-4 mt-6">
+              {recentPosts.map((p) => (
+                <Link key={p.slug} href={`/insights/${p.slug}`} className="border surface rounded-2xl p-5 block" style={{ background: 'var(--surface)' }}>
+                  <h3 className="font-bold text-sm leading-snug" style={{ color: 'var(--ink)' }}>{p.title}</h3>
+                  <p className="muted text-xs leading-5 mt-2 line-clamp-3">{p.excerpt}</p>
+                  <span className="brand-text text-xs font-bold inline-block mt-3">Read guide &rarr;</span>
+                </Link>
+              ))}
             </div>
           </section>
         )}
