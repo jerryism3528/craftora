@@ -9,6 +9,7 @@ const nextConfig = {
   async redirects() {
     return [
       { source: '/verify', destination: '/email-verifier', permanent: true },
+      { source: '/video-downloader', destination: 'https://download.craftora.dev', permanent: true },
       { source: '/terms', destination: '/privacy', permanent: true },
       { source: '/card-tools', destination: '/card-bin-tools', permanent: true },
       { source: '/tools', destination: '/all-tools', permanent: true },

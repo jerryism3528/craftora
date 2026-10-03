@@ -17,7 +17,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=craftora-web"
-      - "traefik.http.routers.craftora.rule=Host(`craftora.dev`) || Host(`www.craftora.dev`) || Host(`download.craftora.dev`)"
+      - "traefik.http.routers.craftora.rule=Host(`craftora.dev`) || Host(`www.craftora.dev`)"
       - "traefik.http.routers.craftora.entrypoints=websecure"
       - "traefik.http.routers.craftora.tls=true"
       - "traefik.http.routers.craftora.tls.certresolver=letsencrypt"
