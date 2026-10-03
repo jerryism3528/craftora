@@ -9,9 +9,16 @@ const nextConfig = {
   async redirects() {
     return [
       { source: '/verify', destination: '/email-verifier', permanent: true },
+      { source: '/terms', destination: '/privacy', permanent: true },
       { source: '/card-tools', destination: '/card-bin-tools', permanent: true },
       { source: '/tools', destination: '/all-tools', permanent: true },
       { source: '/tools/image-converter', destination: '/convert-image', permanent: true },
+      { source: '/tools/pdf-merge', destination: '/merge-pdf', permanent: true },
+      { source: '/tools/pdf-compress', destination: '/compress-pdf', permanent: true },
+      { source: '/tools/pdf-split', destination: '/split-pdf', permanent: true },
+      { source: '/tools/pdf-rotate', destination: '/rotate-pdf', permanent: true },
+      { source: '/tools/pdf-to-images', destination: '/pdf-to-jpg', permanent: true },
+      { source: '/tools/images-to-pdf', destination: '/jpg-to-pdf', permanent: true },
       { source: '/tools/:path*', destination: '/all-tools', permanent: true },
     ];
   },
