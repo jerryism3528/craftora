@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Rotate PDF pages online for free. Turn pages left, right, or 180 degrees, all pages or just some, and download in seconds. No signup, no watermarks, and your files never leave your browser.',
   alternates: { canonical: '/rotate-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Rotate PDF: Rotate PDF Pages Online Free | Craftora',
     description: 'Rotate PDF pages left, right, or 180 degrees for free, right in your browser. No uploads, no watermarks.',
     url: 'https://craftora.dev/rotate-pdf',

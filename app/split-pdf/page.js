@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Split PDF files online for free. Extract specific pages or a page range, or split every page into separate PDFs. No signup, no watermarks, and your files never leave your browser.',
   alternates: { canonical: '/split-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Split PDF: Extract Pages or Split PDF Online Free | Craftora',
     description: 'Extract pages from a PDF or split every page, free and private. Browser-based, no watermarks.',
     url: 'https://craftora.dev/split-pdf',

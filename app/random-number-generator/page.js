@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free random number generator. Generate random numbers in any range, single or in bulk, with no-duplicate and sorting options. Uses secure randomness in your browser. No signup, nothing uploaded.',
   alternates: { canonical: '/random-number-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Random Number Generator: Pick Numbers Online Free | Craftora',
     description: 'Generate random numbers in any range, with no-duplicate and sort options. Free, secure, no signup.',
     url: 'https://craftora.dev/random-number-generator',

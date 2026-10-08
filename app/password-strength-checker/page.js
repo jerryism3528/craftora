@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free password strength checker. Test how strong your password is, see the estimated time to crack it, and get tips to improve it. Checked entirely in your browser, never uploaded, no signup.',
   alternates: { canonical: '/password-strength-checker' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Password Strength Checker: Test Your Password Free | Craftora',
     description: 'Test your password strength and crack time, with tips to improve it. Private, in your browser, no signup.',
     url: 'https://craftora.dev/password-strength-checker',

@@ -22,7 +22,7 @@ export function generateMetadata({ params }) {
     title,
     description,
     alternates: { canonical: `/${cat.slug}` },
-    openGraph: {
+    openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
       title: `${title} | Craftora`,
       description,
       url: `${SITE_URL}/${cat.slug}`,

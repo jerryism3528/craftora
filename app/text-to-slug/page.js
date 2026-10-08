@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free URL slug generator. Turn any title or text into a clean, SEO-friendly slug with lowercase letters and hyphens. Handles accents and special characters. Runs in your browser, no signup.',
   alternates: { canonical: '/text-to-slug' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Text to Slug: Free URL Slug Generator | Craftora',
     description: 'Convert any title into a clean, SEO-friendly URL slug instantly. Free, private, no signup.',
     url: 'https://craftora.dev/text-to-slug',

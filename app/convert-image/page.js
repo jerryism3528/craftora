@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Convert images online for free. Change JPG, PNG, and WebP formats in seconds, convert many images at once, with no signup, no watermarks, and full privacy. Your images never leave your browser.',
   alternates: { canonical: '/convert-image' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Convert Image: JPG, PNG, and WebP Converter Free | Craftora',
     description: 'Convert between JPG, PNG, and WebP for free, right in your browser. No uploads, no watermarks, no signup.',
     url: 'https://craftora.dev/convert-image',

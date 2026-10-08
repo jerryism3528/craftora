@@ -23,6 +23,8 @@ services:
       - "traefik.http.routers.craftora.tls=true"
       - "traefik.http.routers.craftora.tls.certresolver=letsencrypt"
       - "traefik.http.services.craftora.loadbalancer.server.port=3000"
+      - "traefik.http.middlewares.craftora-hsts.headers.stsSeconds=31536000"
+      - "traefik.http.routers.craftora.middlewares=craftora-hsts"
 
 networks:
   craftora-web:

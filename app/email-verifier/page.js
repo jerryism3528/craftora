@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free email verifier. Check whether an email address is valid and deliverable in real time, with a clear safe, risky, or invalid result. Detects disposable and role accounts. No email is ever sent.',
   alternates: { canonical: '/email-verifier' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Email Verifier: Check if an Email Is Valid Free | Craftora',
     description: 'Verify email addresses in real time and see if they are valid and deliverable. Free with a Craftora account.',
     url: 'https://craftora.dev/email-verifier',

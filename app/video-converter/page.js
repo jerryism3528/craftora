@@ -13,7 +13,7 @@ export const metadata = {
     'video to gif', 'mp4 to gif', 'wmv to mp4', 'convert video online', 'reduce video size',
   ],
   alternates: { canonical: '/video-converter' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Video Converter: Convert MP4, MOV, AVI, MKV, WEBM Free | Craftora',
     description: 'Convert videos between MP4, MOV, AVI, MKV, and WEBM, or make a GIF. Free with an account.',
     url: 'https://craftora.dev/video-converter',

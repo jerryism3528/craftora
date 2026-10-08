@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free BIN search tool. Search a database of over 340,000 BINs by bank name, country, card brand, or type (credit or debit). Find the BIN ranges for any issuer and export the results to CSV.',
   alternates: { canonical: '/bin-search' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'BIN Search: Find Card BINs by Bank, Country, Brand | Craftora',
     description: 'Search 340,000+ BINs by bank, country, brand, or card type. Find issuer BIN ranges and export to CSV.',
     url: 'https://craftora.dev/bin-search',

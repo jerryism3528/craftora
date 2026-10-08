@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Generate a favicon online for free. Turn any image or logo into a full set of favicon sizes for your website, with a ready-to-paste HTML snippet. No signup, no watermarks, and your image never leaves your browser.',
   alternates: { canonical: '/favicon-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Favicon Generator: Make a Favicon Online Free | Craftora',
     description: 'Create a favicon from any image for free, right in your browser. Full size pack plus HTML snippet, no uploads.',
     url: 'https://craftora.dev/favicon-generator',

@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free SERP snippet preview tool. See how your title and meta description look in Google search results on desktop and mobile, with pixel-width warnings for truncation. Runs in your browser, no signup.',
   alternates: { canonical: '/serp-preview' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'SERP Snippet Preview: Test Your Google Result Free | Craftora',
     description: 'Preview your Google search snippet on desktop and mobile, with truncation warnings. Free, no signup.',
     url: 'https://craftora.dev/serp-preview',

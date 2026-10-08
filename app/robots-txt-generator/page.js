@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free robots.txt generator. Create a robots.txt file with allow and disallow rules, crawl-delay, and your sitemap URL, using simple presets. Runs in your browser, download ready to upload, no signup.',
   alternates: { canonical: '/robots-txt-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Robots.txt Generator: Free and Easy | Craftora',
     description: 'Create a robots.txt file with allow/disallow rules and your sitemap. Free presets, ready to download, no signup.',
     url: 'https://craftora.dev/robots-txt-generator',

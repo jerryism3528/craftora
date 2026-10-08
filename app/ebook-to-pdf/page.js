@@ -13,7 +13,7 @@ export const metadata = {
     'fb2 to pdf', 'convert ebook to pdf', 'epub to pdf converter', 'cbz to pdf',
   ],
   alternates: { canonical: '/ebook-to-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Ebook to PDF: Convert EPUB, MOBI, AZW3 to PDF Free | Craftora',
     description: 'Convert EPUB, MOBI, AZW3, and Kindle books to clean, printable PDFs with a table of contents. Up to 50 MB, no page limit.',
     url: 'https://craftora.dev/ebook-to-pdf',

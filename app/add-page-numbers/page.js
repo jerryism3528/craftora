@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Add page numbers to a PDF online for free. Choose the position, number format, and starting number, then download in seconds. No signup, no watermarks, and your files never leave your browser.',
   alternates: { canonical: '/add-page-numbers' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Add Page Numbers to PDF Online Free | Craftora',
     description: 'Add page numbers to any PDF for free, right in your browser. Pick position and format. No uploads, no watermarks.',
     url: 'https://craftora.dev/add-page-numbers',

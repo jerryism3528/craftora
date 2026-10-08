@@ -13,7 +13,7 @@ export const metadata = {
     'wma to mp3', 'aac to mp3', 'opus to mp3', 'convert audio online', 'mp3 converter',
   ],
   alternates: { canonical: '/audio-converter' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Audio Converter: Convert WAV, M4A, FLAC, OGG to MP3 Free | Craftora',
     description: 'Convert audio between MP3, WAV, M4A, AAC, OGG, FLAC, and OPUS. Free with an account.',
     url: 'https://craftora.dev/audio-converter',

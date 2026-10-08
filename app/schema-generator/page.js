@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free schema markup generator. Create JSON-LD structured data for Organization, LocalBusiness, Article, Product, FAQ, and Breadcrumb to earn rich results in Google. Runs in your browser, ready to paste.',
   alternates: { canonical: '/schema-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Schema Markup Generator: Free JSON-LD Structured Data | Craftora',
     description: 'Generate JSON-LD schema for FAQ, Article, Product, LocalBusiness, and more. Free, ready to paste, no signup.',
     url: 'https://craftora.dev/schema-generator',

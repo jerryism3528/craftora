@@ -18,7 +18,7 @@ export const metadata = {
     template: '%s | Craftora',
   },
   description:
-    'Craftora is a free online tools suite: merge PDF, compress images, convert files, verify emails, run SEO audits, and more. Privacy-first, no signup, no watermarks. Fast browser-based tools that just work.',
+    'Free online tools to merge PDFs, compress images, convert files, verify emails, and audit SEO. Privacy-first, no signup, no watermarks.',
   keywords: [
     'free online tools',
     'pdf tools',

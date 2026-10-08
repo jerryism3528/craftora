@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online JSON formatter and validator. Beautify, format, and minify JSON, and check for errors instantly. Runs in your browser with no signup, and your data is never uploaded.',
   alternates: { canonical: '/json-formatter' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'JSON Formatter: Format, Validate, and Beautify JSON Free | Craftora',
     description: 'Beautify, validate, and minify JSON free, right in your browser. No uploads, no signup.',
     url: 'https://craftora.dev/json-formatter',

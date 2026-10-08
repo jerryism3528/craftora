@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online hash generator. Create MD5, SHA-1, SHA-256, and SHA-512 hashes from any text instantly. Runs in your browser with no signup, and your text is never uploaded.',
   alternates: { canonical: '/hash-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Hash Generator: MD5, SHA-1, SHA-256 Online Free | Craftora',
     description: 'Generate MD5, SHA-1, SHA-256, and SHA-512 hashes from text, free and instant, right in your browser.',
     url: 'https://craftora.dev/hash-generator',

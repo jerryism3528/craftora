@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online text compare tool. Paste two blocks of text and see the differences line by line, with added and removed lines highlighted. Runs in your browser, no signup, nothing uploaded.',
   alternates: { canonical: '/text-compare' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Text Compare: Find the Difference Between Two Texts | Craftora',
     description: 'Compare two blocks of text and spot every difference, highlighted line by line. Free, private, no signup.',
     url: 'https://craftora.dev/text-compare',

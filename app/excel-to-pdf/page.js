@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free Excel to PDF converter. Turn XLS and XLSX spreadsheets into clean PDF files online, with every sheet, table, and chart included. Accurate, fast, and your file is deleted after conversion.',
   alternates: { canonical: '/excel-to-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Excel to PDF: Convert XLS and XLSX to PDF Free | Craftora',
     description: 'Convert Excel spreadsheets to PDF online with tables and charts preserved. Free with an account.',
     url: 'https://craftora.dev/excel-to-pdf',

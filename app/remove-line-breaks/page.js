@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online tool to remove line breaks from text. Strip unwanted line breaks, keep paragraph spacing, and clean up messy pasted text in one click. Runs in your browser, no signup, nothing uploaded.',
   alternates: { canonical: '/remove-line-breaks' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Remove Line Breaks From Text Online Free | Craftora',
     description: 'Strip unwanted line breaks and clean up messy text while keeping paragraphs. Free, private, no signup.',
     url: 'https://craftora.dev/remove-line-breaks',

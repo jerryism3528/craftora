@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free Open Graph generator. Create OG and Twitter Card meta tags for rich social media previews, with a live preview of how your link looks when shared. Runs in your browser, ready to paste, no signup.',
   alternates: { canonical: '/open-graph-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Open Graph Generator: Free OG Tags with Preview | Craftora',
     description: 'Generate Open Graph and Twitter tags with a live social card preview. Free, ready to paste, no signup.',
     url: 'https://craftora.dev/open-graph-generator',

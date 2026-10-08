@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free credit card validator. Check if a card number is valid with the Luhn algorithm and detect the card brand (Visa, Mastercard, Amex, Discover). Runs in your browser, no signup, nothing uploaded.',
   alternates: { canonical: '/card-validator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Credit Card Validator: Check Card Number Free | Craftora',
     description: 'Validate a card number with the Luhn check and detect its brand, free and private in your browser.',
     url: 'https://craftora.dev/card-validator',

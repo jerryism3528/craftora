@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online Base64 encoder and decoder. Convert text to Base64 and decode Base64 back to text instantly, with full UTF-8 support. Runs in your browser, no signup, and nothing is uploaded.',
   alternates: { canonical: '/base64' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Base64 Encode and Decode Online Free | Craftora',
     description: 'Encode text to Base64 or decode it back, free and instant, right in your browser. No uploads, no signup.',
     url: 'https://craftora.dev/base64',

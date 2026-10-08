@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Unlock a PDF online for free by removing its password. Enter the password you know and download an unprotected copy in seconds. No signup, no watermarks, and your file never leaves your browser.',
   alternates: { canonical: '/unlock-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Unlock PDF: Remove PDF Password Online Free | Craftora',
     description: 'Remove the password from a PDF you can open, for free, right in your browser. No uploads, no watermarks.',
     url: 'https://craftora.dev/unlock-pdf',

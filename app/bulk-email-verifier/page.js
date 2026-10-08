@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free bulk email verifier. Paste a whole list and check every address against its real mail server, with safe, risky, and invalid results and CSV export. Clean your email list before you send.',
   alternates: { canonical: '/bulk-email-verifier' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Bulk Email Verifier: Validate an Email List Free | Craftora',
     description: 'Verify a whole email list in batches, filter safe, risky, and invalid, and export to CSV. Free with an account.',
     url: 'https://craftora.dev/bulk-email-verifier',

@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Compress PDF files online for free and reduce PDF file size in seconds. Shrink PDFs for email and upload with no signup, no watermarks, and full privacy. Your files never leave your browser.',
   alternates: { canonical: '/compress-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Compress PDF: Reduce PDF File Size Online Free | Craftora',
     description: 'Reduce PDF file size for free, right in your browser. No watermarks, no uploads, no signup.',
     url: 'https://craftora.dev/compress-pdf',

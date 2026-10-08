@@ -13,7 +13,7 @@ export const metadata = {
     'mkv to mp3', 'webm to mp3', 'avi to mp3', 'video to audio', 'mp4 to mp3 converter',
   ],
   alternates: { canonical: '/video-to-mp3' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Video to MP3: Convert MP4 to MP3 and Extract Audio Free | Craftora',
     description: 'Extract audio from any video and save it as MP3, M4A, or WAV in up to 320 kbps. Free with an account.',
     url: 'https://craftora.dev/video-to-mp3',

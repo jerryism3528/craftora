@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online UUID generator. Create random UUID version 4 identifiers, one or many at once, and copy them instantly. Runs in your browser with no signup and nothing uploaded.',
   alternates: { canonical: '/uuid-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'UUID Generator: Generate UUID v4 Online Free | Craftora',
     description: 'Generate random UUID v4 identifiers free, one or in bulk, right in your browser. No signup, no limits.',
     url: 'https://craftora.dev/uuid-generator',

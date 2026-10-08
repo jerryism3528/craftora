@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free strong password generator. Create secure, random passwords with custom length, symbols, and numbers, and see the strength instantly. Generated in your browser, never uploaded, no signup.',
   alternates: { canonical: '/password-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Password Generator: Free Strong Random Passwords | Craftora',
     description: 'Create secure random passwords with a custom length and character set. Private, in your browser, no signup.',
     url: 'https://craftora.dev/password-generator',

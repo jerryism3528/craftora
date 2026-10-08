@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free website SEO audit tool. Get an SEO score and 35+ checks for meta tags, content, headings, images, robots.txt, sitemap, schema, speed, and broken links, with clear fixes. No signup.',
   alternates: { canonical: '/seo-audit' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Free SEO Audit Tool: Get Your SEO Score in Seconds | Craftora',
     description: 'Audit any page for 35+ SEO issues and get step-by-step fixes. Free, no signup.',
     url: 'https://craftora.dev/seo-audit',

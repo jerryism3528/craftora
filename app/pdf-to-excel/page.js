@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free PDF to Excel converter. Extract tables from PDF files into an editable XLSX spreadsheet online, each table on its own sheet. Great for bank statements, invoices, and reports.',
   alternates: { canonical: '/pdf-to-excel' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'PDF to Excel: Convert PDF Tables to XLSX Free | Craftora',
     description: 'Extract tables from a PDF into an editable Excel spreadsheet. Free with an account.',
     url: 'https://craftora.dev/pdf-to-excel',

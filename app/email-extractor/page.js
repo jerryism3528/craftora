@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free email extractor. Paste any text and pull out every email address instantly, with duplicates removed. Copy or download the list as TXT or CSV. Runs in your browser, no signup, nothing uploaded.',
   alternates: { canonical: '/email-extractor' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Email Extractor: Extract Emails From Text Free | Craftora',
     description: 'Extract all email addresses from any text instantly, deduped and ready to copy or download. Free, no signup.',
     url: 'https://craftora.dev/email-extractor',

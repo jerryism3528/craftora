@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online barcode generator. Create CODE128, EAN-13, UPC, CODE39, and ITF-14 barcodes and download them as PNG or SVG. Runs in your browser, no signup, nothing uploaded.',
   alternates: { canonical: '/barcode-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Barcode Generator: Create Barcodes Online Free | Craftora',
     description: 'Create CODE128, EAN-13, UPC, and more barcodes and download as PNG or SVG. Free, no signup.',
     url: 'https://craftora.dev/barcode-generator',

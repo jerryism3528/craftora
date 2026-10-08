@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free XML sitemap generator. Enter your website URL and Craftora crawls up to 500 pages, then builds sitemap.xml with lastmod and priority. Also exports TXT and HTML sitemaps and finds broken links. No signup.',
   alternates: { canonical: '/sitemap-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Free XML Sitemap Generator | Craftora',
     description: 'Crawl your website and download sitemap.xml in seconds. Finds broken links too. Free, no signup.',
     url: 'https://craftora.dev/sitemap-generator',

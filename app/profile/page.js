@@ -102,6 +102,7 @@ function ProfileInner() {
 
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-extrabold text-2xl" style={{ color: 'var(--ink)' }}>Your profile</h1>
+        <div className="mt-3 flex flex-wrap gap-2"><a href="/account/seo" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm font-semibold hover:soft-surface" style={{ color: 'var(--ink)' }}><Lucide.Gauge className="w-4 h-4" /> SEO Dashboard</a></div>
         <button onClick={() => signOut({ callbackUrl: '/' })} className="rounded-xl px-4 py-2 text-sm font-semibold border surface inline-flex items-center gap-2" style={{ color: 'var(--ink)' }}>
           <Lucide.LogOut className="w-4 h-4" /> Sign out
         </button>

@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free credit card generator. Create valid credit and debit card numbers with expiry and CVV for checkout and payment form testing. Visa, Mastercard, Amex, Discover, JCB. Runs in your browser, no signup.',
   alternates: { canonical: '/credit-card-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Credit Card Generator: Free Card Numbers for Testing | Craftora',
     description: 'Generate credit and debit card numbers for checkout testing. Visa, Mastercard, Amex, and more. Free, no signup.',
     url: 'https://craftora.dev/credit-card-generator',

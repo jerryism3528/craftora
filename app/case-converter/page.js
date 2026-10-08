@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online case converter. Change text to UPPERCASE, lowercase, Title Case, Sentence case, camelCase, snake_case, and kebab-case instantly. Runs in your browser, no signup, nothing uploaded.',
   alternates: { canonical: '/case-converter' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Case Converter: Change Text Case Online Free | Craftora',
     description: 'Convert text to uppercase, lowercase, title case, camelCase, snake_case, and more. Free, no signup.',
     url: 'https://craftora.dev/case-converter',

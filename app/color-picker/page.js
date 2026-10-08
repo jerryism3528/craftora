@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online color picker. Pick any color and get its HEX, RGB, and HSL codes, or upload an image and pick colors from it. Build a palette and copy codes instantly. Runs in your browser, no signup.',
   alternates: { canonical: '/color-picker' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Color Picker: Get HEX, RGB, and HSL Codes Free | Craftora',
     description: 'Pick colors, get HEX, RGB, and HSL codes, and grab colors from any image. Free, in your browser, no signup.',
     url: 'https://craftora.dev/color-picker',

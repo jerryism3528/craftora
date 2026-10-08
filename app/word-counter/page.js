@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online word counter. Count words, characters, sentences, and paragraphs in real time, plus reading time. Perfect for essays, articles, and social posts. Runs in your browser, no signup.',
   alternates: { canonical: '/word-counter' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Word Counter: Count Words and Characters Free | Craftora',
     description: 'Count words, characters, sentences, and paragraphs in real time, with reading time. Free, no signup.',
     url: 'https://craftora.dev/word-counter',

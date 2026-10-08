@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Add a text watermark to a PDF online for free. Set the text, opacity, size, color, and angle, tiled or centered, then download in seconds. No signup, no watermarks from us, and your files never leave your browser.',
   alternates: { canonical: '/watermark-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Add Watermark to PDF Online Free | Craftora',
     description: 'Add a custom text watermark to any PDF for free, right in your browser. No uploads, and no watermark from us.',
     url: 'https://craftora.dev/watermark-pdf',

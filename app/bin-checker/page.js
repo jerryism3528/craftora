@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free bulk BIN checker. Look up many card BINs at once to find the issuing bank, country, card brand, and type (credit or debit). Paste a list and export the results to CSV. For developers and verification.',
   alternates: { canonical: '/bin-checker' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'BIN Checker: Bulk BIN Lookup With Bank and Country | Craftora',
     description: 'Look up many BINs at once: bank, country, brand, and card type. Export to CSV. Free with an account.',
     url: 'https://craftora.dev/bin-checker',

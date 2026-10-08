@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Sign a PDF online for free. Draw or type your signature, place it on any page, and download the signed document in seconds. No signup, no watermarks, and your file never leaves your browser.',
   alternates: { canonical: '/sign-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Sign PDF: Add Your Signature to a PDF Online Free | Craftora',
     description: 'Draw or type your signature and add it to any PDF for free, right in your browser. No uploads, no watermarks.',
     url: 'https://craftora.dev/sign-pdf',

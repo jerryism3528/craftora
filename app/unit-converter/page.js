@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online unit converter. Convert length, weight, temperature, volume, area, speed, time, and data units instantly. No signup, works in your browser, and gives accurate results in real time.',
   alternates: { canonical: '/unit-converter' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Unit Converter: Convert Length, Weight, and More Free | Craftora',
     description: 'Convert length, weight, temperature, volume, speed, and more, free and instant, right in your browser.',
     url: 'https://craftora.dev/unit-converter',

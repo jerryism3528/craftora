@@ -10,7 +10,7 @@ export const metadata = {
     'Free URL shortener. Shorten long links, create custom short links, and track every click by device, browser, and referrer. Get a QR code for each link. Unlimited links, safety-checked by Google.',
   keywords: ['url shortener', 'link shortener', 'free url shortener', 'short link', 'shorten url', 'custom short link', 'url shortener with analytics', 'link shortener with tracking', 'qr code link', 'bitly alternative', 'tinyurl alternative', 'shorten link free'],
   alternates: { canonical: '/url-shortener' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'URL Shortener: Free Link Shortener With Click Tracking | Craftora',
     description: 'Shorten links, pick custom names, get QR codes, and track clicks. Free and unlimited.',
     url: 'https://craftora.dev/url-shortener',

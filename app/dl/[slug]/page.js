@@ -19,7 +19,7 @@ export function generateMetadata({ params }) {
     description: d.description,
     keywords: d.keywords,
     alternates: { canonical: url },
-    openGraph: { title: d.title, description: d.description, url, type: 'website', siteName: 'Craftora Downloader' },
+    openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }],  title: d.title, description: d.description, url, type: 'website', siteName: 'Craftora Downloader' },
     twitter: { card: 'summary', title: d.title, description: d.description },
   };
 }

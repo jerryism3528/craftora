@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Merge PDF files into one document online for free. Combine multiple PDFs, reorder pages, and download instantly. No signup, no watermarks, and your files never leave your browser.',
   alternates: { canonical: '/merge-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Merge PDF: Combine PDF Files Online Free | Craftora',
     description: 'Combine multiple PDF files into one online for free. Private, browser-based, no watermarks.',
     url: 'https://craftora.dev/merge-pdf',

@@ -11,7 +11,7 @@ export const metadata = {
   title: `SEO Audit Checklist: ${COUNT} Checks and How to Fix Them`,
   description: `The complete SEO checklist used by the Craftora SEO audit tool. ${COUNT} checks for meta tags, content, technical SEO, links, and site structure, each with a step-by-step fix guide.`,
   alternates: { canonical: '/seo-audit/checks' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: `SEO Audit Checklist: ${COUNT} Checks and How to Fix Them | Craftora`,
     description: 'Every SEO issue explained, with why it matters and exactly how to fix it.',
     url: `${SITE}/seo-audit/checks`,

@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free BIN list and directory. Browse over 340,000 card BINs by network (Visa, Mastercard, and more) and by country. See BIN ranges, issuing banks, and card types, and export any list to CSV.',
   alternates: { canonical: '/bin-list' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'BIN List: Browse Card BIN Ranges by Country and Network | Craftora',
     description: 'Browse 340,000+ BINs by network and country. See ranges, banks, and card types. Free, no signup.',
     url: 'https://craftora.dev/bin-list',

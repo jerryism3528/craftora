@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free PDF to PowerPoint converter. Turn every page of a PDF into a PowerPoint slide online, looking exactly like the original. Present your PDF in PowerPoint, Keynote, or Google Slides.',
   alternates: { canonical: '/pdf-to-powerpoint' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'PDF to PowerPoint: Convert PDF to PPTX Slides Free | Craftora',
     description: 'Turn each PDF page into a PowerPoint slide that looks exactly like the original. Free with an account.',
     url: 'https://craftora.dev/pdf-to-powerpoint',

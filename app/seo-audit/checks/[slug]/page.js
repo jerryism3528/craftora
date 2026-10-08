@@ -32,7 +32,7 @@ export function generateMetadata({ params }) {
     title: `${g.name}: How to Fix It`,
     description: metaDescription(g),
     alternates: { canonical: `/seo-audit/checks/${g.slug}` },
-    openGraph: { title: `${g.name}: How to Fix It | Craftora`, description: metaDescription(g), url: `${SITE}/seo-audit/checks/${g.slug}`, type: 'article' },
+    openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }],  title: `${g.name}: How to Fix It | Craftora`, description: metaDescription(g), url: `${SITE}/seo-audit/checks/${g.slug}`, type: 'article' },
   };
 }
 

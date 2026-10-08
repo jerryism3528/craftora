@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Password protect a PDF online for free. Add strong AES encryption to your PDF so only people with the password can open it. No signup, no watermarks, and your file never leaves your browser.',
   alternates: { canonical: '/protect-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Protect PDF: Add a Password to a PDF Online Free | Craftora',
     description: 'Add a password and encryption to any PDF for free, right in your browser. No uploads, no watermarks.',
     url: 'https://craftora.dev/protect-pdf',

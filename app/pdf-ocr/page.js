@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free PDF OCR tool. Turn scanned PDFs into searchable, selectable PDFs online. Find words with Ctrl+F, copy text, and keep the original look of every page. No software needed.',
   alternates: { canonical: '/pdf-ocr' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'PDF OCR: Make Scanned PDFs Searchable Free | Craftora',
     description: 'Add a text layer to scanned PDFs so you can search, select, and copy text. Free with an account.',
     url: 'https://craftora.dev/pdf-ocr',

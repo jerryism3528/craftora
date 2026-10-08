@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free PDF to Word converter. Turn PDF files into editable DOCX documents online, with text, paragraphs, tables, and images kept in place. Edit your PDF in Microsoft Word or Google Docs.',
   alternates: { canonical: '/pdf-to-word' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'PDF to Word: Convert PDF to Editable DOCX Free | Craftora',
     description: 'Convert PDF to an editable Word document online with layout and tables preserved. Free with an account.',
     url: 'https://craftora.dev/pdf-to-word',

@@ -14,7 +14,7 @@ export const metadata = {
     'transcribe video', 'voice to text', 'whisper transcription',
   ],
   alternates: { canonical: '/transcription' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Transcribe Audio and Video to Text Free, With Subtitles | Craftora',
     description: 'AI transcription in 90+ languages with timestamps and SRT/VTT subtitle downloads. Free with an account.',
     url: 'https://craftora.dev/transcription',

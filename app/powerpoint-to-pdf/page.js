@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free PowerPoint to PDF converter. Turn PPT and PPTX presentations into PDF online, one slide per page with images and layout preserved. Easy to share, print, or submit.',
   alternates: { canonical: '/powerpoint-to-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'PowerPoint to PDF: Convert PPT and PPTX to PDF Free | Craftora',
     description: 'Convert PowerPoint presentations to PDF online, one slide per page. Free with an account.',
     url: 'https://craftora.dev/powerpoint-to-pdf',

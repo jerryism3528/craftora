@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Resize images online for free. Change the width and height of JPG, PNG, and WebP images, keep the aspect ratio, and download in seconds. No signup, no watermarks, and your images never leave your browser.',
   alternates: { canonical: '/resize-image' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Resize Image: Change Image Dimensions Online Free | Craftora',
     description: 'Change image width and height for free, right in your browser. No uploads, no watermarks, no signup.',
     url: 'https://craftora.dev/resize-image',

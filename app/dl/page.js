@@ -10,7 +10,7 @@ export const metadata = {
   description: 'Free online video downloader. Download videos from TikTok without watermark, Instagram Reels, Facebook, X (Twitter), and Dailymotion in HD MP4 or MP3. No app, no login, works on any phone or PC.',
   keywords: ['video downloader', 'online video downloader', 'free video downloader', 'social media video downloader', 'tiktok downloader', 'instagram reels downloader', 'facebook video downloader', 'twitter video downloader', 'download video from link', 'video downloader no watermark', 'all in one video downloader', 'mp4 downloader', 'video to mp3 downloader'],
   alternates: { canonical: DL_BASE },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Free Video Downloader: TikTok, Instagram, Facebook, X | Craftora',
     description: 'Download videos from TikTok, Instagram, Facebook, X, and more in HD. Free, no app, no login.',
     url: DL_BASE, type: 'website', siteName: 'Craftora Downloader',

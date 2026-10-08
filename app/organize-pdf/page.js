@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Organize PDF pages online for free. Reorder pages, rotate them, and delete pages you do not need, all in one place. No signup, no watermarks, and your files never leave your browser.',
   alternates: { canonical: '/organize-pdf' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Organize PDF: Reorder, Rotate, and Delete Pages Free | Craftora',
     description: 'Reorder, rotate, and delete PDF pages for free, right in your browser. No uploads, no watermarks.',
     url: 'https://craftora.dev/organize-pdf',

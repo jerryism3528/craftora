@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online QR code generator. Create a QR code from any link or text, customize the size and colors, and download it as PNG or SVG. Runs in your browser, no signup, and nothing is uploaded.',
   alternates: { canonical: '/qr-code-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'QR Code Generator: Create a Free QR Code Online | Craftora',
     description: 'Generate a QR code from any link or text for free. Custom colors, PNG or SVG download, no signup.',
     url: 'https://craftora.dev/qr-code-generator',

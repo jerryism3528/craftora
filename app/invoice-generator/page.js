@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online invoice generator. Fill in your business, client, and line items, and download a clean professional PDF invoice with automatic totals and tax. Runs in your browser, no signup, nothing stored.',
   alternates: { canonical: '/invoice-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Invoice Generator: Create Free PDF Invoices | Craftora',
     description: 'Create and download professional PDF invoices with automatic totals and tax. Free, private, no signup.',
     url: 'https://craftora.dev/invoice-generator',

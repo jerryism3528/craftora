@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online Unix timestamp converter. Convert Unix timestamps to human-readable dates and dates back to timestamps, in seconds or milliseconds, with local and UTC time. Runs in your browser, no signup.',
   alternates: { canonical: '/timestamp-converter' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Unix Timestamp Converter Online Free | Craftora',
     description: 'Convert Unix timestamps to dates and back, in seconds or milliseconds, with local and UTC time. Free, no signup.',
     url: 'https://craftora.dev/timestamp-converter',

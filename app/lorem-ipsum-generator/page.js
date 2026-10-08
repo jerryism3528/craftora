@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free Lorem Ipsum generator. Create placeholder text by paragraphs, sentences, or words for your designs and mockups, then copy it with one click. Runs in your browser, no signup.',
   alternates: { canonical: '/lorem-ipsum-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Lorem Ipsum Generator: Free Placeholder Text | Craftora',
     description: 'Generate Lorem Ipsum placeholder text by paragraphs, sentences, or words. Free, instant, no signup.',
     url: 'https://craftora.dev/lorem-ipsum-generator',

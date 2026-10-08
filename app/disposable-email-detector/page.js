@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free disposable email detector. Check a list of emails against a database of over 9,000 temporary and throwaway domains, then download the clean list. Catch fake signups before they cost you.',
   alternates: { canonical: '/disposable-email-detector' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Disposable Email Detector: Find Temp Emails Free | Craftora',
     description: 'Detect disposable and temporary email addresses in your list against 9,000+ known domains. Free with an account.',
     url: 'https://craftora.dev/disposable-email-detector',

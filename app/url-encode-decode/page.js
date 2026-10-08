@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free online URL encoder and decoder. Encode text and URLs for safe use in links and query strings, and decode percent-encoded URLs back to readable text. Runs in your browser, no signup, nothing uploaded.',
   alternates: { canonical: '/url-encode-decode' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'URL Encode and Decode Online Free | Craftora',
     description: 'Encode or decode URLs and query strings free, right in your browser. No uploads, no signup.',
     url: 'https://craftora.dev/url-encode-decode',

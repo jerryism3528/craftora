@@ -9,7 +9,7 @@ export const metadata = {
   description:
     'Free meta tag generator. Create SEO title, description, canonical, Open Graph, and Twitter Card tags for your web pages, with live length checks. Runs in your browser, no signup, ready to paste.',
   alternates: { canonical: '/meta-tag-generator' },
-  openGraph: {
+  openGraph: { images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }], 
     title: 'Meta Tag Generator: Free SEO Meta Tags | Craftora',
     description: 'Generate SEO, Open Graph, and Twitter meta tags with live length checks. Free, ready to paste, no signup.',
     url: 'https://craftora.dev/meta-tag-generator',
