@@ -13,6 +13,7 @@ services:
     volumes:
       - craftora_uploads:/app/public/uploads
       - craftora_images:/app/storage/images
+      - craftora_docs:/app/storage/docs
     networks:
       - craftora-web
     labels:
@@ -33,3 +34,4 @@ networks:
 volumes:
   craftora_uploads:
   craftora_images:
+  craftora_docs:

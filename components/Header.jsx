@@ -106,6 +106,7 @@ export default function Header() {
                   </div>
                   <Link href="/profile" onClick={() => setAcctOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold hover:soft-surface" style={{ color: 'var(--ink)' }}><Lucide.User className="w-4 h-4" /> Profile</Link>
                   <Link href="/account/seo" onClick={() => setAcctOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold hover:soft-surface" style={{ color: 'var(--ink)' }}><Lucide.Gauge className="w-4 h-4" /> SEO Dashboard</Link>
+                  <Link href="/account/documents" onClick={() => setAcctOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold hover:soft-surface" style={{ color: 'var(--ink)' }}><Lucide.FileSignature className="w-4 h-4" /> My Documents</Link>
                   {user.isAdmin && (
                     <Link href="/administrator-account-craftora" onClick={() => setAcctOpen(false)} className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold hover:soft-surface" style={{ color: 'var(--ink)' }}><Lucide.ShieldCheck className="w-4 h-4" /> Admin panel</Link>
                   )}
@@ -152,6 +153,7 @@ export default function Header() {
                 </div>
                 <Link href="/profile" onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm font-semibold" style={{ color: 'var(--ink)' }}>Profile</Link>
                 <Link href="/account/seo" onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm font-semibold" style={{ color: 'var(--ink)' }}>SEO Dashboard</Link>
+                <Link href="/account/documents" onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm font-semibold" style={{ color: 'var(--ink)' }}>My Documents</Link>
                 {user.isAdmin && <Link href="/administrator-account-craftora" onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm font-semibold" style={{ color: 'var(--ink)' }}>Admin panel</Link>}
                 <button onClick={() => { setMobileOpen(false); signOut({ callbackUrl: '/' }); }} className="block py-1.5 text-sm font-semibold" style={{ color: '#b3261e' }}>Sign out</button>
               </div>

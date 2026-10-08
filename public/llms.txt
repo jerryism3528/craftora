@@ -47,3 +47,8 @@ Craftora is built for privacy and speed. PDF, image, text, and developer tools p
 - Site: https://craftora.dev
 - All tools: https://craftora.dev/all-tools
 - More tools are added regularly, including document converters, video and audio converters, SEO tools, text tools, and an email verifier.
+
+## E-signatures
+- [Document Signer](https://craftora.dev/document-signer): Free e-signature tool. Upload a PDF, add up to 10 signers, place signature fields, send by email, track status, and get a signed PDF with a certificate of completion.
+- [Verify Document](https://craftora.dev/verify-document): Check that a PDF signed with Craftora Sign is authentic and unchanged.
+- [SEO Audit Checklist](https://craftora.dev/seo-audit/checks): 52 SEO checks, each with a step-by-step fix guide.

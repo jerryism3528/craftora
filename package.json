@@ -32,7 +32,8 @@
     "@tiptap/extension-image": "2.10.3",
     "@tiptap/extension-underline": "2.10.3",
     "@tiptap/extension-placeholder": "2.10.3",
-    "sharp": "0.33.5"
+    "sharp": "0.33.5",
+    "@fontsource/dancing-script": "5.1.0"
   },
   "devDependencies": {
     "autoprefixer": "10.4.20",
