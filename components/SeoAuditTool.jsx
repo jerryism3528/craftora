@@ -7,6 +7,7 @@ import {
   RotateCcw, Gauge, FileText, Link2, Image as ImageIcon, Code2, Clock, Target, Wrench,
 } from 'lucide-react';
 import { CATEGORIES, SEVERITY_WEIGHT } from '../lib/seo-checks';
+import { guideUrl } from '../lib/seo-guides';
 
 const STEPS = ['Fetching the page', 'Reading meta tags', 'Analyzing content', 'Checking robots.txt and sitemap', 'Testing links', 'Calculating score'];
 
@@ -79,9 +80,12 @@ function CheckRow({ c }) {
             <Wrench className="w-4 h-4 mt-0.5 shrink-0 text-indigo-500" />
             <p><span className="font-semibold">{c.status === 'pass' ? 'Why it matters: ' : 'How to fix: '}</span>{c.fix}</p>
           </div>
-          {c.tools && c.tools.length > 0 && (
+          {(guideUrl(c.id) || (c.tools && c.tools.length > 0)) && (
             <div className="flex flex-wrap gap-2">
-              {c.tools.map((t) => (
+              {guideUrl(c.id) && (
+                <Link href={guideUrl(c.id)} className="text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:border-indigo-400">Read the full guide</Link>
+              )}
+              {(c.tools || []).map((t) => (
                 <Link key={t.slug} href={`/${t.slug}`} className="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-950/50 dark:text-indigo-300 dark:hover:bg-indigo-900/60">
                   Fix with {t.name}
                 </Link>
@@ -210,7 +214,7 @@ export default function SeoAuditTool() {
             <Target className="w-4 h-4" /> Add a target keyword (optional)
           </button>
         )}
-        <p className="text-xs text-slate-500 dark:text-slate-400">Free, no signup. 35+ checks on meta tags, content, technical SEO, and links. 10 audits per hour.</p>
+        <p className="text-xs text-slate-500 dark:text-slate-400">Free, no signup. 35+ checks on meta tags, content, technical SEO, and links. 10 audits per hour. <Link href="/seo-audit/checks" className="text-indigo-600 dark:text-indigo-400 hover:underline">See the full SEO checklist</Link>.</p>
       </form>
 
       {loading && (

@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { ScoreRing, SEV, scoreColor, siteCategoryScores, CategoryBars, PHASES } from './ReportParts';
 import { CATEGORIES, CHECKS } from '../../lib/seo-checks';
+import { guideUrl } from '../../lib/seo-guides';
 
 function IssueRow({ c }) {
   const [open, setOpen] = useState(false);
@@ -39,9 +40,12 @@ function IssueRow({ c }) {
             <Wrench className="w-4 h-4 mt-0.5 shrink-0 text-indigo-500" />
             <p><span className="font-semibold">{c.status === 'pass' ? 'Why it matters: ' : 'How to fix: '}</span>{c.fix}</p>
           </div>
-          {c.tools?.length > 0 && (
-            <div className="flex flex-wrap gap-2">
-              {c.tools.map((t) => (
+          {(guideUrl(c.id) || c.tools?.length > 0) && (
+            <div className="flex flex-wrap gap-2 print:hidden">
+              {guideUrl(c.id) && (
+                <Link href={guideUrl(c.id)} className="text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 hover:border-indigo-400">Read the full guide</Link>
+              )}
+              {(c.tools || []).map((t) => (
                 <Link key={t.slug} href={`/${t.slug}`} className="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-50 text-indigo-700 hover:bg-indigo-100 dark:bg-indigo-950/50 dark:text-indigo-300 dark:hover:bg-indigo-900/60">Fix with {t.name}</Link>
               ))}
             </div>
