@@ -40,7 +40,7 @@ const faqs = [
   ['What is a good SEO score?', 'A score of 80 or higher is good, and 90 or higher is excellent. Fix critical issues first, since they can stop a page from ranking at all, then work through warnings and notices.'],
   ['Is this SEO audit tool free?', 'Yes. You can audit up to 10 pages per hour for free, with no signup and no credit card.'],
   ['What does the target keyword check do?', 'If you enter a keyword, the audit checks whether it appears in the title, meta description, H1, URL, and the first 100 words, and shows how often it is used on the page. These are the places where keywords matter most for on-page SEO.'],
-  ['Can I audit my whole website?', 'This tool audits one page at a time so results are instant. To check every page for broken links and build an XML sitemap, use the free Sitemap Generator, which crawls up to 500 pages.'],
+  ['Can I audit my whole website?', 'Yes. Create a free account to run a full-site audit that crawls up to 500 pages, finds site-wide issues like duplicate titles, broken links, orphan pages, and sitemap errors, saves every report, and tracks your SEO score over time in your SEO dashboard.'],
   ['Why does my page fail the noindex or robots.txt check?', 'A noindex tag or header tells Google not to show the page in search results, and a robots.txt Disallow rule stops Google from crawling it. Both are useful for private pages, but if you want the page to rank, remove them.'],
   ['Does the audit check page speed?', 'The audit measures server response time, HTML size, compression, and the number of scripts and stylesheets, which are the main server-side speed factors. For full Core Web Vitals, also test the page in Google PageSpeed Insights.'],
 ];

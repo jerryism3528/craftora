@@ -364,9 +364,9 @@ export default function SeoAuditTool() {
           </div>
 
           <div className="rounded-2xl bg-gradient-to-br from-indigo-600 to-violet-600 p-6 text-white">
-            <div className="text-lg font-bold">Check every page, not just one</div>
-            <p className="text-sm text-indigo-100 mt-1">Crawl your whole site to build a sitemap and find broken links on every page.</p>
-            <Link href="/sitemap-generator" className="inline-block mt-3 px-4 py-2 rounded-lg bg-white text-indigo-700 font-semibold text-sm hover:bg-indigo-50">Crawl my website</Link>
+            <div className="text-lg font-bold">Audit your entire website</div>
+            <p className="text-sm text-indigo-100 mt-1">Audit up to 500 pages with 45+ checks, find duplicate titles, broken links, and orphan pages, and track your score over time. Free with an account.</p>
+            <Link href="/account/seo" className="inline-block mt-3 px-4 py-2 rounded-lg bg-white text-indigo-700 font-semibold text-sm hover:bg-indigo-50">Audit my whole website</Link>
           </div>
         </div>
       )}
