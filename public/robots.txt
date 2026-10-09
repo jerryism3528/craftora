@@ -4,3 +4,4 @@ Allow: /
 Sitemap: https://craftora.dev/sitemap.xml
 Sitemap: https://craftora.dev/seo-audit/checks/sitemap.xml
 Sitemap: https://craftora.dev/verify-document/sitemap.xml
+Sitemap: https://craftora.dev/about/sitemap.xml

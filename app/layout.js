@@ -61,7 +61,7 @@ export const metadata = {
     description:
       'Free, privacy-first online tools. Merge PDF, compress images, convert files, verify emails, run SEO audits, and more. No signup, no watermarks.',
   },
-  twitter: {
+  twitter: { site: '@craftoraaa', creator: '@craftoraaa',
     card: 'summary_large_image',
     title: 'Craftora: Free Online Tools That Just Work',
     description:

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import * as Lucide from 'lucide-react';
 import { categories } from '../lib/tools';
+import CompanyLegal from './CompanyLegal';
 
 const DONATE_URL = 'https://www.gofundme.com/';
 
@@ -65,6 +66,6 @@ export default function Footer() {
           <p className="muted text-xs">Free online tools that just work.</p>
         </div>
       </div>
-    </footer>
+    <CompanyLegal /></footer>
   );
 }

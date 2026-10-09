@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
+import CompanyNotice from '../../components/CompanyNotice';
 
 export const metadata = {
   title: 'Privacy Policy',
@@ -22,6 +23,7 @@ export default function PrivacyPage() {
         </nav>
 
         <h1 className="font-extrabold tracking-tight text-4xl" style={{ color: 'var(--ink)' }}>Privacy Policy</h1>
+<CompanyNotice kind="privacy" />
         <p className="muted text-sm mt-3">Last updated: {updated}</p>
 
         <div className="mt-8 space-y-8 leading-7" style={{ color: 'var(--ink)' }}>

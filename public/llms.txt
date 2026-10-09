@@ -52,3 +52,6 @@ Craftora is built for privacy and speed. PDF, image, text, and developer tools p
 - [Document Signer](https://craftora.dev/document-signer): Free e-signature tool. Upload a PDF, add up to 10 signers, place signature fields, send by email, track status, and get a signed PDF with a certificate of completion.
 - [Verify Document](https://craftora.dev/verify-document): Check that a PDF signed with Craftora Sign is authentic and unchanged.
 - [SEO Audit Checklist](https://craftora.dev/seo-audit/checks): 52 SEO checks, each with a step-by-step fix guide.
+
+## Company
+- [About Craftora](https://craftora.dev/about): Craftora is a product of GE Promo Hub LLC, a Florida limited liability company led by Maria Vindell (Founder and CEO). Address: 4251 Mahogany Run, Winter Haven, FL 33884, USA. Support: support@craftora.dev. Business: maria@craftora.dev. X: @craftoraaa.
