@@ -1,215 +1,101 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import * as Lucide from 'lucide-react';
+import { useCallback, useEffect, useState } from 'react';
+import { LayoutDashboard, Users, Crown, SlidersHorizontal, Flag, Gauge, FileSignature, Bell, Activity, Newspaper, ShieldCheck, ExternalLink } from 'lucide-react';
 import Header from '../../components/Header';
-import Footer from '../../components/Footer';
-import ArticleEditor from '../../components/ArticleEditor';
+import { tools as CATALOG } from '../../lib/tools';
+import Overview from '../../components/admin/Overview';
+import UsersSection from '../../components/admin/Users';
+import PlansSection from '../../components/admin/Plans';
+import ToolsSection from '../../components/admin/Tools';
+import ModerationSection from '../../components/admin/Moderation';
+import SeoSection from '../../components/admin/SeoAudits';
+import DocsSection from '../../components/admin/Documents';
+import NotificationsSection from '../../components/admin/Notifications';
+import ActivitySection from '../../components/admin/Activity';
+import ArticlesTab from '../../components/admin/Articles';
+
+const NAV = [
+  ['overview', 'Overview', LayoutDashboard, 'Site health at a glance'],
+  ['users', 'Users', Users, 'Search, manage plans, suspend, and block tools'],
+  ['plans', 'Plans and backers', Crown, 'Plan limits, Kickstarter tiers, and backer import'],
+  ['tools', 'Tools and limits', SlidersHorizontal, 'Daily limits and on/off switches for server tools'],
+  ['moderation', 'Moderation', Flag, 'Abuse reports, hosted images, and short links'],
+  ['seo', 'SEO audits', Gauge, 'Full-site audits across all users'],
+  ['docs', 'Documents', FileSignature, 'Craftora Sign documents and storage cleanup'],
+  ['notifications', 'Notifications', Bell, 'System alerts'],
+  ['activity', 'Activity', Activity, 'Tool usage and admin audit trail'],
+  ['articles', 'Articles', Newspaper, 'Insights blog posts'],
+];
+const TOOLS = CATALOG.map((t) => ({ slug: t.slug, name: t.name, engine: t.engine }));
 
 export default function AdminPage() {
-  const [tab, setTab] = useState('users');
-
-  return (
-    <div>
-      <Header />
-      <main className="editorial-width px-4 sm:px-7 py-10">
-        <div className="flex items-center gap-3 mb-6">
-          <Lucide.ShieldCheck className="w-7 h-7 brand-text" />
-          <h1 className="font-extrabold text-2xl" style={{ color: 'var(--ink)' }}>Admin panel</h1>
-        </div>
-
-        <div className="flex gap-2 mb-8 border-b surface">
-          {[['users', 'Users'], ['articles', 'Articles'], ['activity', 'Activity']].map(([k, label]) => (
-            <button key={k} onClick={() => setTab(k)} className="px-4 py-2.5 text-sm font-bold border-b-2 -mb-px" style={{ color: tab === k ? 'var(--brand)' : 'var(--muted)', borderColor: tab === k ? 'var(--brand)' : 'transparent' }}>{label}</button>
-          ))}
-        </div>
-
-        {tab === 'users' && <UsersTab />}
-        {tab === 'articles' && <ArticlesTab />}
-        {tab === 'activity' && <ActivityTab />}
-      </main>
-      <Footer />
-    </div>
-  );
-}
-
-function UsersTab() {
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [q, setQ] = useState('');
-  const [msg, setMsg] = useState('');
-
-  async function load() {
-    setLoading(true);
-    const res = await fetch('/api/admin/users');
-    const data = await res.json();
-    setUsers(data.users || []);
-    setLoading(false);
-  }
-  useEffect(() => { load(); }, []);
-
-  async function act(action, userId, extra = {}) {
-    setMsg('');
-    const res = await fetch('/api/admin/users', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ action, userId, ...extra }),
-    });
-    const data = await res.json();
-    if (!data.ok) { setMsg(data.error || 'Action failed.'); return; }
-    setMsg(data.message || 'Done.');
-    load();
-  }
-
-  const filtered = users.filter((u) => !q || u.email.toLowerCase().includes(q.toLowerCase()) || (u.username || '').toLowerCase().includes(q.toLowerCase()));
-
-  if (loading) return <p className="muted text-sm">Loading users...</p>;
-
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-4 gap-3">
-        <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by email or username" className="rounded-xl border surface px-4 py-2 text-sm bg-transparent w-full max-w-xs" style={{ color: 'var(--ink)' }} />
-        <span className="muted text-sm shrink-0">{filtered.length} users</span>
-      </div>
-      {msg && <p className="text-sm mb-3 brand-text">{msg}</p>}
-      <div className="space-y-3">
-        {filtered.map((u) => (
-          <div key={u.id} className="border surface rounded-xl p-4" style={{ background: 'var(--surface)' }}>
-            <div className="flex items-start justify-between gap-3 flex-wrap">
-              <div>
-                <p className="font-bold text-sm" style={{ color: 'var(--ink)' }}>{u.username || '(no username)'} {u.is_admin && <span className="brand-text text-xs">ADMIN</span>}</p>
-                <p className="muted text-xs">{u.email}</p>
-                <p className="muted text-xs mt-1">Joined {new Date(u.created_at).toLocaleDateString()} {u.suspended && <span style={{ color: '#b3261e' }}>· SUSPENDED</span>}</p>
-              </div>
-              {!u.is_admin && (
-                <div className="flex flex-wrap gap-2">
-                  <button onClick={() => act('reset_limits', u.id)} className="rounded-lg px-3 py-1.5 text-xs font-semibold border surface" style={{ color: 'var(--ink)' }}>Reset limits</button>
-                  <button onClick={() => { const t = prompt('Tool slug to block (e.g. email-verifier):'); if (t) act('block_tool', u.id, { tool: t }); }} className="rounded-lg px-3 py-1.5 text-xs font-semibold border surface" style={{ color: 'var(--ink)' }}>Block tool</button>
-                  <button onClick={() => { const d = prompt('Suspend for how many days?', '7'); if (d) act('suspend', u.id, { days: Number(d) }); }} className="rounded-lg px-3 py-1.5 text-xs font-semibold border surface" style={{ color: '#c98a13' }}>Suspend</button>
-                  {u.suspended && <button onClick={() => act('unsuspend', u.id)} className="rounded-lg px-3 py-1.5 text-xs font-semibold border surface" style={{ color: 'var(--mint)' }}>Unsuspend</button>}
-                  <button onClick={() => { if (confirm('Delete this user permanently? This cannot be undone.')) act('delete', u.id); }} className="rounded-lg px-3 py-1.5 text-xs font-semibold border surface" style={{ color: '#b3261e' }}>Delete</button>
-                </div>
-              )}
-            </div>
-            {u.blocked_tools && u.blocked_tools.length > 0 && (
-              <div className="mt-3 flex flex-wrap gap-2">
-                {u.blocked_tools.map((t) => (
-                  <span key={t} className="rounded-md px-2 py-1 text-xs inline-flex items-center gap-1" style={{ background: 'var(--surface-soft)', color: '#b3261e' }}>
-                    {t} <button onClick={() => act('unblock_tool', u.id, { tool: t })}><Lucide.X className="w-3 h-3" /></button>
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function ArticlesTab() {
-  const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [editing, setEditing] = useState(null); // null | 'new' | article object
-  const [msg, setMsg] = useState('');
-
-  async function load() {
-    setLoading(true);
-    const res = await fetch('/api/admin/articles');
-    const data = await res.json();
-    setArticles(data.articles || []);
-    setLoading(false);
-  }
-  useEffect(() => { load(); }, []);
-
-  async function openEdit(id) {
-    const res = await fetch('/api/admin/articles/get?id=' + id);
-    const data = await res.json();
-    if (data.ok) setEditing(data.article);
-  }
-
-  async function del(id) {
-    if (!confirm('Delete this article permanently?')) return;
-    const res = await fetch('/api/admin/articles', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id }),
-    });
-    const data = await res.json();
-    if (data.ok) { setMsg('Article deleted.'); load(); }
-    else setMsg(data.error || 'Delete failed.');
-  }
-
-  if (editing) {
-    return (
-      <ArticleEditor
-        initial={editing === 'new' ? null : editing}
-        onSaved={() => { setEditing(null); setMsg('Article saved.'); load(); }}
-        onCancel={() => setEditing(null)}
-      />
-    );
-  }
-
-  if (loading) return <p className="muted text-sm">Loading articles...</p>;
-
-  return (
-    <div>
-      <div className="flex items-center justify-between mb-4">
-        <span className="muted text-sm">{articles.length} articles</span>
-        <button onClick={() => setEditing('new')} className="rounded-xl px-5 py-2.5 font-bold text-sm inline-flex items-center gap-2" style={{ background: 'var(--brand)', color: '#fff' }}>
-          <Lucide.Plus className="w-4 h-4" /> New article
-        </button>
-      </div>
-      {msg && <p className="text-sm mb-3 brand-text">{msg}</p>}
-      <div className="space-y-3">
-        {articles.map((art) => (
-          <div key={art.id} className="border surface rounded-xl p-4 flex items-start justify-between gap-3 flex-wrap" style={{ background: 'var(--surface)' }}>
-            <div>
-              <p className="font-bold text-sm" style={{ color: 'var(--ink)' }}>
-                {art.title}
-                {art.published
-                  ? <span className="ml-2 text-xs" style={{ color: 'var(--mint)' }}>PUBLISHED</span>
-                  : <span className="ml-2 text-xs muted">DRAFT</span>}
-              </p>
-              <p className="muted text-xs mt-1">/insights/{art.slug} · updated {new Date(art.updated_at).toLocaleDateString()}</p>
-            </div>
-            <div className="flex gap-2">
-              <a href={'/insights/' + art.slug} target="_blank" rel="noreferrer" className="rounded-lg px-3 py-1.5 text-xs font-semibold border surface" style={{ color: 'var(--ink)' }}>View</a>
-              <button onClick={() => openEdit(art.id)} className="rounded-lg px-3 py-1.5 text-xs font-semibold border surface" style={{ color: 'var(--ink)' }}>Edit</button>
-              <button onClick={() => del(art.id)} className="rounded-lg px-3 py-1.5 text-xs font-semibold border surface" style={{ color: '#b3261e' }}>Delete</button>
-            </div>
-          </div>
-        ))}
-        {articles.length === 0 && <p className="muted text-sm">No articles yet. Click New article to write your first post.</p>}
-      </div>
-    </div>
-  );
-}
-
-function ActivityTab() {
-  const [logs, setLogs] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState('overview');
+  const [badges, setBadges] = useState({});
 
   useEffect(() => {
-    (async () => {
-      const res = await fetch('/api/admin/activity');
-      const data = await res.json();
-      setLogs(data.logs || []);
-      setLoading(false);
-    })();
+    const h = window.location.hash.replace('#', '');
+    if (NAV.some(([k]) => k === h)) setTab(h);
+    const onHash = () => { const x = window.location.hash.replace('#', ''); if (NAV.some(([k]) => k === x)) setTab(x); };
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
-  if (loading) return <p className="muted text-sm">Loading activity...</p>;
-  if (!logs.length) return <p className="muted text-sm">No activity logged yet.</p>;
+  const go = useCallback((k) => { setTab(k); if (typeof window !== 'undefined') history.replaceState(null, '', `#${k}`); window.scrollTo({ top: 0 }); }, []);
+
+  const loadBadges = useCallback(async () => {
+    try {
+      const [n, m] = await Promise.all([
+        fetch('/api/admin/notifications?unread=1', { cache: 'no-store' }).then((r) => r.json()),
+        fetch('/api/admin/moderation?type=reports', { cache: 'no-store' }).then((r) => r.json()),
+      ]);
+      const open = (m.counts || []).find((c) => c.status === 'open')?.n || 0;
+      setBadges({ notifications: n.unread || 0, moderation: open });
+    } catch {}
+  }, []);
+  useEffect(() => { loadBadges(); const t = setInterval(loadBadges, 60000); return () => clearInterval(t); }, [loadBadges]);
+
+  const current = NAV.find(([k]) => k === tab) || NAV[0];
 
   return (
-    <div className="space-y-2">
-      {logs.map((l, i) => (
-        <div key={i} className="border surface rounded-xl p-3 text-sm flex justify-between gap-3" style={{ background: 'var(--surface)' }}>
-          <span style={{ color: 'var(--ink)' }}>{l.email || 'anon'} used <strong>{l.tool_slug}</strong> ({l.amount})</span>
-          <span className="muted text-xs shrink-0">{new Date(l.created_at).toLocaleString()}</span>
-        </div>
-      ))}
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-900">
+      <Header />
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 py-6 lg:py-8 lg:grid lg:grid-cols-[230px_1fr] lg:gap-8">
+        <aside className="lg:sticky lg:top-20 lg:self-start mb-6 lg:mb-0">
+          <div className="flex items-center gap-2 mb-4 px-1">
+            <ShieldCheck className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+            <span className="font-extrabold text-lg text-slate-900 dark:text-white">Craftora Admin</span>
+          </div>
+          <nav className="flex lg:flex-col gap-1 overflow-x-auto pb-2 lg:pb-0 -mx-4 px-4 lg:mx-0 lg:px-0" aria-label="Admin sections">
+            {NAV.map(([k, label, Icon]) => (
+              <button key={k} onClick={() => go(k)} aria-current={tab === k ? 'page' : undefined}
+                className={`flex items-center gap-2.5 whitespace-nowrap rounded-xl px-3 py-2 text-sm font-semibold transition ${tab === k ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 dark:text-slate-300 hover:bg-white dark:hover:bg-slate-800'}`}>
+                <Icon className="w-4 h-4 shrink-0" />
+                <span className="flex-1 text-left">{label}</span>
+                {badges[k] > 0 && <span className={`text-[11px] font-bold rounded-full px-1.5 min-w-[20px] text-center ${tab === k ? 'bg-white/25 text-white' : 'bg-red-500 text-white'}`}>{badges[k]}</span>}
+              </button>
+            ))}
+          </nav>
+          <a href="/" className="hidden lg:flex items-center gap-1.5 text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-indigo-600 mt-6 px-3"><ExternalLink className="w-3.5 h-3.5" />View site</a>
+        </aside>
+
+        <main className="min-w-0">
+          <div className="mb-5">
+            <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white">{current[1]}</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">{current[3]}</p>
+          </div>
+          {tab === 'overview' && <Overview go={go} />}
+          {tab === 'users' && <UsersSection tools={TOOLS} />}
+          {tab === 'plans' && <PlansSection />}
+          {tab === 'tools' && <ToolsSection />}
+          {tab === 'moderation' && <ModerationSection />}
+          {tab === 'seo' && <SeoSection />}
+          {tab === 'docs' && <DocsSection />}
+          {tab === 'notifications' && <NotificationsSection onChange={loadBadges} go={go} />}
+          {tab === 'activity' && <ActivitySection tools={TOOLS} />}
+          {tab === 'articles' && <ArticlesTab />}
+        </main>
+      </div>
     </div>
   );
 }
