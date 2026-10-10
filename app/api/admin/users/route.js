@@ -1,6 +1,7 @@
 import { query, queryOne } from '../../../../lib/db';
 import { requireAdmin, logAction, ok, bad, forbid, readJson, pageArgs } from '../../../../lib/admin';
 import { getPlans, applyGrantToUser, clearPlanCache } from '../../../../lib/plans';
+import { cleanName, safeUrl } from '../../../../lib/supporters';
 
 export const dynamic = 'force-dynamic';
 
@@ -62,9 +63,18 @@ export async function POST(req) {
       return ok({ message: 'Note saved.' });
     }
     if (action === 'set_supporter') {
-      await query('UPDATE users SET is_supporter = $2, supporter_name = $3 WHERE id = $1', [userId, !!body.supporter, String(body.supporterName || '').slice(0, 80) || null]);
-      await logAction(admin.id, 'set_supporter', target.email, { supporter: !!body.supporter });
-      return ok({ message: body.supporter ? 'Marked as supporter.' : 'Supporter status removed.' });
+      const on = !!body.supporter;
+      const name = cleanName(body.supporterName) || null;
+      const sponsorUrl = body.sponsorUrl ? safeUrl(body.sponsorUrl) : '';
+      if (body.sponsorUrl && !sponsorUrl) return bad('Sponsor link must start with http:// or https://');
+      const logo = String(body.sponsorLogo || '').trim();
+      const sponsorLogo = logo.startsWith('/') ? logo.slice(0, 300) : (logo ? safeUrl(logo) : '');
+      if (logo && !sponsorLogo) return bad('Logo must be a site path like /uploads/logo.png or a full https:// link.');
+      await query(`UPDATE users SET is_supporter = $2, supporter_name = $3, show_on_wall = $4, sponsor_url = $5, sponsor_logo = $6,
+          supporter_since = CASE WHEN $2 THEN COALESCE(supporter_since, now()) ELSE NULL END WHERE id = $1`,
+        [userId, on, name, body.showOnWall !== false, sponsorUrl || null, sponsorLogo || null]);
+      await logAction(admin.id, 'set_supporter', target.email, { supporter: on, show: body.showOnWall !== false });
+      return ok({ message: on ? 'Supporter listing saved.' : 'Supporter status removed.' });
     }
     if (action === 'set_plan') {
       const plans = await getPlans(true);

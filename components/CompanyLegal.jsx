@@ -12,6 +12,7 @@ export default function CompanyLegal() {
       <p className="mt-1">{addressLine}</p>
       <p className="mt-2 flex flex-wrap justify-center gap-x-4 gap-y-1">
         <Link href="/about" className="hover:text-indigo-600 dark:hover:text-indigo-400">About us</Link>
+        <Link href="/supporters" className="hover:text-indigo-600 dark:hover:text-indigo-400">Supporters</Link>
         <Link href="/terms" className="hover:text-indigo-600 dark:hover:text-indigo-400">Terms</Link>
         <Link href="/privacy" className="hover:text-indigo-600 dark:hover:text-indigo-400">Privacy</Link>
         <a href={`mailto:${COMPANY.email}`} className="hover:text-indigo-600 dark:hover:text-indigo-400">{COMPANY.email}</a>

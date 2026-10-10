@@ -10,7 +10,7 @@ export async function GET(_req, { params }) {
   if (!(await requireAdmin())) return forbid();
   if (!/^[0-9a-f-]{36}$/i.test(params.id)) return bad('Bad id.');
   const u = await queryOne(`SELECT id, email, username, avatar_url, is_admin, email_verified, created_at, updated_at, suspended_until,
-      plan, plan_expires_at, plan_source, reward_tier, is_supporter, supporter_name, admin_note,
+      plan, plan_expires_at, plan_source, reward_tier, is_supporter, supporter_name, admin_note, show_on_wall, sponsor_url, sponsor_logo,
       (password_hash IS NOT NULL) AS has_password
     FROM users WHERE id = $1`, [params.id]);
   if (!u) return bad('User not found.', 404);
