@@ -1,7 +1,7 @@
 import { query, queryOne } from '../../../../lib/db';
 import { requireAdmin, logAction, ok, bad, forbid, readJson, pageArgs } from '../../../../lib/admin';
 import { getPlans, applyGrantToUser, clearPlanCache } from '../../../../lib/plans';
-import { cleanName, safeUrl } from '../../../../lib/supporters';
+import { ensureWallEntry, deletePhoto, LEVELS } from '../../../../lib/wall';
 
 export const dynamic = 'force-dynamic';
 
@@ -63,18 +63,16 @@ export async function POST(req) {
       return ok({ message: 'Note saved.' });
     }
     if (action === 'set_supporter') {
-      const on = !!body.supporter;
-      const name = cleanName(body.supporterName) || null;
-      const sponsorUrl = body.sponsorUrl ? safeUrl(body.sponsorUrl) : '';
-      if (body.sponsorUrl && !sponsorUrl) return bad('Sponsor link must start with http:// or https://');
-      const logo = String(body.sponsorLogo || '').trim();
-      const sponsorLogo = logo.startsWith('/') ? logo.slice(0, 300) : (logo ? safeUrl(logo) : '');
-      if (logo && !sponsorLogo) return bad('Logo must be a site path like /uploads/logo.png or a full https:// link.');
-      await query(`UPDATE users SET is_supporter = $2, supporter_name = $3, show_on_wall = $4, sponsor_url = $5, sponsor_logo = $6,
-          supporter_since = CASE WHEN $2 THEN COALESCE(supporter_since, now()) ELSE NULL END WHERE id = $1`,
-        [userId, on, name, body.showOnWall !== false, sponsorUrl || null, sponsorLogo || null]);
-      await logAction(admin.id, 'set_supporter', target.email, { supporter: on, show: body.showOnWall !== false });
-      return ok({ message: on ? 'Supporter listing saved.' : 'Supporter status removed.' });
+      if (body.supporter) {
+        await ensureWallEntry({ userId, name: body.supporterName || '', level: LEVELS.includes(body.level) ? body.level : null, source: 'manual' });
+        await logAction(admin.id, 'set_supporter', target.email, { supporter: true });
+        return ok({ message: 'Added to the supporters wall.' });
+      }
+      const w = await queryOne('DELETE FROM wall_entries WHERE user_id = $1 RETURNING photo, pending_photo', [userId]);
+      if (w) { await deletePhoto(w.photo); await deletePhoto(w.pending_photo); }
+      await query('UPDATE users SET is_supporter = false WHERE id = $1', [userId]);
+      await logAction(admin.id, 'set_supporter', target.email, { supporter: false });
+      return ok({ message: 'Removed from the supporters wall.' });
     }
     if (action === 'set_plan') {
       const plans = await getPlans(true);

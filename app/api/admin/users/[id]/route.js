@@ -17,6 +17,7 @@ export async function GET(_req, { params }) {
   const plans = await getPlans();
   const uid = u.id, uidText = String(u.id);
 
+  const wall = await safe(() => queryOne('SELECT id, name, level, visible, photo, pending_photo FROM wall_entries WHERE user_id = $1', [u.id]), null);
   const [usage, recent, blocks, providers, counts, log, grants, ips] = await Promise.all([
     safe(() => query(`SELECT tool_slug, sum(amount)::int AS uses,
         COALESCE(sum(amount) FILTER (WHERE created_at > now() - interval '24 hours'), 0)::int AS uses24h
@@ -37,5 +38,5 @@ export async function GET(_req, { params }) {
   ]);
 
   const activePlan = effectivePlanKey(u, plans);
-  return ok({ user: { ...u, active_plan: activePlan, suspended: !!(u.suspended_until && new Date(u.suspended_until) > new Date()) }, usage, recent, blocks, providers: providers.map((p) => p.provider), counts, log, grants, ips });
+  return ok({ wall, user: { ...u, active_plan: activePlan, suspended: !!(u.suspended_until && new Date(u.suspended_until) > new Date()) }, usage, recent, blocks, providers: providers.map((p) => p.provider), counts, log, grants, ips });
 }

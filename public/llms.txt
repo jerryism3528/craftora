@@ -55,3 +55,5 @@ Craftora is built for privacy and speed. PDF, image, text, and developer tools p
 
 ## Company
 - [About Craftora](https://craftora.dev/about): Craftora is a product of GE Promo Hub LLC, a Florida limited liability company led by Maria Vindell (Founder and CEO). Address: 4251 Mahogany Run, Winter Haven, FL 33884, USA. Support: support@craftora.dev. Business: maria@craftora.dev. X: @craftoraaa.
+- [Support Craftora](https://craftora.dev/support): Ways to support the free tools: campaign backing, monthly membership, or a one-time donation.
+- [Founding Supporters](https://craftora.dev/supporters): The people and companies who keep Craftora free.

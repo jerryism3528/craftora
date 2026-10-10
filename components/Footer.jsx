@@ -29,9 +29,9 @@ export default function Footer() {
             <p className="muted text-sm leading-6 mt-3 max-w-xs">
               Free online tools that just work. Privacy-first PDF, image, file, SEO, and developer tools with no signup and no watermarks.
             </p>
-            <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold mt-5" style={{ background: 'var(--brand)', color: '#ffffff' }}>
+            <a href="/support" className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold mt-5" style={{ background: 'var(--brand)', color: '#ffffff' }}>
               <Lucide.Heart className="w-4 h-4" />
-              Donate
+              Support
             </a>
           </div>
           <div>

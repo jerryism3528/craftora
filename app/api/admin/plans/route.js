@@ -1,6 +1,7 @@
 import { query, queryOne } from '../../../../lib/db';
 import { requireAdmin, logAction, ok, bad, forbid, readJson } from '../../../../lib/admin';
 import { getPlans, clearPlanCache, applyGrantToUser } from '../../../../lib/plans';
+import { ensureWallEntry } from '../../../../lib/wall';
 
 export const dynamic = 'force-dynamic';
 
@@ -192,6 +193,7 @@ export async function POST(req) {
           await query(`INSERT INTO plan_grants (email, plan, months, tier, supporter, supporter_name, source) VALUES ($1,$2,$3,$4,$5,$6,$7)
             ON CONFLICT (lower(email)) WHERE claimed_at IS NULL DO UPDATE SET plan = $2, months = $3, tier = $4, supporter = $5, supporter_name = $6, source = $7, created_at = now()`,
             [r.email, t.plan, t.months, t.key, t.supporter, r.name || null, source]);
+          if (t.supporter && r.name) await ensureWallEntry({ email: r.email, name: r.name, tierKey: t.key, source });
           pending++;
         }
       }

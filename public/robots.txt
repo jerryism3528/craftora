@@ -7,3 +7,4 @@ Sitemap: https://craftora.dev/verify-document/sitemap.xml
 Sitemap: https://craftora.dev/about/sitemap.xml
 Sitemap: https://craftora.dev/terms/sitemap.xml
 Sitemap: https://craftora.dev/supporters/sitemap.xml
+Sitemap: https://craftora.dev/support/sitemap.xml

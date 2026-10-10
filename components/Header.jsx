@@ -81,9 +81,9 @@ export default function Header() {
             <input value={query} onChange={(e) => setQuery(e.target.value)} className="w-full rounded-lg border surface pl-9 pr-3 py-1.5 text-sm bg-transparent" style={{ color: 'var(--ink)' }} placeholder="Search tools" aria-label="Search tools" />
           </div>
         </form>
-        <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-bold shrink-0" style={{ background: 'var(--brand)', color: '#ffffff' }}>
+        <a href="/support" className="hidden md:inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-bold shrink-0" style={{ background: 'var(--brand)', color: '#ffffff' }}>
           <Lucide.Heart className="w-4 h-4" />
-          Donate
+          Support
         </a>
 
         {/* Auth control (desktop) */}
@@ -172,9 +172,9 @@ export default function Header() {
             </div>
             <Link href="/insights" onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm font-semibold" style={{ color: 'var(--ink)' }}>Insights</Link>
             <Link href="/about" onClick={() => setMobileOpen(false)} className="block py-1.5 text-sm font-semibold" style={{ color: 'var(--ink)' }}>About</Link>
-            <a href={DONATE_URL} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold" style={{ background: 'var(--brand)', color: '#ffffff' }}>
+            <a href="/support" className="inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-bold" style={{ background: 'var(--brand)', color: '#ffffff' }}>
               <Lucide.Heart className="w-4 h-4" />
-              Donate
+              Support
             </a>
           </div>
         </div>

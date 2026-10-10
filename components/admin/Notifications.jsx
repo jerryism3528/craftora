@@ -27,6 +27,7 @@ export default function NotificationsSection({ onChange, go }) {
                 {n.body && <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5 break-words">{n.body}</p>}
                 <div className="flex gap-3 mt-1">
                   {['image', 'images', 'link', 'short_link', 'report'].includes(n.target_type) && <button className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline" onClick={() => { if (!n.is_read) act('read', n.id); go('moderation'); }}>Review</button>}
+                  {n.target_type === 'wall' && <button className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline" onClick={() => { if (!n.is_read) act('read', n.id); go('wall'); }}>Review photo</button>}
                   {!n.is_read && <button className="text-xs font-semibold text-slate-500 hover:underline" onClick={() => act('read', n.id)}>Mark read</button>}
                 </div>
               </div>

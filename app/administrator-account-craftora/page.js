@@ -1,12 +1,13 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { LayoutDashboard, Users, Crown, SlidersHorizontal, Flag, Gauge, FileSignature, Bell, Activity, Newspaper, ShieldCheck, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, Users, Heart, Crown, SlidersHorizontal, Flag, Gauge, FileSignature, Bell, Activity, Newspaper, ShieldCheck, ExternalLink } from 'lucide-react';
 import Header from '../../components/Header';
 import { tools as CATALOG } from '../../lib/tools';
 import Overview from '../../components/admin/Overview';
 import UsersSection from '../../components/admin/Users';
 import PlansSection from '../../components/admin/Plans';
+import WallSection from '../../components/admin/Wall';
 import ToolsSection from '../../components/admin/Tools';
 import ModerationSection from '../../components/admin/Moderation';
 import SeoSection from '../../components/admin/SeoAudits';
@@ -19,6 +20,7 @@ const NAV = [
   ['overview', 'Overview', LayoutDashboard, 'Site health at a glance'],
   ['users', 'Users', Users, 'Search, manage plans, suspend, and block tools'],
   ['plans', 'Plans and backers', Crown, 'Plan limits, Kickstarter tiers, and backer import'],
+  ['wall', 'Supporters wall', Heart, 'Names and photos on the public Founding Supporters page'],
   ['tools', 'Tools and limits', SlidersHorizontal, 'Daily limits and on/off switches for server tools'],
   ['moderation', 'Moderation', Flag, 'Abuse reports, hosted images, and short links'],
   ['seo', 'SEO audits', Gauge, 'Full-site audits across all users'],
@@ -50,7 +52,9 @@ export default function AdminPage() {
         fetch('/api/admin/moderation?type=reports', { cache: 'no-store' }).then((r) => r.json()),
       ]);
       const open = (m.counts || []).find((c) => c.status === 'open')?.n || 0;
-      setBadges({ notifications: n.unread || 0, moderation: open });
+      let wall = 0;
+      try { const w = await fetch('/api/admin/wall?show=photos', { cache: 'no-store' }).then((r) => r.json()); wall = w.pendingPhotos || 0; } catch {}
+      setBadges({ notifications: n.unread || 0, moderation: open, wall });
     } catch {}
   }, []);
   useEffect(() => { loadBadges(); const t = setInterval(loadBadges, 60000); return () => clearInterval(t); }, [loadBadges]);
@@ -87,6 +91,7 @@ export default function AdminPage() {
           {tab === 'overview' && <Overview go={go} />}
           {tab === 'users' && <UsersSection tools={TOOLS} />}
           {tab === 'plans' && <PlansSection />}
+          {tab === 'wall' && <WallSection />}
           {tab === 'tools' && <ToolsSection />}
           {tab === 'moderation' && <ModerationSection />}
           {tab === 'seo' && <SeoSection />}

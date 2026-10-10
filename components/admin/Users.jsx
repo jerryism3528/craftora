@@ -76,7 +76,6 @@ function UserDrawer({ id, onClose, onChanged, tools }) {
   const [blockTool, setBlockTool] = useState('');
   const [suspendDays, setSuspendDays] = useState(7);
   const [supporterName, setSupporterName] = useState('');
-  const [wall, setWall] = useState({ show: true, sponsorUrl: '', sponsorLogo: '' });
 
   useEffect(() => {
     if (!data?.user) return;
@@ -84,7 +83,6 @@ function UserDrawer({ id, onClose, onChanged, tools }) {
     setPlanForm({ plan: u.active_plan, mode: u.plan_expires_at ? 'date' : 'lifetime', months: 12, date: u.plan_expires_at ? String(u.plan_expires_at).slice(0, 10) : '' });
     setNote(u.admin_note || '');
     setSupporterName(u.supporter_name || '');
-    setWall({ show: u.show_on_wall !== false, sponsorUrl: u.sponsor_url || '', sponsorLogo: u.sponsor_logo || '' });
   }, [data]);
   useEffect(() => { if (id) fetch('/api/admin/plans').then((r) => r.json()).then((d) => setTiers(d.tiers || [])).catch(() => {}); }, [id]);
 
@@ -149,38 +147,23 @@ function UserDrawer({ id, onClose, onChanged, tools }) {
                 </div>
               </Field>
             </div>
-            <div className="border-t border-slate-200 dark:border-slate-700 mt-4 pt-4 space-y-3">
-              <div className="flex items-center justify-between gap-2"><span className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5"><Heart className="w-4 h-4 text-pink-500" />Supporters wall</span><a href="/supporters" target="_blank" rel="noreferrer" className="text-xs font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">View wall</a></div>
-              <div className="grid sm:grid-cols-[1fr_auto] gap-2 items-end">
-                <Field label="Name on the wall"><input value={supporterName} onChange={(e) => setSupporterName(e.target.value)} placeholder={u.username || ''} className={inputCls} /></Field>
-                <label className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200 pb-2"><input type="checkbox" checked={wall.show} onChange={(e) => setWall({ ...wall, show: e.target.checked })} /> Show publicly</label>
-              </div>
-              <details open={!!(wall.sponsorUrl || wall.sponsorLogo || u.reward_tier === 'sponsor')}>
-                <summary className="text-xs font-semibold text-slate-600 dark:text-slate-300 cursor-pointer">Sponsor link and logo</summary>
-                <div className="grid sm:grid-cols-2 gap-2 mt-2">
-                  <Field label="Website link" hint="Shown as a sponsored link"><input value={wall.sponsorUrl} onChange={(e) => setWall({ ...wall, sponsorUrl: e.target.value })} placeholder="https://example.com" className={inputCls} /></Field>
-                  <Field label="Logo" hint="PNG, JPG, or WebP under 3 MB. A wide logo works best.">
-                    <div className="flex gap-2 items-center">
-                      {wall.sponsorLogo && <img src={wall.sponsorLogo} alt="" className="h-9 w-16 object-contain rounded bg-white border border-slate-200 dark:border-slate-600" />}
-                      <input value={wall.sponsorLogo} onChange={(e) => setWall({ ...wall, sponsorLogo: e.target.value })} placeholder="/uploads/logo.png" className={inputCls} />
-                      <label className="shrink-0 cursor-pointer inline-flex items-center rounded-lg border border-slate-300 dark:border-slate-600 px-3 py-2 text-sm font-semibold text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700">
-                        {busy === 'logo' ? 'Uploading...' : 'Upload'}
-                        <input type="file" accept="image/png,image/jpeg,image/webp" className="hidden" onChange={async (e) => {
-                          const f = e.target.files?.[0]; if (!f) return;
-                          setBusy('logo');
-                          const fd = new FormData(); fd.append('file', f);
-                          try { const r = await fetch('/api/admin/upload', { method: 'POST', body: fd }).then((x) => x.json()); if (r.ok) setWall((w) => ({ ...w, sponsorLogo: r.url })); else show(r); } catch { show({ ok: false, error: 'Upload failed.' }); }
-                          setBusy('');
-                        }} />
-                      </label>
-                    </div>
-                  </Field>
+            <div className="border-t border-slate-200 dark:border-slate-700 mt-4 pt-4">
+              <div className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5"><Heart className="w-4 h-4 text-pink-500" />Supporters wall</div>
+              {data.wall ? (
+                <div className="flex flex-wrap items-center gap-2 mt-2 text-sm">
+                  <span className="font-semibold text-slate-800 dark:text-slate-100">{data.wall.name}</span>
+                  <Badge tone="indigo">{data.wall.level}</Badge>
+                  {!data.wall.visible && <Badge>hidden</Badge>}
+                  {data.wall.pending_photo && <Badge tone="amber">photo waiting</Badge>}
+                  <span className="text-xs text-slate-500 dark:text-slate-400">Edit name, photo, and level in Supporters wall.</span>
+                  <Btn size="xs" tone="ghost" onClick={() => act('set_supporter', { supporter: false }, 'Remove this person from the supporters wall?')}>Remove</Btn>
                 </div>
-              </details>
-              <div className="flex gap-2">
-                <Btn busy={busy === 'set_supporter'} onClick={() => act('set_supporter', { supporter: true, supporterName, showOnWall: wall.show, sponsorUrl: wall.sponsorUrl, sponsorLogo: wall.sponsorLogo })}><Heart className="w-4 h-4" />{u.is_supporter ? 'Save listing' : 'Make supporter'}</Btn>
-                {u.is_supporter && <Btn tone="ghost" onClick={() => act('set_supporter', { supporter: false }, 'Remove supporter status? They disappear from the wall.')}>Remove supporter</Btn>}
-              </div>
+              ) : (
+                <div className="grid sm:grid-cols-[1fr_auto] gap-2 items-end mt-2">
+                  <Field label="Name on the wall"><input value={supporterName} onChange={(e) => setSupporterName(e.target.value)} placeholder={u.username || ''} className={inputCls} /></Field>
+                  <Btn busy={busy === 'set_supporter'} onClick={() => act('set_supporter', { supporter: true, supporterName })}><Heart className="w-4 h-4" />Add to wall</Btn>
+                </div>
+              )}
             </div>
           </Card>
 
