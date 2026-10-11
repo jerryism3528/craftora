@@ -74,6 +74,7 @@ export default function Header() {
           </div>
           <Link href="/insights" className="px-3 py-1.5 text-sm font-semibold rounded-lg hover:soft-surface" style={{ color: 'var(--ink)' }}>Insights</Link>
           <Link href="/about" className="px-3 py-1.5 text-sm font-semibold rounded-lg hover:soft-surface" style={{ color: 'var(--ink)' }}>About</Link>
+          <Link href="/pricing" className="px-3 py-1.5 text-sm font-semibold rounded-lg hover:soft-surface" style={{ color: 'var(--ink)' }}>Pricing</Link>
         </nav>
         <form onSubmit={submitSearch} className="ml-auto hidden md:block w-full max-w-xs">
           <div className="relative">

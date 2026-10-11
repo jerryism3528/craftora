@@ -6,7 +6,7 @@ import { SITE, COMPANY, FUNDING } from '../../lib/company';
 
 export const metadata = {
   title: 'Support Craftora: Help Keep Free Online Tools Free',
-  description: 'Support Craftora, the free and privacy-first online tools suite. Back our campaign for lifetime perks, become a monthly supporter, or make a one-time donation.',
+  description: 'Support Craftora, the free and privacy-first online tools suite. Get Pro or Business, back our campaign for lifetime perks, or make a one-time donation.',
   alternates: { canonical: '/support' },
   openGraph: {
     images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Craftora: free online tools that just work' }],
@@ -18,6 +18,12 @@ export const metadata = {
 };
 
 const OPTIONS = [
+  {
+    key: 'subscribe', icon: Crown, tone: 'from-violet-600 to-fuchsia-600', title: 'Get Pro or Business', href: '/pricing',
+    blurb: 'Monthly, yearly, or pay once. Higher limits from $5 a month.',
+    perks: ['Up to 10x higher daily limits', 'Apple Pay, Google Pay, PayPal, or card', 'Cancel any time'],
+    cta: 'See plans',
+  },
   {
     key: 'kickstarter', icon: Rocket, tone: 'from-indigo-600 to-violet-600', title: 'Back the campaign', platform: 'Kickstarter',
     blurb: 'Pledge once and get lifetime perks while the campaign runs.',
@@ -66,9 +72,9 @@ export default function SupportPage() {
           <p className="text-lg text-slate-600 dark:text-slate-300 mt-4">Craftora gives everyone free, private online tools with no watermarks and no signup walls. Pick the way of helping that suits you.</p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-5 mt-10">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-5 mt-10">
           {OPTIONS.map((o) => {
-            const url = FUNDING[o.key];
+            const url = o.href || FUNDING[o.key];
             const Icon = o.icon;
             return (
               <section key={o.key} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 overflow-hidden flex flex-col" aria-labelledby={`opt-${o.key}`}>
@@ -82,7 +88,9 @@ export default function SupportPage() {
                     {o.perks.map((p) => <li key={p} className="flex gap-2"><Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />{p}</li>)}
                   </ul>
                   {o.note && <p className="text-xs text-slate-500 dark:text-slate-400 mt-3">{o.note}</p>}
-                  {url ? (
+                  {o.href ? (
+                    <Link href={o.href} className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-3">{o.cta} <ArrowRight className="w-4 h-4" /></Link>
+                  ) : url ? (
                     <a href={url} target="_blank" rel="noopener" className="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold px-4 py-3 hover:opacity-90">{o.cta} <ArrowRight className="w-4 h-4" /></a>
                   ) : (
                     <span className="mt-5 inline-flex items-center justify-center rounded-xl border border-dashed border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400 font-semibold px-4 py-3">{o.soon}</span>
@@ -91,12 +99,6 @@ export default function SupportPage() {
               </section>
             );
           })}
-        </div>
-
-        <div className="mt-6 rounded-2xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/40 p-5 flex flex-col sm:flex-row sm:items-center gap-3">
-          <Crown className="w-6 h-6 text-indigo-600 dark:text-indigo-400 shrink-0" />
-          <p className="text-sm text-slate-700 dark:text-slate-200 flex-1"><strong className="text-slate-900 dark:text-white">Prefer a regular subscription?</strong> Get Pro or Business with monthly or yearly billing, right here on craftora.dev. Cancel any time.</p>
-          <Link href="/pricing" className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 text-sm">See plans <ArrowRight className="w-4 h-4" /></Link>
         </div>
 
         <section className="mt-12" aria-labelledby="free-ways">

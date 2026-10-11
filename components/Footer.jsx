@@ -56,6 +56,7 @@ export default function Footer() {
               <Link href="/all-tools" className="block muted hover:underline">All Tools</Link>
               <Link href="/insights" className="block muted hover:underline">Insights</Link>
               <Link href="/about" className="block muted hover:underline">About</Link>
+              <Link href="/pricing" className="block muted hover:underline">Pricing</Link>
               <Link href="/privacy" className="block muted hover:underline">Privacy Policy</Link>
               <Link href="/contact" className="block muted hover:underline">Contact</Link>
             </div>

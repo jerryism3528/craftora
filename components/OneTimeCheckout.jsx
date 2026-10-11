@@ -76,7 +76,7 @@ function CryptoOption({ product, disabled }) {
   );
 }
 
-function Modal({ product, clientId, mode, onClose }) {
+function Modal({ product, clientId, mode, crypto, onClose }) {
   const ppRef = useRef(null);
   const gpRef = useRef(null);
   const apRef = useRef(null);
@@ -232,7 +232,7 @@ function Modal({ product, clientId, mode, onClose }) {
               <div ref={apRef} />
               <div ref={gpRef} className="h-[45px] empty:hidden" />
               <div ref={ppRef} className="rounded-lg bg-white p-1" />
-              {state.step !== 'loading' && <CryptoOption product={product} disabled={state.step === 'working'} />}
+              {crypto && state.step !== 'loading' && <CryptoOption product={product} disabled={state.step === 'working'} />}
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">Processed securely by PayPal. Apple Pay shows in Safari and Google Pay in Chrome when your device supports them. We email you 7 days before your plan ends.</p>
           </>
@@ -242,14 +242,14 @@ function Modal({ product, clientId, mode, onClose }) {
   );
 }
 
-export default function OneTimeCheckout({ products, clientId, mode, loggedIn }) {
+export default function OneTimeCheckout({ products, clientId, mode, loggedIn, crypto = false }) {
   const [open, setOpen] = useState(null);
   if (!products?.length || !clientId) return null;
   return (
     <section className="mt-12" aria-labelledby="pay-once">
       <div className="text-center">
         <h2 id="pay-once" className="text-2xl font-extrabold text-slate-900 dark:text-white">Prefer to pay once?</h2>
-        <p className="text-slate-600 dark:text-slate-300 mt-2">No subscription. Pay with Apple Pay, Google Pay, PayPal, any card, or crypto.</p>
+        <p className="text-slate-600 dark:text-slate-300 mt-2">No subscription. Pay with Apple Pay, Google Pay, PayPal, any card{crypto ? ', or crypto' : ''}.</p>
       </div>
       <div className="grid sm:grid-cols-2 gap-4 mt-6 max-w-3xl mx-auto">
         {products.map((p) => (
@@ -268,7 +268,7 @@ export default function OneTimeCheckout({ products, clientId, mode, loggedIn }) 
           </div>
         ))}
       </div>
-      {open && <Modal product={open} clientId={clientId} mode={mode} onClose={() => setOpen(null)} />}
+      {open && <Modal product={open} clientId={clientId} mode={mode} crypto={crypto} onClose={() => setOpen(null)} />}
     </section>
   );
 }

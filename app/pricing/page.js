@@ -77,7 +77,7 @@ export default async function PricingPage() {
     ['Is Craftora still free?', `Yes. All ${browserTools}+ browser tools are free with no daily limits, and server tools like the SEO audit and Email Verifier have a free daily allowance. Paid plans only raise the limits.`],
     ['How do I pay?', 'Checkout is handled by PayPal. You can pay with your PayPal balance or a debit or credit card. We never see or store your card details.'],
     ['Can I cancel any time?', 'Yes. Cancel from your Billing page or from your PayPal account. Your plan stays active until the end of the period you already paid for, and you will not be charged again.'],
-    ['Can I pay once instead of subscribing?', 'Yes. Choose Pro or Business for 1 year with a single payment. It does not renew, and we email you a week before it ends. You can pay with Apple Pay, Google Pay, PayPal, a card, or crypto.'],
+    ['Can I pay once instead of subscribing?', `Yes. Choose Pro or Business for 1 year with a single payment. It does not renew, and we email you a week before it ends. You can pay with Apple Pay, Google Pay, PayPal, or a card${process.env.PAYPAL_CRYPTO === 'on' ? ', or crypto' : ''}.`],
     ['Do you offer refunds?', `If you are not happy, email ${COMPANY.supportEmail} within 7 days of your first payment or of a one-time purchase and we will refund it. Renewals are not refunded, but you can cancel before the next renewal date.`],
     ['Can I switch between Pro and Business?', 'Yes. Upgrading to Business starts right away and your Pro subscription is cancelled automatically. To move from Business to Pro, cancel Business, then subscribe to Pro when your paid period ends.'],
     ['Who is the seller?', `Craftora is operated by ${COMPANY.legalName}, a ${COMPANY.state} company. Payments show as Craftora or ${COMPANY.legalName} on your statement.`],
@@ -129,6 +129,7 @@ export default async function PricingPage() {
           clientId={process.env.PAYPAL_CLIENT_ID || ''}
           mode={paypalMode()}
           loggedIn={!!user}
+          crypto={process.env.PAYPAL_CRYPTO === 'on'}
         />
 
         <section className="mt-14" aria-labelledby="compare">

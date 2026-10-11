@@ -20,6 +20,7 @@ export async function POST(req) {
   const recent = await queryOne("SELECT count(*)::int AS n FROM billing_orders WHERE user_id = $1 AND status = 'CREATED' AND created_at > now() - interval '1 hour'", [user.id]);
   if ((recent?.n || 0) >= 15) return j({ ok: false, error: 'Too many checkout attempts. Please wait a few minutes.' }, 429);
   if (b.method === 'crypto') {
+    if (process.env.PAYPAL_CRYPTO !== 'on') return j({ ok: false, error: 'Crypto payments are not available yet.' }, 404);
     const clean = (v) => String(v || '').replace(/[^\p{L}\p{M}' .-]/gu, '').trim().slice(0, 60);
     const first = clean(b.firstName), last = clean(b.lastName);
     if (!first || !last) return j({ ok: false, error: 'Please enter your first and last name.' }, 400);
