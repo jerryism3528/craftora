@@ -16,6 +16,9 @@ export function middleware(req) {
   const host = (req.headers.get('host') || '').split(':')[0].toLowerCase();
   const { pathname, search } = req.nextUrl;
 
+  // www.craftora.dev goes to craftora.dev (301)
+  if (host === 'www.' + D) return NextResponse.redirect(MAIN + pathname + search, 301);
+
   // ---------- download.craftora.dev ----------
   if (host === DL_HOST) {
     if (pathname.startsWith('/api/') || pathname.startsWith('/uploads/')) return NextResponse.next();
