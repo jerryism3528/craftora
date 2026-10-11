@@ -1,0 +1,232 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { X, Loader2, CheckCircle2, Zap, AlertTriangle } from 'lucide-react';
+
+const scripts = {};
+function loadScript(src, attrs = {}) {
+  if (scripts[src]) return scripts[src];
+  scripts[src] = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.async = true;
+    Object.entries(attrs).forEach(([k, v]) => s.setAttribute(k, v));
+    s.onload = () => resolve();
+    s.onerror = () => { delete scripts[src]; reject(new Error('Could not load ' + src)); };
+    document.head.appendChild(s);
+  });
+  return scripts[src];
+}
+
+const dollars = (c) => (Number(c || 0) / 100).toFixed(2);
+
+async function apiCreate(product) {
+  const r = await fetch('/api/billing/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ product }) });
+  const d = await r.json().catch(() => ({}));
+  if (r.status === 401) { window.location.href = '/login?callbackUrl=%2Fpricing'; throw new Error('Please sign in first.'); }
+  if (!d.ok) throw new Error(d.error || 'Could not start checkout.');
+  return d.id;
+}
+async function apiCapture(orderId) {
+  const r = await fetch('/api/billing/order/capture', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderId }) });
+  const d = await r.json().catch(() => ({}));
+  if (!d.ok) { const e = new Error(d.error || 'Payment failed.'); e.pending = d.pending; throw e; }
+  return d;
+}
+
+function Modal({ product, clientId, mode, onClose }) {
+  const ppRef = useRef(null);
+  const gpRef = useRef(null);
+  const apRef = useRef(null);
+  const [state, setState] = useState({ step: 'loading' });
+  const price = dollars(product.price_cents);
+
+  useEffect(() => {
+    let dead = false;
+    const done = (d) => !dead && setState({ step: 'done', plan: d.plan });
+    const fail = (e) => !dead && setState((s) => ({ ...s, step: e?.pending ? 'pending' : 'ready', error: e?.message || 'Payment failed. You were not charged.' }));
+
+    (async () => {
+      try {
+        const q = new URLSearchParams({ 'client-id': clientId, components: 'buttons,applepay,googlepay', currency: 'USD', intent: 'capture' });
+        if (mode !== 'live') q.set('buyer-country', 'US');
+        await loadScript(`https://www.paypal.com/sdk/js?${q}`, { 'data-namespace': 'paypal' });
+        if (dead) return;
+        const paypal = window.paypal;
+
+        // 1. PayPal, Venmo, Pay Later, and debit or credit card.
+        await paypal.Buttons({
+          style: { layout: 'vertical', shape: 'rect', label: 'pay', height: 45 },
+          createOrder: () => apiCreate(product.key),
+          onApprove: async (data) => { setState({ step: 'working' }); try { done(await apiCapture(data.orderID)); } catch (e) { fail(e); } },
+          onError: (e) => fail(e),
+        }).render(ppRef.current);
+        if (!dead) setState({ step: 'ready' });
+
+        // 2. Google Pay (Chrome, Android).
+        try {
+          await loadScript('https://pay.google.com/gp/p/js/pay.js');
+          const gp = paypal.Googlepay();
+          const cfg = await gp.config();
+          const after = async (orderId) => {
+            setState({ step: 'working' });
+            try { await gp.initiatePayerAction({ orderId }); done(await apiCapture(orderId)); } catch (e) { fail(e); }
+          };
+          const client = new window.google.payments.api.PaymentsClient({
+            environment: mode === 'live' ? 'PRODUCTION' : 'TEST',
+            paymentDataCallbacks: {
+              onPaymentAuthorized: async (paymentData) => {
+                try {
+                  const orderId = await apiCreate(product.key);
+                  const { status } = await gp.confirmOrder({ orderId, paymentMethodData: paymentData.paymentMethodData });
+                  if (status === 'PAYER_ACTION_REQUIRED') { setTimeout(() => after(orderId), 0); return { transactionState: 'SUCCESS' }; }
+                  if (status !== 'APPROVED') throw new Error('Google Pay could not approve this payment.');
+                  const d = await apiCapture(orderId);
+                  setTimeout(() => done(d), 0);
+                  return { transactionState: 'SUCCESS' };
+                } catch (e) {
+                  return { transactionState: 'ERROR', error: { intent: 'PAYMENT_AUTHORIZATION', message: e.message || 'Payment failed', reason: 'PAYMENT_DATA_INVALID' } };
+                }
+              },
+            },
+          });
+          const ready = await client.isReadyToPay({ apiVersion: 2, apiVersionMinor: 0, allowedPaymentMethods: cfg.allowedPaymentMethods });
+          if (ready.result && gpRef.current && !dead) {
+            const btn = client.createButton({
+              buttonColor: 'black', buttonType: 'pay', buttonSizeMode: 'fill',
+              onClick: () => client.loadPaymentData({
+                apiVersion: 2, apiVersionMinor: 0,
+                allowedPaymentMethods: cfg.allowedPaymentMethods,
+                merchantInfo: cfg.merchantInfo,
+                transactionInfo: { countryCode: 'US', currencyCode: 'USD', totalPriceStatus: 'FINAL', totalPrice: price, totalPriceLabel: 'Total' },
+                callbackIntents: ['PAYMENT_AUTHORIZATION'],
+              }).catch(() => {}),
+            });
+            gpRef.current.appendChild(btn);
+          }
+        } catch (e) { console.warn('Google Pay not available:', e?.message); }
+
+        // 3. Apple Pay (Safari on iPhone, iPad, Mac).
+        try {
+          if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+            await loadScript('https://applepay.cdn-apple.com/jsapi/1.latest/apple-pay-sdk.js', { crossorigin: 'anonymous' });
+            const ap = paypal.Applepay();
+            const cfg = await ap.config();
+            if (cfg.isEligible && apRef.current && !dead) {
+              const btn = document.createElement('apple-pay-button');
+              btn.setAttribute('buttonstyle', 'black');
+              btn.setAttribute('type', 'buy');
+              btn.setAttribute('locale', 'en-US');
+              btn.style.cssText = 'display:block;width:100%;--apple-pay-button-width:100%;--apple-pay-button-height:45px;--apple-pay-button-border-radius:6px;';
+              btn.addEventListener('click', () => {
+                const session = new window.ApplePaySession(4, {
+                  countryCode: cfg.countryCode,
+                  merchantCapabilities: cfg.merchantCapabilities,
+                  supportedNetworks: cfg.supportedNetworks,
+                  currencyCode: 'USD',
+                  requiredBillingContactFields: ['postalAddress'],
+                  total: { label: 'Craftora', type: 'final', amount: price },
+                });
+                session.onvalidatemerchant = (ev) => {
+                  ap.validateMerchant({ validationUrl: ev.validationURL, displayName: 'Craftora' })
+                    .then((r) => session.completeMerchantValidation(r.merchantSession))
+                    .catch(() => { session.abort(); fail(new Error('Apple Pay is not available right now. Please use another option.')); });
+                };
+                session.onpaymentauthorized = async (ev) => {
+                  try {
+                    const orderId = await apiCreate(product.key);
+                    await ap.confirmOrder({ orderId, token: ev.payment.token, billingContact: ev.payment.billingContact });
+                    const d = await apiCapture(orderId);
+                    session.completePayment(window.ApplePaySession.STATUS_SUCCESS);
+                    done(d);
+                  } catch (e) {
+                    session.completePayment(window.ApplePaySession.STATUS_FAILURE);
+                    fail(e);
+                  }
+                };
+                session.begin();
+              });
+              apRef.current.appendChild(btn);
+            }
+          }
+        } catch (e) { console.warn('Apple Pay not available:', e?.message); }
+      } catch (e) {
+        if (!dead) setState({ step: 'error', error: 'Could not load the payment options. Please refresh and try again.' });
+      }
+    })();
+    return () => { dead = true; };
+  }, [product, clientId, mode, price]);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 p-0 sm:p-4" role="dialog" aria-modal="true" aria-labelledby="otc-title" onClick={(e) => e.target === e.currentTarget && state.step !== 'working' && onClose()}>
+      <div className="w-full sm:max-w-md max-h-[92vh] overflow-y-auto rounded-t-2xl sm:rounded-2xl bg-white dark:bg-slate-800 p-5 sm:p-6 shadow-xl">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 id="otc-title" className="text-xl font-extrabold text-slate-900 dark:text-white">{product.name}</h2>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">${price} one-time payment. Does not renew.</p>
+          </div>
+          {state.step !== 'working' && <button type="button" onClick={onClose} aria-label="Close" className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700"><X className="w-5 h-5" /></button>}
+        </div>
+
+        {state.step === 'done' ? (
+          <div className="text-center py-6">
+            <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
+            <p className="text-lg font-extrabold text-slate-900 dark:text-white mt-3">Welcome to {state.plan?.name}!</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-1">{state.plan?.lifetime ? 'Your plan never expires.' : `Your plan is active until ${new Date(state.plan?.expiresAt).toLocaleDateString(undefined, { dateStyle: 'medium' })}.`}</p>
+            <div className="flex justify-center gap-3 mt-5">
+              <Link href="/all-tools" className="rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 text-sm">Start using tools</Link>
+              <Link href="/account/billing" className="rounded-xl border border-slate-300 dark:border-slate-600 font-bold px-4 py-2.5 text-sm text-slate-800 dark:text-slate-100">View billing</Link>
+            </div>
+          </div>
+        ) : state.step === 'pending' ? (
+          <p className="mt-5 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-200 p-4 text-sm">{state.error}</p>
+        ) : (
+          <>
+            {state.error && <p role="alert" className="mt-4 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-700 dark:text-red-300 px-3 py-2 text-sm flex gap-2"><AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />{state.error}</p>}
+            {(state.step === 'loading' || state.step === 'working') && (
+              <p className="mt-5 flex items-center justify-center gap-2 text-sm text-slate-500 dark:text-slate-400"><Loader2 className="w-4 h-4 animate-spin" />{state.step === 'working' ? 'Completing your payment...' : 'Loading payment options...'}</p>
+            )}
+            <div className={`mt-5 space-y-3 ${state.step === 'working' ? 'pointer-events-none opacity-50' : ''}`}>
+              <div ref={apRef} />
+              <div ref={gpRef} className="h-[45px] empty:hidden" />
+              <div ref={ppRef} className="rounded-lg bg-white p-1" />
+            </div>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">Processed securely by PayPal. Apple Pay shows in Safari and Google Pay in Chrome when your device supports them. We email you 7 days before your plan ends.</p>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export default function OneTimeCheckout({ products, clientId, mode, loggedIn }) {
+  const [open, setOpen] = useState(null);
+  if (!products?.length || !clientId) return null;
+  return (
+    <section className="mt-12" aria-labelledby="pay-once">
+      <div className="text-center">
+        <h2 id="pay-once" className="text-2xl font-extrabold text-slate-900 dark:text-white">Prefer to pay once?</h2>
+        <p className="text-slate-600 dark:text-slate-300 mt-2">No subscription. Pay with Apple Pay, Google Pay, PayPal, or any card.</p>
+      </div>
+      <div className="grid sm:grid-cols-2 gap-4 mt-6 max-w-3xl mx-auto">
+        {products.map((p) => (
+          <div key={p.key} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 flex items-center justify-between gap-4">
+            <div>
+              <div className="font-extrabold text-slate-900 dark:text-white">{p.name}</div>
+              <div className="text-sm text-slate-600 dark:text-slate-300"><span className="font-bold text-slate-900 dark:text-white">${dollars(p.price_cents).replace(/\.00$/, '')}</span> once{p.months ? `, ${p.months} months of access` : ', never expires'}</div>
+            </div>
+            <button
+              type="button"
+              onClick={() => (loggedIn ? setOpen(p) : (window.location.href = '/login?callbackUrl=%2Fpricing'))}
+              className="shrink-0 inline-flex items-center gap-1.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold px-4 py-2.5 text-sm hover:opacity-90"
+            >
+              <Zap className="w-4 h-4" />{loggedIn ? 'Buy' : 'Sign in to buy'}
+            </button>
+          </div>
+        ))}
+      </div>
+      {open && <Modal product={open} clientId={clientId} mode={mode} onClose={() => setOpen(null)} />}
+    </section>
+  );
+}

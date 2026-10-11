@@ -17,6 +17,10 @@ export async function GET(req) {
   else where += " AND s.status <> 'APPROVAL_PENDING'";
   if (q) { params.push(`%${q}%`); where += ` AND (u.email ILIKE $${params.length} OR s.payer_email ILIKE $${params.length} OR s.paypal_subscription_id ILIKE $${params.length})`; }
 
+  const [products, orders] = await Promise.all([
+    query('SELECT * FROM billing_products ORDER BY sort').catch(() => []),
+    query("SELECT o.*, u.email AS user_email FROM billing_orders o LEFT JOIN users u ON u.id = o.user_id WHERE o.mode = $1 AND o.status <> 'CREATED' ORDER BY o.created_at DESC LIMIT 100", [mode]).catch(() => []),
+  ]);
   const [plans, subs, payments, events, stats] = await Promise.all([
     query('SELECT * FROM billing_plans WHERE mode = $1 ORDER BY plan_key, billing_interval', [mode]),
     query(`SELECT s.*, u.email AS user_email, u.username FROM subscriptions s LEFT JOIN users u ON u.id = s.user_id WHERE ${where} ORDER BY s.created_at DESC LIMIT 200`, params),
@@ -34,20 +38,28 @@ export async function GET(req) {
     mode,
     configured: paypalConfigured(),
     webhookSet: !!process.env.PAYPAL_WEBHOOK_ID,
-    plans, subscriptions: subs, payments, events, stats,
+    plans, subscriptions: subs, payments, events, stats, products, orders,
   });
 }
 
 export async function POST(req) {
   const admin = await requireAdmin();
   if (!admin) return forbid();
-  if (!paypalConfigured()) return bad('PayPal keys are missing in .env.');
   const b = await readJson(req);
+  if (b.action !== 'save_product' && !paypalConfigured()) return bad('PayPal keys are missing in .env.');
   try {
     if (b.action === 'setup_plans') {
       const r = await setupPaypalPlans();
       await logAction(admin.id, 'billing_setup_plans', r.mode, r);
       return ok({ message: r.created.length ? `Created in PayPal (${r.mode}): ${r.created.join('; ')}` : `All plans already exist in PayPal (${r.mode}).`, result: r });
+    }
+    if (b.action === 'save_product') {
+      const cents = Math.round(Number(b.price_cents));
+      if (!Number.isFinite(cents) || cents < 100 || cents > 1000000) return bad('Price must be between $1 and $10,000.');
+      const r = await queryOne('UPDATE billing_products SET price_cents = $2, active = $3 WHERE key = $1 RETURNING key', [String(b.key || ''), cents, !!b.active]);
+      if (!r) return bad('Product not found.');
+      await logAction(admin.id, 'billing_save_product', r.key, { cents, active: !!b.active });
+      return ok({ message: 'Saved. The pricing page shows the change right away.' });
     }
     if (b.action === 'sync') {
       const { row } = await syncSubscription(String(b.id || ''));

@@ -61,6 +61,22 @@ export default function AccountBilling() {
         {active && active.plan_key === 'pro' && <Link href="/pricing" className="inline-block mt-4 rounded-xl border border-indigo-300 dark:border-indigo-700 text-indigo-700 dark:text-indigo-300 font-bold px-4 py-2.5 text-sm">Upgrade to Business</Link>}
       </section>
 
+      {data.orders?.length > 0 && (
+        <section className={box}>
+          <h2 className="font-bold text-slate-900 dark:text-white">One-time purchases</h2>
+          <ul className="divide-y divide-slate-100 dark:divide-slate-700 mt-2">
+            {data.orders.map((o) => (
+              <li key={o.paypal_order_id} className="py-3 flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <div className="font-semibold text-slate-900 dark:text-white">{o.product_name || o.product_key} <span className="text-slate-500 dark:text-slate-400 font-normal">{usd(o.amount_cents)}</span></div>
+                  <div className="text-xs text-slate-500 dark:text-slate-400">Paid {fmt(o.fulfilled_at)}{o.payment_source ? ` with ${o.payment_source.replace('_', ' ')}` : ''}. Does not renew.</div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
       <section className={box}>
         <h2 className="font-bold text-slate-900 dark:text-white">Subscriptions</h2>
         {data.subscriptions.length === 0 ? (

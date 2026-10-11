@@ -1,6 +1,22 @@
 'use client';
 
 import { useState } from 'react';
+
+function ProductRow({ p, onSave, busy }) {
+  const [price, setPrice] = useState((p.price_cents / 100).toFixed(2));
+  const [active, setActive] = useState(p.active);
+  const dirty = price !== (p.price_cents / 100).toFixed(2) || active !== p.active;
+  return (
+    <tr>
+      <td className="py-2 px-3 font-semibold">{p.name}</td>
+      <td className="py-2 px-3 capitalize">{p.plan_key}</td>
+      <td className="py-2 px-3">{p.months ? `${p.months} months` : 'Lifetime'}</td>
+      <td className="py-2 px-3"><span className="inline-flex items-center gap-1">$<input value={price} onChange={(e) => setPrice(e.target.value)} inputMode="decimal" className="w-24 rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-2 py-1 text-sm" aria-label={`Price for ${p.name}`} /></span></td>
+      <td className="py-2 px-3"><label className="inline-flex items-center gap-2 text-sm"><input type="checkbox" checked={active} onChange={(e) => setActive(e.target.checked)} />{active ? 'On sale' : 'Hidden'}</label></td>
+      <td className="py-2 px-3 text-right"><Btn size="xs" tone="primary" disabled={!dirty} busy={busy} onClick={() => onSave({ key: p.key, price_cents: Math.round(Number(price) * 100), active })}>Save</Btn></td>
+    </tr>
+  );
+}
 import { CreditCard, Repeat, TrendingUp, Undo2, UserMinus, AlertTriangle, RefreshCw, Rocket, ExternalLink } from 'lucide-react';
 import { useApi, post, useToast, Card, Stat, Badge, Btn, Table, Tabs, Toolbar, Loading, ErrorBox, Empty, fmtDate, ago, inputCls, useDebounced } from './ui';
 
@@ -63,8 +79,15 @@ export default function BillingSection() {
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-3">Sandbox and live each have their own plans. After switching PAYPAL_MODE to live, come back here and create the live plans once.</p>
       </Card>
 
+      <Card title="One-time products (Apple Pay, Google Pay, PayPal, card)">
+        <Table head={['Product', 'Plan', 'Access', 'Price', 'Status', '']}>
+          {(data.products || []).map((p) => <ProductRow key={p.key + p.price_cents + p.active} p={p} busy={busy === 'save_product' + p.key} onSave={(x) => act('save_product', { ...x, id: x.key })} />)}
+        </Table>
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-3">Products marked On sale appear under "Prefer to pay once?" on the pricing page. Keep the Lifetime ones hidden until the Kickstarter campaign ends.</p>
+      </Card>
+
       <Card>
-        <Tabs value={tab} onChange={setTab} items={[['subs', 'Subscriptions', data.subscriptions.length], ['payments', 'Payments', data.payments.length], ['events', 'Webhook events', data.events.length]]} />
+        <Tabs value={tab} onChange={setTab} items={[['subs', 'Subscriptions', data.subscriptions.length], ['orders', 'One-time orders', (data.orders || []).length], ['payments', 'Payments', data.payments.length], ['events', 'Webhook events', data.events.length]]} />
         <div className="mt-4">
           {tab === 'subs' && (
             <>
@@ -92,6 +115,20 @@ export default function BillingSection() {
                 ))}
               </Table>
             </>
+          )}
+          {tab === 'orders' && (
+            <Table head={['When', 'Customer', 'Product', 'Amount', 'Paid with', 'Status']} empty={!(data.orders || []).length && <Empty>No one-time orders yet.</Empty>}>
+              {(data.orders || []).map((o) => (
+                <tr key={o.id}>
+                  <td className="py-2 px-3">{fmtDate(o.created_at, true)}</td>
+                  <td className="py-2 px-3">{o.user_email || o.payer_email || '-'}</td>
+                  <td className="py-2 px-3">{o.product_key}</td>
+                  <td className="py-2 px-3 font-semibold">{usd(o.amount_cents)}</td>
+                  <td className="py-2 px-3 capitalize">{(o.payment_source || '-').replace('_', ' ')}</td>
+                  <td className="py-2 px-3"><Badge tone={o.status === 'COMPLETED' ? 'emerald' : 'red'}>{o.status.toLowerCase()}</Badge></td>
+                </tr>
+              ))}
+            </Table>
           )}
           {tab === 'payments' && (
             <Table head={['When', 'Customer', 'Type', 'Amount', 'PayPal transaction']} empty={!data.payments.length && <Empty>No payments yet.</Empty>}>

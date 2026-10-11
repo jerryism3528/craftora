@@ -1,6 +1,8 @@
 import { query, queryOne } from '../../../../lib/db';
 import { verifyWebhook, paypalMode } from '../../../../lib/paypal';
 import { syncSubscription, notify, money } from '../../../../lib/billing';
+import { paypal } from '../../../../lib/paypal';
+import { fulfilOrder } from '../../../../lib/billing-once';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,6 +45,12 @@ async function handle(ev) {
   }
 
   if (t === 'PAYMENT.CAPTURE.COMPLETED') {
+    // One-time purchase: make sure the plan is added even if the buyer closed the page before we captured.
+    const orderId = r.supplementary_data?.related_ids?.order_id;
+    if (orderId && (await queryOne('SELECT 1 FROM billing_orders WHERE paypal_order_id = $1', [orderId]))) {
+      await fulfilOrder(await paypal('GET', `/v2/checkout/orders/${orderId}`));
+      return;
+    }
     await recordPayment({ txnId: r.id, subId: null, kind: 'payment', amount: r.amount?.value, currency: r.amount?.currency_code, status: r.status });
     return;
   }

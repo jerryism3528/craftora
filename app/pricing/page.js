@@ -2,6 +2,9 @@ import Link from 'next/link';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import PricingPlans from '../../components/PricingPlans';
+import OneTimeCheckout from '../../components/OneTimeCheckout';
+import { activeProducts } from '../../lib/billing-once';
+import { paypalMode } from '../../lib/paypal';
 import { query } from '../../lib/db';
 import { getPlans, planForUser } from '../../lib/plans';
 import { priceTable } from '../../lib/billing';
@@ -49,7 +52,7 @@ function limitFor(plan, slug, base) {
 }
 
 export default async function PricingPage() {
-  const [plans, prices, user] = await Promise.all([getPlans(), priceTable(), currentUser().catch(() => null)]);
+  const [plans, prices, user, products] = await Promise.all([getPlans(), priceTable(), currentUser().catch(() => null), activeProducts()]);
   let limitsRows = [];
   try { limitsRows = await query('SELECT tool_slug, daily_limit, batch_limit FROM tool_limits WHERE enabled'); } catch { limitsRows = []; }
   const rows = limitsRows
@@ -74,7 +77,8 @@ export default async function PricingPage() {
     ['Is Craftora still free?', `Yes. All ${browserTools}+ browser tools are free with no daily limits, and server tools like the SEO audit and Email Verifier have a free daily allowance. Paid plans only raise the limits.`],
     ['How do I pay?', 'Checkout is handled by PayPal. You can pay with your PayPal balance or a debit or credit card. We never see or store your card details.'],
     ['Can I cancel any time?', 'Yes. Cancel from your Billing page or from your PayPal account. Your plan stays active until the end of the period you already paid for, and you will not be charged again.'],
-    ['Do you offer refunds?', `If you are not happy, email ${COMPANY.supportEmail} within 7 days of your first payment and we will refund it. Renewals are not refunded, but you can cancel before the next renewal date.`],
+    ['Can I pay once instead of subscribing?', 'Yes. Choose Pro or Business for 1 year with a single payment. It does not renew, and we email you a week before it ends. You can pay with Apple Pay, Google Pay, PayPal, or a card.'],
+    ['Do you offer refunds?', `If you are not happy, email ${COMPANY.supportEmail} within 7 days of your first payment or of a one-time purchase and we will refund it. Renewals are not refunded, but you can cancel before the next renewal date.`],
     ['Can I switch between Pro and Business?', 'Yes. Upgrading to Business starts right away and your Pro subscription is cancelled automatically. To move from Business to Pro, cancel Business, then subscribe to Pro when your paid period ends.'],
     ['Who is the seller?', `Craftora is operated by ${COMPANY.legalName}, a ${COMPANY.state} company. Payments show as Craftora or ${COMPANY.legalName} on your statement.`],
   ];
@@ -88,6 +92,7 @@ export default async function PricingPage() {
         pro.year && { '@type': 'Offer', name: 'Pro (yearly)', price: dollars(pro.year.cents), priceCurrency: 'USD' },
         biz.month && { '@type': 'Offer', name: 'Business (monthly)', price: dollars(biz.month.cents), priceCurrency: 'USD' },
         biz.year && { '@type': 'Offer', name: 'Business (yearly)', price: dollars(biz.year.cents), priceCurrency: 'USD' },
+        ...products.map((p) => ({ '@type': 'Offer', name: `${p.name} (one-time)`, price: dollars(p.price_cents), priceCurrency: 'USD' })),
       ].filter(Boolean),
     },
     { '@context': 'https://schema.org', '@type': 'FAQPage', mainEntity: FAQS.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
@@ -117,6 +122,13 @@ export default async function PricingPage() {
           browserTools={browserTools}
           loggedIn={!!user}
           current={current ? { key: current.key, lifetime: current.lifetime, expiresAt: current.expiresAt } : null}
+        />
+
+        <OneTimeCheckout
+          products={products.map((p) => ({ key: p.key, name: p.name, months: p.months, price_cents: p.price_cents }))}
+          clientId={process.env.PAYPAL_CLIENT_ID || ''}
+          mode={paypalMode()}
+          loggedIn={!!user}
         />
 
         <section className="mt-14" aria-labelledby="compare">

@@ -41,8 +41,9 @@ const SECTIONS = [
   ['billing', 'Paid plans, billing, and refunds', [
     'Paid plans are sold by GE Promo Hub LLC and billed through PayPal. Prices are shown on our Pricing page in US dollars. Taxes may apply where required by law.',
     'Subscriptions renew automatically every month or year, depending on the billing period you choose, until you cancel. PayPal charges your selected payment method at the start of each period.',
+    'One-time plans (for example Pro for 1 year) are paid once and do not renew. They end after the period shown at checkout, and we email you before they end. Lifetime plans do not expire while Craftora operates.',
     'You can cancel any time from your Billing page or from your PayPal account. After you cancel, your plan stays active until the end of the period you already paid for, and you will not be charged again.',
-    'If you are not satisfied, contact us within 7 days of your first payment for a full refund of that payment. Renewal payments and partial periods are not refunded, except where the law requires it.',
+    'If you are not satisfied, contact us within 7 days of your first subscription payment or of a one-time purchase for a full refund of that payment. Renewal payments and partial periods are not refunded, except where the law requires it.',
     'When you upgrade from Pro to Business, the Business plan starts right away and your Pro subscription is cancelled. Unused time on the old plan is not refunded.',
     'If a payment fails, PayPal may retry it. If it still fails, your subscription may be suspended and your account returns to the free plan. If a payment is refunded or reversed, we may remove the related plan.',
     'We may change prices for future billing periods. We will tell you before a price change affects your subscription, and you can cancel before it takes effect.',
