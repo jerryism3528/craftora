@@ -1,6 +1,8 @@
 import crypto from 'crypto';
 import { requireAdmin, logAction, ok, forbid } from '../../../../lib/admin';
 import { runSignerCleanup } from '../../../../lib/signer-cleanup';
+import { syncDueSubscriptions } from '../../../../lib/billing';
+import { paypalConfigured } from '../../../../lib/paypal';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,6 +19,9 @@ export async function POST(req) {
   const admin = fromCron ? null : await requireAdmin();
   if (!fromCron && !admin) return forbid();
   const signer = await runSignerCleanup({ dryRun: false });
+  // Billing safety net: re-check subscriptions that renew soon, in case a webhook was missed.
+  let billing = null;
+  if (paypalConfigured()) { try { billing = await syncDueSubscriptions(); } catch (e) { billing = { error: e.message }; } }
   await logAction(admin?.id || null, 'storage_cleanup', fromCron ? 'cron' : 'manual', { drafts: signer.drafts, closed: signer.closed, orphans: signer.orphanFiles, bytes: signer.bytes });
-  return ok({ signer: { drafts: signer.drafts, closed: signer.closed, orphanFiles: signer.orphanFiles, bytes: signer.bytes } });
+  return ok({ signer: { drafts: signer.drafts, closed: signer.closed, orphanFiles: signer.orphanFiles, bytes: signer.bytes }, billing });
 }

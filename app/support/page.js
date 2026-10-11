@@ -95,7 +95,8 @@ export default function SupportPage() {
 
         <div className="mt-6 rounded-2xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/40 p-5 flex flex-col sm:flex-row sm:items-center gap-3">
           <Crown className="w-6 h-6 text-indigo-600 dark:text-indigo-400 shrink-0" />
-          <p className="text-sm text-slate-700 dark:text-slate-200 flex-1"><strong className="text-slate-900 dark:text-white">Prefer a regular subscription?</strong> Pro and Business plans with monthly or yearly billing are coming soon, right here on craftora.dev.</p>
+          <p className="text-sm text-slate-700 dark:text-slate-200 flex-1"><strong className="text-slate-900 dark:text-white">Prefer a regular subscription?</strong> Get Pro or Business with monthly or yearly billing, right here on craftora.dev. Cancel any time.</p>
+          <Link href="/pricing" className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-4 py-2.5 text-sm">See plans <ArrowRight className="w-4 h-4" /></Link>
         </div>
 
         <section className="mt-12" aria-labelledby="free-ways">

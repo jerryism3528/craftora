@@ -1,13 +1,14 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { LayoutDashboard, Users, Heart, Crown, SlidersHorizontal, Flag, Gauge, FileSignature, Bell, Activity, Newspaper, ShieldCheck, ExternalLink } from 'lucide-react';
+import { LayoutDashboard, Users, Heart, Crown, SlidersHorizontal, Flag, Gauge, FileSignature, Bell, Activity, Newspaper, ShieldCheck, ExternalLink, CreditCard } from 'lucide-react';
 import Header from '../../components/Header';
 import { tools as CATALOG } from '../../lib/tools';
 import Overview from '../../components/admin/Overview';
 import UsersSection from '../../components/admin/Users';
 import PlansSection from '../../components/admin/Plans';
 import WallSection from '../../components/admin/Wall';
+import BillingSection from '../../components/admin/Billing';
 import ToolsSection from '../../components/admin/Tools';
 import ModerationSection from '../../components/admin/Moderation';
 import SeoSection from '../../components/admin/SeoAudits';
@@ -20,6 +21,7 @@ const NAV = [
   ['overview', 'Overview', LayoutDashboard, 'Site health at a glance'],
   ['users', 'Users', Users, 'Search, manage plans, suspend, and block tools'],
   ['plans', 'Plans and backers', Crown, 'Plan limits, Kickstarter tiers, and backer import'],
+  ['billing', 'Billing', CreditCard, 'PayPal subscriptions, payments, and webhooks'],
   ['wall', 'Supporters wall', Heart, 'Names and photos on the public Founding Supporters page'],
   ['tools', 'Tools and limits', SlidersHorizontal, 'Daily limits and on/off switches for server tools'],
   ['moderation', 'Moderation', Flag, 'Abuse reports, hosted images, and short links'],
@@ -91,6 +93,7 @@ export default function AdminPage() {
           {tab === 'overview' && <Overview go={go} />}
           {tab === 'users' && <UsersSection tools={TOOLS} />}
           {tab === 'plans' && <PlansSection />}
+          {tab === 'billing' && <BillingSection />}
           {tab === 'wall' && <WallSection />}
           {tab === 'tools' && <ToolsSection />}
           {tab === 'moderation' && <ModerationSection />}

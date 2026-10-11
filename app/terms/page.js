@@ -4,7 +4,7 @@ import Footer from '../../components/Footer';
 import CompanyNotice from '../../components/CompanyNotice';
 import { SITE, COMPANY, addressLine } from '../../lib/company';
 
-const UPDATED = 'October 9, 2026';
+const UPDATED = 'October 11, 2026';
 
 export const metadata = {
   title: 'Terms of Service | Craftora',
@@ -27,7 +27,7 @@ const SECTIONS = [
   ['service', 'The service', [
     'Craftora provides free online tools for PDFs, images, file conversion, text, developer tasks, SEO, email verification, and electronic signatures.',
     'Most tools run entirely in your browser, so your files are not uploaded to our servers. Some tools need our servers to work. Files uploaded to those tools are deleted automatically, usually within one hour.',
-    'We may add, change, limit, or remove tools and features at any time. Tools are provided free of charge, and we may introduce optional paid plans in the future. If we do, paid features will be clearly labeled and nothing will be charged without your clear agreement.',
+    'We may add, change, limit, or remove tools and features at any time. Most tools are free. Optional paid plans (Pro and Business) raise daily limits on some server tools. Paid features are clearly labeled and nothing is charged without your clear agreement.',
   ]],
   ['accounts', 'Accounts', [
     'Some tools, such as the full-site SEO audit, the Email Verifier, and the Document Signer, require a free account. You agree to give accurate information, keep your password secure, and tell us right away if you think your account has been accessed without permission.',
@@ -37,6 +37,15 @@ const SECTIONS = [
   ['limits', 'Fair use and daily limits', [
     'To keep Craftora fast and free for everyone, server-based tools have daily or hourly usage limits. Limits are shown in each tool and may change over time.',
     'You may not try to get around limits, for example by using many accounts, scripts, bots, or rotating IP addresses or VPNs. We track usage per account, device, and IP address to prevent abuse.',
+  ]],
+  ['billing', 'Paid plans, billing, and refunds', [
+    'Paid plans are sold by GE Promo Hub LLC and billed through PayPal. Prices are shown on our Pricing page in US dollars. Taxes may apply where required by law.',
+    'Subscriptions renew automatically every month or year, depending on the billing period you choose, until you cancel. PayPal charges your selected payment method at the start of each period.',
+    'You can cancel any time from your Billing page or from your PayPal account. After you cancel, your plan stays active until the end of the period you already paid for, and you will not be charged again.',
+    'If you are not satisfied, contact us within 7 days of your first payment for a full refund of that payment. Renewal payments and partial periods are not refunded, except where the law requires it.',
+    'When you upgrade from Pro to Business, the Business plan starts right away and your Pro subscription is cancelled. Unused time on the old plan is not refunded.',
+    'If a payment fails, PayPal may retry it. If it still fails, your subscription may be suspended and your account returns to the free plan. If a payment is refunded or reversed, we may remove the related plan.',
+    'We may change prices for future billing periods. We will tell you before a price change affects your subscription, and you can cancel before it takes effect.',
   ]],
   ['acceptable-use', 'Acceptable use', [
     'You agree not to use Craftora to: break any law; upload or process content you do not have the right to use; infringe anyone\'s copyright, trademark, or privacy; send spam or unsolicited messages; harass, threaten, or defraud anyone; or upload malware or harmful code.',
@@ -86,7 +95,7 @@ const SECTIONS = [
 
 export default function TermsPage() {
   const schema = [
-    { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Terms of Service', url: `${SITE}/terms`, dateModified: '2026-10-09', publisher: { '@id': `${SITE}/#organization` } },
+    { '@context': 'https://schema.org', '@type': 'WebPage', name: 'Terms of Service', url: `${SITE}/terms`, dateModified: '2026-10-11', publisher: { '@id': `${SITE}/#organization` } },
     { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'Home', item: SITE }, { '@type': 'ListItem', position: 2, name: 'Terms of Service', item: `${SITE}/terms` }] },
   ];
   return (
