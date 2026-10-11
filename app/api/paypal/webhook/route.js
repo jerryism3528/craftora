@@ -55,6 +55,13 @@ async function handle(ev) {
     return;
   }
 
+  if (t === 'PAYMENT.CAPTURE.DENIED' || t === 'CHECKOUT.ORDER.DECLINED') {
+    const orderId = t === 'CHECKOUT.ORDER.DECLINED' ? r.id : r.supplementary_data?.related_ids?.order_id;
+    const row = orderId ? await queryOne("UPDATE billing_orders SET status = 'FAILED', updated_at = now() WHERE paypal_order_id = $1 AND status <> 'COMPLETED' RETURNING product_key, payment_source", [orderId]) : null;
+    if (row) await notify('billing', 'Payment failed', `Order ${orderId} (${row.product_key}, ${row.payment_source || 'paypal'}) was declined. No plan was added.`);
+    return;
+  }
+
   if (t === 'PAYMENT.CAPTURE.REFUNDED' || t === 'PAYMENT.CAPTURE.REVERSED') {
     await recordPayment({ txnId: r.id, subId: null, kind: 'refund', amount: r.amount?.value, currency: r.amount?.currency_code, status: r.status || t });
     await notify('billing', 'Payment refunded', `${money(toCents(r.amount?.value))} refunded (${r.id}).`);

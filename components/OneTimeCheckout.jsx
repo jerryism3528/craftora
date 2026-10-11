@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { X, Loader2, CheckCircle2, Zap, AlertTriangle } from 'lucide-react';
+import { X, Loader2, CheckCircle2, Zap, AlertTriangle, Bitcoin, ArrowRight } from 'lucide-react';
 
 const scripts = {};
 function loadScript(src, attrs = {}) {
@@ -33,6 +33,47 @@ async function apiCapture(orderId) {
   const d = await r.json().catch(() => ({}));
   if (!d.ok) { const e = new Error(d.error || 'Payment failed.'); e.pending = d.pending; throw e; }
   return d;
+}
+
+function CryptoOption({ product, disabled }) {
+  const [open, setOpen] = useState(false);
+  const [first, setFirst] = useState('');
+  const [last, setLast] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  async function go(e) {
+    e.preventDefault();
+    setBusy(true); setErr('');
+    try {
+      const r = await fetch('/api/billing/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ product: product.key, method: 'crypto', firstName: first, lastName: last }) });
+      const d = await r.json().catch(() => ({}));
+      if (!d.ok || !d.redirect) throw new Error(d.error || 'Crypto payment is not available right now.');
+      try { sessionStorage.setItem('craftora-crypto-order', d.id); } catch {}
+      window.location.href = d.redirect;
+    } catch (x) { setErr(x.message); setBusy(false); }
+  }
+  const inp = 'w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-900 px-3 py-2 text-sm text-slate-900 dark:text-white';
+  if (!open) {
+    return (
+      <button type="button" disabled={disabled} onClick={() => setOpen(true)} className="w-full h-[45px] inline-flex items-center justify-center gap-2 rounded-md border border-slate-300 dark:border-slate-600 font-bold text-slate-800 dark:text-slate-100 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50">
+        <Bitcoin className="w-5 h-5 text-amber-500" />Pay with crypto
+      </button>
+    );
+  }
+  return (
+    <form onSubmit={go} className="rounded-xl border border-slate-200 dark:border-slate-700 p-3 space-y-2">
+      <p className="text-sm font-semibold text-slate-900 dark:text-white flex items-center gap-2"><Bitcoin className="w-4 h-4 text-amber-500" />Pay with crypto through PayPal</p>
+      <div className="grid grid-cols-2 gap-2">
+        <input className={inp} placeholder="First name" aria-label="First name" value={first} onChange={(e) => setFirst(e.target.value)} required maxLength={60} autoComplete="given-name" />
+        <input className={inp} placeholder="Last name" aria-label="Last name" value={last} onChange={(e) => setLast(e.target.value)} required maxLength={60} autoComplete="family-name" />
+      </div>
+      {err && <p className="text-xs text-red-600 dark:text-red-400">{err}</p>}
+      <button type="submit" disabled={busy} className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold px-4 py-2.5 text-sm disabled:opacity-60">
+        {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}Continue to crypto payment
+      </button>
+      <p className="text-[11px] text-slate-500 dark:text-slate-400">You will pay on PayPal with a supported coin or wallet. The price stays ${dollars(product.price_cents)} in USD.</p>
+    </form>
+  );
 }
 
 function Modal({ product, clientId, mode, onClose }) {
@@ -191,6 +232,7 @@ function Modal({ product, clientId, mode, onClose }) {
               <div ref={apRef} />
               <div ref={gpRef} className="h-[45px] empty:hidden" />
               <div ref={ppRef} className="rounded-lg bg-white p-1" />
+              {state.step !== 'loading' && <CryptoOption product={product} disabled={state.step === 'working'} />}
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">Processed securely by PayPal. Apple Pay shows in Safari and Google Pay in Chrome when your device supports them. We email you 7 days before your plan ends.</p>
           </>
@@ -207,7 +249,7 @@ export default function OneTimeCheckout({ products, clientId, mode, loggedIn }) 
     <section className="mt-12" aria-labelledby="pay-once">
       <div className="text-center">
         <h2 id="pay-once" className="text-2xl font-extrabold text-slate-900 dark:text-white">Prefer to pay once?</h2>
-        <p className="text-slate-600 dark:text-slate-300 mt-2">No subscription. Pay with Apple Pay, Google Pay, PayPal, or any card.</p>
+        <p className="text-slate-600 dark:text-slate-300 mt-2">No subscription. Pay with Apple Pay, Google Pay, PayPal, any card, or crypto.</p>
       </div>
       <div className="grid sm:grid-cols-2 gap-4 mt-6 max-w-3xl mx-auto">
         {products.map((p) => (

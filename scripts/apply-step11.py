@@ -24,7 +24,7 @@ for mode, url in FILES.items():
     except Exception as e:
         print(f'Apple Pay {mode} domain file: FAILED ({e}). Download it manually from {url} to {dest}')
 
-line = '- [Pay once](https://craftora.dev/pricing): Pro or Business for 1 year with a single payment by Apple Pay, Google Pay, PayPal, or card.'
+line = '- [Pay once](https://craftora.dev/pricing): Pro or Business for 1 year with a single payment by Apple Pay, Google Pay, PayPal, card, or crypto.'
 p = 'public/llms.txt'
 if os.path.exists(p):
     s = open(p, encoding='utf-8').read()
