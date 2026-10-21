@@ -11,7 +11,7 @@ export const metadata = {
 };
 
 export default function PrivacyPage() {
-  const updated = 'September 2026';
+  const updated = 'October 2026';
   return (
     <div>
       <Header />
@@ -45,6 +45,23 @@ export default function PrivacyPage() {
             <h2 className="font-bold text-xl mb-2">Accounts</h2>
             <p className="muted">
               You can use the everyday tools with no account. A free account is only needed for tools that save results for you, such as the Email Verifier and SEO Audit. If you create an account, we store your email address and your saved results so you can return to them. You can request deletion at any time.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-bold text-xl mb-2">Payments</h2>
+            <p className="muted">
+              Paid plans are optional. Card, PayPal, Venmo, Apple Pay, and Google Pay payments are processed by PayPal. USDC payments are processed by Coinbase. Craftora never sees or stores your full card number or wallet keys.
+            </p>
+            <p className="muted mt-3">
+              From PayPal we receive the order or subscription ID, the amount, the payment method type (for example card or PayPal), the payer email, and the payment status. From Coinbase we receive the checkout ID, the amount, the payment status, and the blockchain transaction ID, which is public on the Base network. We keep these records to activate your plan, handle refunds, send renewal reminders, and meet tax and accounting rules. PayPal and Coinbase handle your payment details under their own privacy policies.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="font-bold text-xl mb-2">Abuse prevention</h2>
+            <p className="muted">
+              To keep free daily limits fair and protect the service, we record your IP address and basic device information when you use server-based tools or sign in. We use this only to enforce limits and stop abuse, never for advertising.
             </p>
           </section>
 
