@@ -1,6 +1,6 @@
 import { currentUser } from '../../../../../lib/current-user';
 import { queryOne } from '../../../../../lib/db';
-import { refreshOnceOrder } from '../../../../../lib/billing-once';
+import { refreshOnceOrder, orderIdFromRef } from '../../../../../lib/billing-once';
 import { planForUser } from '../../../../../lib/plans';
 
 export const dynamic = 'force-dynamic';
@@ -12,7 +12,8 @@ export async function POST(req) {
   if (!user) return j({ ok: false, error: 'Please sign in first.', needLogin: true }, 401);
   let b = {};
   try { b = await req.json(); } catch {}
-  const orderId = String(b.orderId || '');
+  let orderId = String(b.orderId || '');
+  if (!orderId && /^[0-9a-f-]{36}$/i.test(String(b.ref || ''))) orderId = (await orderIdFromRef(String(b.ref))) || '';
   const row = await queryOne('SELECT user_id, status FROM billing_orders WHERE paypal_order_id = $1', [orderId]);
   if (!row || row.user_id !== user.id) return j({ ok: false, error: 'Order not found for this account.' }, 404);
   try {
@@ -22,6 +23,6 @@ export async function POST(req) {
     return j({ ok: true, plan: { key: plan.key, name: plan.name, expiresAt: plan.expiresAt, lifetime: plan.lifetime } });
   } catch (e) {
     console.error('order status failed:', e.message);
-    return j({ ok: false, pending: true, error: 'We could not check your payment yet. Your plan will be added automatically once PayPal confirms it.' });
+    return j({ ok: false, pending: true, error: 'We could not check your payment yet. Your plan will be added automatically once the payment is confirmed.' });
   }
 }

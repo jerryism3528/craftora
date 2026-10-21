@@ -60,3 +60,4 @@ Craftora is built for privacy and speed. PDF, image, text, and developer tools p
 - [Pricing](https://craftora.dev/pricing): Free, Pro ($5/month) and Business ($15/month) plans. Every browser tool stays free.
 - [Pay once](https://craftora.dev/pricing): Pro or Business for 1 year with a single payment by Apple Pay, Google Pay, PayPal, or card.
 - [Pay once](https://craftora.dev/pricing): Pro or Business for 1 year with a single payment by Apple Pay, Google Pay, PayPal, card, or crypto.
+- Payments: monthly and yearly plans by card or PayPal; one-time yearly plans also by Apple Pay, Google Pay, and USDC through Coinbase.

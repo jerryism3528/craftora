@@ -9,13 +9,16 @@ export default function CryptoReturn() {
 
   useEffect(() => {
     let stop = false;
-    let id = new URLSearchParams(window.location.search).get('token') || '';
-    try { if (!id) id = sessionStorage.getItem('craftora-crypto-order') || ''; } catch {}
-    if (!/^[A-Z0-9]{10,30}$/.test(id)) { setS({ step: 'error', error: 'We could not find your order in this link.' }); return; }
+    const qs = new URLSearchParams(window.location.search);
+    const ref = qs.get('cb') || '';
+    let id = qs.get('token') || '';
+    try { if (!id && !ref) id = sessionStorage.getItem('craftora-crypto-order') || ''; } catch {}
+    const body = /^[0-9a-f-]{36}$/i.test(ref) ? { ref } : /^[A-Za-z0-9]{10,40}$/.test(id) ? { orderId: id } : null;
+    if (!body) { setS({ step: 'error', error: 'We could not find your order in this link.' }); return; }
     (async () => {
-      for (let i = 0; i < 8 && !stop; i++) {
+      for (let i = 0; i < 15 && !stop; i++) {
         try {
-          const r = await fetch('/api/billing/order/status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ orderId: id }) });
+          const r = await fetch('/api/billing/order/status', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
           const d = await r.json().catch(() => ({}));
           if (r.status === 401) { setS({ step: 'login' }); return; }
           if (d.ok) { try { sessionStorage.removeItem('craftora-crypto-order'); } catch {} setS({ step: 'done', plan: d.plan }); return; }

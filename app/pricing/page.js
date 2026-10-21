@@ -5,6 +5,7 @@ import PricingPlans from '../../components/PricingPlans';
 import OneTimeCheckout from '../../components/OneTimeCheckout';
 import { activeProducts } from '../../lib/billing-once';
 import { paypalMode } from '../../lib/paypal';
+import { coinbaseConfigured } from '../../lib/coinbase';
 import { query } from '../../lib/db';
 import { getPlans, planForUser } from '../../lib/plans';
 import { priceTable } from '../../lib/billing';
@@ -68,6 +69,7 @@ export default async function PricingPage() {
       business: limitFor(plans.business, r.tool_slug, r.daily_limit),
     }));
   const current = user ? await planForUser(user.id) : null;
+  const usdc = coinbaseConfigured();
   const browserTools = tools.filter((t) => t.status === 'live' && t.engine === 'browser').length;
 
   const pro = prices.pro || {};
@@ -75,9 +77,9 @@ export default async function PricingPage() {
   const dollars = (c) => (Number(c || 0) / 100).toFixed(2);
   const FAQS = [
     ['Is Craftora still free?', `Yes. All ${browserTools}+ browser tools are free with no daily limits, and server tools like the SEO audit and Email Verifier have a free daily allowance. Paid plans only raise the limits.`],
-    ['How do I pay?', 'Checkout is handled by PayPal. You can pay with your PayPal balance or a debit or credit card. We never see or store your card details.'],
+    ['How do I pay?', `Monthly and yearly plans: pay with a debit or credit card (Visa, Mastercard, American Express, Discover) as a guest, no PayPal account needed, or with PayPal. One-time yearly plans also accept Apple Pay, Google Pay${usdc ? ', and USDC through Coinbase' : ''}. Card payments are processed by PayPal. We never see or store your card details.`],
     ['Can I cancel any time?', 'Yes. Cancel from your Billing page or from your PayPal account. Your plan stays active until the end of the period you already paid for, and you will not be charged again.'],
-    ['Can I pay once instead of subscribing?', `Yes. Choose Pro or Business for 1 year with a single payment. It does not renew, and we email you a week before it ends. You can pay with Apple Pay, Google Pay, PayPal, or a card${process.env.PAYPAL_CRYPTO === 'on' ? ', or crypto' : ''}.`],
+    ['Can I pay once instead of subscribing?', `Yes. Choose Pro or Business for 1 year with a single payment. It does not renew, and we email you a week before it ends. You can pay with Apple Pay, Google Pay, PayPal, or a card${usdc || process.env.PAYPAL_CRYPTO === 'on' ? ', or crypto (USDC)' : ''}.`],
     ['Do you offer refunds?', `If you are not happy, email ${COMPANY.supportEmail} within 7 days of your first payment or of a one-time purchase and we will refund it. Renewals are not refunded, but you can cancel before the next renewal date.`],
     ['Can I switch between Pro and Business?', 'Yes. Upgrading to Business starts right away and your Pro subscription is cancelled automatically. To move from Business to Pro, cancel Business, then subscribe to Pro when your paid period ends.'],
     ['Who is the seller?', `Craftora is operated by ${COMPANY.legalName}, a ${COMPANY.state} company. Payments show as Craftora or ${COMPANY.legalName} on your statement.`],
@@ -122,6 +124,9 @@ export default async function PricingPage() {
           browserTools={browserTools}
           loggedIn={!!user}
           current={current ? { key: current.key, lifetime: current.lifetime, expiresAt: current.expiresAt } : null}
+          clientId={process.env.PAYPAL_CLIENT_ID || ''}
+          mode={paypalMode()}
+          usdc={usdc}
         />
 
         <OneTimeCheckout
@@ -130,6 +135,7 @@ export default async function PricingPage() {
           mode={paypalMode()}
           loggedIn={!!user}
           crypto={process.env.PAYPAL_CRYPTO === 'on'}
+          usdc={usdc}
         />
 
         <section className="mt-14" aria-labelledby="compare">

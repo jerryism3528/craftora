@@ -44,7 +44,7 @@ export async function POST(req) {
     await saveSubscription(sub);
     const approve = (sub.links || []).find((l) => l.rel === 'approve')?.href;
     if (!approve) throw new Error('PayPal did not return an approval link.');
-    return j({ ok: true, approveUrl: approve });
+    return j({ ok: true, id: sub.id, approveUrl: approve });
   } catch (e) {
     console.error('subscribe failed:', e.message);
     await query("INSERT INTO admin_notifications (type, title, body, target_type) VALUES ('billing', 'Checkout failed', $1, 'billing')", [`${user.email}: ${e.message}`]).catch(() => {});

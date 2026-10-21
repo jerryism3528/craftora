@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { X, Loader2, CheckCircle2, Zap, AlertTriangle, Bitcoin, ArrowRight } from 'lucide-react';
+import PaymentMethods, { ONCE_METHODS } from './PaymentMethods';
 
 const scripts = {};
 function loadScript(src, attrs = {}) {
@@ -76,7 +77,32 @@ function CryptoOption({ product, disabled }) {
   );
 }
 
-function Modal({ product, clientId, mode, crypto, onClose }) {
+function UsdcOption({ product, disabled }) {
+  const [busy, setBusy] = useState(false);
+  const [err, setErr] = useState('');
+  async function go() {
+    setBusy(true); setErr('');
+    try {
+      const r = await fetch('/api/billing/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ product: product.key, method: 'usdc' }) });
+      const d = await r.json().catch(() => ({}));
+      if (r.status === 401) { window.location.href = '/login?callbackUrl=%2Fpricing'; return; }
+      if (!d.ok || !d.redirect) throw new Error(d.error || 'USDC payments are not available right now.');
+      window.location.href = d.redirect;
+    } catch (x) { setErr(x.message); setBusy(false); }
+  }
+  return (
+    <div>
+      <button type="button" disabled={disabled || busy} onClick={go} className="w-full h-[45px] inline-flex items-center justify-center gap-2 rounded-md bg-[#0052FF] hover:bg-[#0045d8] text-white font-bold disabled:opacity-60">
+        {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <svg viewBox="0 0 24 24" className="w-5 h-5" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#fff" /><text x="12" y="16.5" textAnchor="middle" fontSize="13" fontWeight="700" fill="#2775CA" fontFamily="Arial, sans-serif">$</text></svg>}
+        Pay with USDC
+      </button>
+      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 text-center">Through Coinbase. Pay from Coinbase or any wallet with USDC on Base.</p>
+      {err && <p className="text-xs text-red-600 dark:text-red-400 mt-1 text-center">{err}</p>}
+    </div>
+  );
+}
+
+function Modal({ product, clientId, mode, crypto, usdc, onClose }) {
   const ppRef = useRef(null);
   const gpRef = useRef(null);
   const apRef = useRef(null);
@@ -232,9 +258,10 @@ function Modal({ product, clientId, mode, crypto, onClose }) {
               <div ref={apRef} />
               <div ref={gpRef} className="h-[45px] empty:hidden" />
               <div ref={ppRef} className="rounded-lg bg-white p-1" />
+              {usdc && state.step !== 'loading' && <UsdcOption product={product} disabled={state.step === 'working'} />}
               {crypto && state.step !== 'loading' && <CryptoOption product={product} disabled={state.step === 'working'} />}
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">Processed securely by PayPal. Apple Pay shows in Safari and Google Pay in Chrome when your device supports them. We email you 7 days before your plan ends.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">Card, PayPal, Apple Pay and Google Pay are processed securely by PayPal{usdc ? ', USDC by Coinbase' : ''}. No PayPal account needed to pay by card. Apple Pay shows in Safari and Google Pay in Chrome when your device supports them. We email you 7 days before your plan ends.</p>
           </>
         )}
       </div>
@@ -242,14 +269,15 @@ function Modal({ product, clientId, mode, crypto, onClose }) {
   );
 }
 
-export default function OneTimeCheckout({ products, clientId, mode, loggedIn, crypto = false }) {
+export default function OneTimeCheckout({ products, clientId, mode, loggedIn, crypto = false, usdc = false }) {
   const [open, setOpen] = useState(null);
   if (!products?.length || !clientId) return null;
   return (
-    <section className="mt-12" aria-labelledby="pay-once">
+    <section id="pay-once" className="mt-12 scroll-mt-24" aria-labelledby="pay-once-title">
       <div className="text-center">
-        <h2 id="pay-once" className="text-2xl font-extrabold text-slate-900 dark:text-white">Prefer to pay once?</h2>
-        <p className="text-slate-600 dark:text-slate-300 mt-2">No subscription. Pay with Apple Pay, Google Pay, PayPal, any card{crypto ? ', or crypto' : ''}.</p>
+        <h2 id="pay-once-title" className="text-2xl font-extrabold text-slate-900 dark:text-white">Prefer to pay once?</h2>
+        <p className="text-slate-600 dark:text-slate-300 mt-2">No subscription. Pay with Apple Pay, Google Pay, PayPal, any card{usdc || crypto ? ', or crypto (USDC)' : ''}.</p>
+        <PaymentMethods methods={usdc ? [...ONCE_METHODS, 'usdc'] : ONCE_METHODS} className="mt-4" />
       </div>
       <div className="grid sm:grid-cols-2 gap-4 mt-6 max-w-3xl mx-auto">
         {products.map((p) => (
@@ -268,7 +296,7 @@ export default function OneTimeCheckout({ products, clientId, mode, loggedIn, cr
           </div>
         ))}
       </div>
-      {open && <Modal product={open} clientId={clientId} mode={mode} crypto={crypto} onClose={() => setOpen(null)} />}
+      {open && <Modal product={open} clientId={clientId} mode={mode} crypto={crypto} usdc={usdc} onClose={() => setOpen(null)} />}
     </section>
   );
 }
