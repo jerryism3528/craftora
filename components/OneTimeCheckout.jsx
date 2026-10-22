@@ -271,6 +271,16 @@ function Modal({ product, clientId, mode, crypto, usdc, onClose }) {
 
 export default function OneTimeCheckout({ products, clientId, mode, loggedIn, crypto = false, usdc = false }) {
   const [open, setOpen] = useState(null);
+  useEffect(() => {
+    const onPay = (e) => {
+      const p = (products || []).find((x) => x.key === e.detail?.product);
+      if (!p) return;
+      if (!loggedIn) { window.location.href = '/login?callbackUrl=%2Fpricing'; return; }
+      setOpen(p);
+    };
+    window.addEventListener('craftora:pay-once', onPay);
+    return () => window.removeEventListener('craftora:pay-once', onPay);
+  }, [products, loggedIn]);
   if (!products?.length || !clientId) return null;
   return (
     <section id="pay-once" className="mt-12 scroll-mt-24" aria-labelledby="pay-once-title">
@@ -284,7 +294,7 @@ export default function OneTimeCheckout({ products, clientId, mode, loggedIn, cr
           <div key={p.key} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 flex items-center justify-between gap-4">
             <div>
               <div className="font-extrabold text-slate-900 dark:text-white">{p.name}</div>
-              <div className="text-sm text-slate-600 dark:text-slate-300"><span className="font-bold text-slate-900 dark:text-white">${dollars(p.price_cents).replace(/\.00$/, '')}</span> once{p.months ? `, ${p.months} months of access` : ', never expires'}</div>
+              <div className="text-sm text-slate-600 dark:text-slate-300"><span className="font-bold text-slate-900 dark:text-white">${dollars(p.price_cents).replace(/\.00$/, '')}</span> once{p.months ? `, ${p.months} month${p.months === 1 ? '' : 's'} of access` : ', never expires'}</div>
             </div>
             <button
               type="button"

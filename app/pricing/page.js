@@ -77,9 +77,9 @@ export default async function PricingPage() {
   const dollars = (c) => (Number(c || 0) / 100).toFixed(2);
   const FAQS = [
     ['Is Craftora still free?', `Yes. All ${browserTools}+ browser tools are free with no daily limits, and server tools like the SEO audit and Email Verifier have a free daily allowance. Paid plans only raise the limits.`],
-    ['How do I pay?', `Monthly and yearly plans: pay with a debit or credit card (Visa, Mastercard, American Express, Discover) as a guest, no PayPal account needed, or with PayPal. One-time yearly plans also accept Apple Pay, Google Pay${usdc ? ', and USDC through Coinbase' : ''}. Card payments are processed by PayPal. We never see or store your card details.`],
+    ['How do I pay?', `Monthly and yearly plans: pay with a debit or credit card (Visa, Mastercard, American Express, Discover) as a guest, no PayPal account needed, or with PayPal. One-time plans (1 month or 1 year, no auto-renewal) also accept Apple Pay, Google Pay${usdc ? ', and USDC through Coinbase' : ''}. Card payments are processed by PayPal. We never see or store your card details.`],
     ['Can I cancel any time?', 'Yes. Cancel from your Billing page or from your PayPal account. Your plan stays active until the end of the period you already paid for, and you will not be charged again.'],
-    ['Can I pay once instead of subscribing?', `Yes. Choose Pro or Business for 1 year with a single payment. It does not renew, and we email you a week before it ends. You can pay with Apple Pay, Google Pay, PayPal, or a card${usdc || process.env.PAYPAL_CRYPTO === 'on' ? ', or crypto (USDC)' : ''}.`],
+    ['Can I pay once instead of subscribing?', `Yes. Choose Pro or Business for 1 month or 1 year with a single payment. It does not renew, and we email you a week before it ends. You can pay with Apple Pay, Google Pay, PayPal, or a card${usdc || process.env.PAYPAL_CRYPTO === 'on' ? ', or crypto (USDC)' : ''}.`],
     ['Do you offer refunds?', `If you are not happy, email ${COMPANY.supportEmail} within 7 days of your first payment or of a one-time purchase and we will refund it. Renewals are not refunded, but you can cancel before the next renewal date.`],
     ['Can I switch between Pro and Business?', 'Yes. Upgrading to Business starts right away and your Pro subscription is cancelled automatically. To move from Business to Pro, cancel Business, then subscribe to Pro when your paid period ends.'],
     ['Who is the seller?', `Craftora is operated by ${COMPANY.legalName}, a ${COMPANY.state} company. Payments show as Craftora or ${COMPANY.legalName} on your statement.`],
@@ -127,6 +127,7 @@ export default async function PricingPage() {
           clientId={process.env.PAYPAL_CLIENT_ID || ''}
           mode={paypalMode()}
           usdc={usdc}
+          onceKeys={products.map((p) => p.key)}
         />
 
         <OneTimeCheckout

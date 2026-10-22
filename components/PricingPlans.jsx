@@ -8,7 +8,7 @@ import PaymentMethods, { SUB_METHODS } from './PaymentMethods';
 let subSdk = null;
 function loadSubSdk(clientId, mode) {
   if (subSdk) return subSdk;
-  const q = new URLSearchParams({ 'client-id': clientId, vault: 'true', intent: 'subscription', components: 'buttons' });
+  const q = new URLSearchParams({ 'client-id': clientId, vault: 'true', intent: 'subscription', components: 'buttons', 'disable-funding': 'credit' });
   if (mode !== 'live') q.set('buyer-country', 'US');
   subSdk = new Promise((resolve, reject) => {
     const el = document.createElement('script');
@@ -22,7 +22,7 @@ function loadSubSdk(clientId, mode) {
   return subSdk;
 }
 
-function SubscribeModal({ planKey, planName, interval, cents, clientId, mode, onClose, onRedirect }) {
+function SubscribeModal({ planKey, planName, interval, cents, clientId, mode, usdc, onceProduct, onClose, onRedirect }) {
   const ref = useRef(null);
   const lastErr = useRef('');
   const [state, setState] = useState({ step: 'loading' });
@@ -100,7 +100,20 @@ function SubscribeModal({ planKey, planName, interval, cents, clientId, mode, on
             <div ref={ref} className={`mt-5 rounded-lg bg-white p-1 ${busy ? 'pointer-events-none opacity-50' : ''}`} />
             <PaymentMethods methods={SUB_METHODS} className="mt-3" />
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">Pay with your PayPal account, or choose <b>Debit or Credit Card</b> to pay as a guest with no PayPal account. Processed securely by PayPal.</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">Want Apple Pay, Google Pay or USDC? <a href="#pay-once" onClick={onClose} className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline">Pay once for a year</a> instead.</p>
+            {onceProduct && (
+              <div className="mt-4 rounded-xl border border-slate-200 dark:border-slate-700 p-3">
+                <p className="text-sm font-bold text-slate-900 dark:text-white">Prefer Google Pay, Apple Pay{usdc ? ' or USDC' : ''}?</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Pay for {interval === 'year' ? '1 year' : '1 month'} once, with no auto-renewal. We email you before it ends.</p>
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => { onClose(); window.dispatchEvent(new CustomEvent('craftora:pay-once', { detail: { product: onceProduct } })); }}
+                  className="mt-2 w-full rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold px-4 py-2.5 text-sm hover:opacity-90 disabled:opacity-60"
+                >
+                  Pay {price} once for {interval === 'year' ? '1 year' : '1 month'}
+                </button>
+              </div>
+            )}
             {state.step !== 'loading' && !busy && (
               <button type="button" onClick={onRedirect} className="mt-3 inline-flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400 hover:underline"><ExternalLink className="w-3.5 h-3.5" />Buttons not working? Continue on PayPal's website</button>
             )}
@@ -116,7 +129,7 @@ const dollars = (c) => {
   return Number.isInteger(v) ? `$${v}` : `$${v.toFixed(2)}`;
 };
 
-export default function PricingPlans({ prices, plans, rows, browserTools, loggedIn, current, clientId, mode, usdc = false }) {
+export default function PricingPlans({ prices, plans, rows, browserTools, loggedIn, current, clientId, mode, usdc = false, onceKeys = [] }) {
   const [period, setPeriod] = useState('month');
   const [busy, setBusy] = useState('');
   const [msg, setMsg] = useState(null);
@@ -233,7 +246,7 @@ export default function PricingPlans({ prices, plans, rows, browserTools, logged
       <p className="mt-3 text-xs text-slate-500 dark:text-slate-400 flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
         <span className="inline-flex items-center gap-1"><Lock className="w-3.5 h-3.5" />Secure checkout processed by PayPal</span>
         <span className="inline-flex items-center gap-1"><ShieldCheck className="w-3.5 h-3.5" />Cancel any time</span>
-        <a href="#pay-once" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Apple Pay, Google Pay{usdc ? ' or USDC' : ''}? Pay once below</a>
+        <a href="#pay-once" className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">Google Pay, Apple Pay{usdc ? ' or USDC' : ''}? Pay once below</a>
       </p>
 
       {checkout && (
@@ -244,6 +257,8 @@ export default function PricingPlans({ prices, plans, rows, browserTools, logged
           cents={prices[checkout.planKey]?.[checkout.interval]?.cents}
           clientId={clientId}
           mode={mode}
+          usdc={usdc}
+          onceProduct={(onceKeys || []).includes(`${checkout.planKey}-${checkout.interval === 'year' ? '1y' : '1m'}`) ? `${checkout.planKey}-${checkout.interval === 'year' ? '1y' : '1m'}` : null}
           onClose={() => setCheckout(null)}
           onRedirect={() => { const c = checkout; setCheckout(null); subscribe(c.planKey, c.interval); }}
         />
