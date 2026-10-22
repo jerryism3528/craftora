@@ -1,6 +1,8 @@
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
+import { Suspense } from 'react';
 import AuthProvider from '../components/AuthProvider';
+import GoogleAnalytics from '../components/GoogleAnalytics';
 
 const jakarta = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -139,7 +141,7 @@ export default function RootLayout({ children }) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         />
       </head>
-      <body><AuthProvider>{children}</AuthProvider></body>
+      <body><AuthProvider>{children}</AuthProvider><Suspense fallback={null}><GoogleAnalytics /></Suspense></body>
     </html>
   );
 }

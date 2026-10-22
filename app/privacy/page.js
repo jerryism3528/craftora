@@ -68,7 +68,10 @@ export default function PrivacyPage() {
           <section>
             <h2 className="font-bold text-xl mb-2">Analytics and cookies</h2>
             <p className="muted">
-              Craftora may use privacy-friendly analytics to understand which tools are used, in aggregate. We do not sell your personal data. Any cookies used are limited to keeping the site working and remembering your preferences, such as light or dark mode.
+              We use Google Analytics to understand which pages and tools are used, so we can improve them. It sets cookies and records things like the pages you visit, your browser and device type, and your approximate country or city. It never receives your files or anything you type into a tool (only searches on the All Tools page are counted), and we do not send it private pages such as signing links, reports, your account, or billing. Google signals and ad personalization are turned off. You can opt out with the <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener noreferrer" className="brand-text hover:underline">Google Analytics opt-out add-on</a> or by blocking cookies in your browser.
+            </p>
+            <p className="muted mt-3">
+              Other cookies are only used to keep the site working, such as keeping you signed in and remembering your preferences like light or dark mode. We do not sell your personal data.
             </p>
           </section>
 
