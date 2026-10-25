@@ -29,13 +29,13 @@ const features = [
   'Crop freely to any size with the free ratio option.',
   'Works with a mouse on desktop or by touch on phones and tablets.',
   'Images are cropped in your browser, so nothing is uploaded to a server.',
-  'Completely free with no signup, no watermarks, and no daily limits.',
+  'Free without signing up (3 uses a day) and no watermarks. Unlimited on Pro.',
 ];
 
 const faqs = [
   ['How do I crop an image for free?', 'Add your image above, drag the crop box to the area you want, or pick an aspect ratio, then click Crop. Your cropped image downloads instantly. It is free with no signup and no watermarks.'],
   ['How do I crop to a square or 16:9?', 'Choose the 1:1 preset for a perfect square, or 16:9 for a widescreen crop. The crop box locks to that shape so your result matches the ratio exactly.'],
-  ['How is Craftora different from other croppers?', 'Many online croppers upload your photo to their servers. Craftora crops the image right in your browser, so your file never leaves your device, with no daily limits or watermarks.'],
+  ['How is Craftora different from other croppers?', 'Many online croppers upload your photo to their servers. Craftora crops the image right in your browser, so your file never leaves your device, with no watermarks.'],
   ['Can I crop on my phone?', 'Yes. The crop box works by touch, so you can drag and resize it on a phone or tablet just like on a computer.'],
   ['Do my images get uploaded anywhere?', 'No. Cropping runs entirely in your browser on your own device. Your image is never sent to any server.'],
   ['Will cropping reduce the image quality?', 'No. Cropping keeps the original pixels inside the crop area at full quality. It only removes the parts outside the box.'],

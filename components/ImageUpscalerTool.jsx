@@ -2,8 +2,10 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 export default function ImageUpscalerTool() {
+  const gate = useUsageGate('image-upscaler');
   const [src, setSrc] = useState('');
   const [original, setOriginal] = useState(null);
   const [scale, setScale] = useState(2);
@@ -54,6 +56,8 @@ export default function ImageUpscalerTool() {
   }
 
   async function upscale() {
+
+    if (!(await gate.check(src ? { size: Math.round(src.length * 0.75) } : null))) return;
     if (!src || !original) return;
     setBusy(true);
     setResult('');
@@ -138,6 +142,7 @@ export default function ImageUpscalerTool() {
             </button>
             <button onClick={reset} className="rounded-xl px-4 py-2.5 font-semibold text-sm border surface mb-0.5" style={{ color: 'var(--ink)' }}>New image</button>
           </div>
+          {gate.notice && <div className="mb-5">{gate.notice}</div>}
 
           {original && (
             <p className="muted text-sm mb-4">Original: {original.w} x {original.h} px{outSize && ` → Upscaled: ${outSize.w} x ${outSize.h} px`}</p>

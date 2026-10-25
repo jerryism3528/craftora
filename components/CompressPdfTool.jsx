@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 const QUALITY = {
   low: { label: 'Smaller file', scale: 1.0, jpeg: 0.5 },
@@ -10,6 +11,7 @@ const QUALITY = {
 };
 
 export default function CompressPdfTool() {
+  const gate = useUsageGate('compress-pdf');
   const [file, setFile] = useState(null);
   const [mode, setMode] = useState('strong'); // 'strong' | 'light'
   const [quality, setQuality] = useState('medium');
@@ -95,6 +97,8 @@ export default function CompressPdfTool() {
   }
 
   async function compress() {
+
+    if (!(await gate.check(file))) return;
     if (!file) { setError('Add a PDF file first.'); return; }
     setBusy(true);
     setError('');
@@ -192,6 +196,7 @@ export default function CompressPdfTool() {
               <button onClick={compress} disabled={busy} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
                 {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> {progress || 'Compressing...'}</>) : (<><Lucide.Minimize2 className="w-4 h-4" /> Compress PDF</>)}
               </button>
+          {gate.notice}
             </>
           )}
 

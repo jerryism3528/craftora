@@ -29,12 +29,12 @@ const features = [
   'The rotation is saved permanently in the PDF, so it opens the right way everywhere.',
   'Files are processed in your browser, so nothing is uploaded to a server.',
   'No watermarks added to your rotated PDF, ever.',
-  'Completely free with no signup and no daily limits.',
+  'Free to use without signing up, 3 times a day. Unlimited on Pro.',
 ];
 
 const faqs = [
   ['How do I rotate a PDF for free?', 'Add your PDF above, choose a rotation direction, pick all pages or specific pages, and click Rotate. Your corrected PDF downloads instantly. It is free with no signup and no watermarks.'],
-  ['How is Craftora different from iLovePDF or Smallpdf?', 'iLovePDF and Smallpdf upload your PDF to their servers to rotate it. Craftora rotates the file directly in your browser, so your document never leaves your device, with no daily limits or watermarks on the free tier.'],
+  ['How is Craftora different from iLovePDF or Smallpdf?', 'iLovePDF and Smallpdf upload your PDF to their servers to rotate it. Craftora rotates the file directly in your browser, so your document never leaves your device, with no watermarks on the free tier.'],
   ['Can I rotate only some pages?', 'Yes. Choose specific pages and enter the page numbers or ranges, like 1-2, 4. Only those pages are rotated, the rest are left as they are.'],
   ['Is the rotation permanent?', 'Yes. The new orientation is saved into the PDF itself, so it displays correctly in any PDF reader, not just while previewing.'],
   ['Do my files get uploaded anywhere?', 'No. Rotation runs entirely in your browser on your own device. Your PDF is never sent to any server.'],

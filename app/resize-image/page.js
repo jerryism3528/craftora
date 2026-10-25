@@ -29,12 +29,12 @@ const features = [
   'Pick common sizes like 1920 x 1080 or 1080 x 1080 with one click.',
   'Save the result as JPG, PNG, or WebP.',
   'Images are resized in your browser, so nothing is uploaded to a server.',
-  'Completely free with no signup, no watermarks, and no daily limits.',
+  'Free without signing up (3 uses a day) and no watermarks. Unlimited on Pro.',
 ];
 
 const faqs = [
   ['How do I resize an image for free?', 'Add your image above, enter a new width and height or pick a preset, then click Resize. Your resized image downloads instantly. It is free with no signup and no watermarks.'],
-  ['How is Craftora different from iLoveIMG or TinyPNG?', 'iLoveIMG and similar tools upload your image to their servers to resize it. Craftora resizes the image right in your browser, so your file never leaves your device, with no daily limits.'],
+  ['How is Craftora different from iLoveIMG or TinyPNG?', 'iLoveIMG and similar tools upload your image to their servers to resize it. Craftora resizes the image right in your browser, so your file never leaves your device.'],
   ['How do I resize without stretching the image?', 'Keep Lock aspect ratio turned on. When you change the width, the height updates automatically to keep the same proportions, so the image never looks squashed or stretched.'],
   ['Can I resize to an exact width and height?', 'Yes. Turn off Lock aspect ratio and enter the exact width and height you need. Note that very different proportions may crop or stretch the image.'],
   ['Do my images get uploaded anywhere?', 'No. Resizing runs entirely in your browser on your own device. Your image is never sent to any server.'],

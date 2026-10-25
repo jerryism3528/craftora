@@ -29,7 +29,7 @@ const features = [
   'Optional sharpening to keep edges crisp.',
   'Side-by-side preview of the original and upscaled image.',
   'Runs entirely in your browser, so your image is never uploaded.',
-  'Completely free with no signup and no limits.',
+  'Free to use without signing up, 3 times a day. Unlimited on Pro.',
 ];
 
 const faqs = [
@@ -38,7 +38,7 @@ const faqs = [
   ['What is the difference from an AI upscaler?', 'This tool uses high-quality resizing plus sharpening in your browser, which is fast, private, and free. AI upscalers use trained models to add detail and can do more on very low-resolution images, but they are slower and usually upload your image to a server. Craftora keeps everything on your device.'],
   ['What image sizes work best?', 'It works on any size, but the best results come from images that are already reasonably clear. Enlarging a small, sharp image looks great. Enlarging a tiny, blurry one improves the size but cannot fully restore lost detail.'],
   ['Is my image private?', 'Yes. All processing happens in your browser on your own device. Your image is never uploaded to any server.'],
-  ['Do I need to sign up?', 'No. The image upscaler is free with no account and no limits.'],
+  ['Do I need to sign up?', 'No. You can upscale 3 images a day without an account, 5 with a free account, and as many as you like on Pro.'],
 ];
 
 export default function ImageUpscalerPage() {

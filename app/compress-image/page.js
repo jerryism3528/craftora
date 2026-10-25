@@ -18,7 +18,7 @@ export const metadata = {
 };
 
 const howItWorks = [
-  ['Add your images', 'Drop your JPG, PNG, or WebP images into the box or choose them from your device. Add as many as you like.'],
+  ['Add your images', 'Drop your JPG, PNG, or WebP images into the box or choose them from your device. You can add several at once.'],
   ['Pick a quality', 'Choose smaller file, balanced, or better quality to control the size and sharpness tradeoff.'],
   ['Compress and download', 'See how much smaller each image got, then download them one by one or all together in a zip.'],
 ];
@@ -29,14 +29,14 @@ const features = [
   'See the exact before and after size and the percentage saved for each image.',
   'Images are compressed in your browser, so nothing is uploaded to a server.',
   'No watermarks added to your images, ever.',
-  'Completely free with no signup and no daily limits.',
+  'Free to use without signing up, 3 times a day. Unlimited on Pro.',
 ];
 
 const faqs = [
   ['How do I compress an image for free?', 'Add your images above, pick a quality level, and click Compress. Each image is shrunk in your browser and you can download them individually or as a zip. It is free with no signup and no watermarks.'],
   ['How is Craftora different from TinyPNG or iLoveIMG?', 'TinyPNG and iLoveIMG upload your images to their servers to compress them. Craftora compresses images right in your browser, so your files never leave your device, with no daily upload limits.'],
   ['Will compressing lower the image quality?', 'Craftora reduces file size by re-encoding the image at your chosen quality. Better quality keeps images sharp with moderate savings, while smaller file gives the biggest reduction. You can preview the result size before downloading.'],
-  ['Can I compress many images at once?', 'Yes. Add as many images as you like, compress them all in one click, and download them together as a single zip file.'],
+  ['Can I compress many images at once?', 'Yes. Add up to 5 images at a time without an account (10 with a free account, 50 on Pro), compress them all in one click, and download them together as a single zip file.'],
   ['Do my images get uploaded anywhere?', 'No. Compression runs entirely in your browser on your own device. Your images are never sent to any server.'],
   ['What image formats are supported?', 'You can compress JPG, PNG, and WebP images. The compressed output is saved as an optimized JPG.'],
 ];

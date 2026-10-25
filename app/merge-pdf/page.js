@@ -24,19 +24,19 @@ const howItWorks = [
 ];
 
 const features = [
-  'Combine unlimited PDF files into a single document.',
+  'Combine several PDF files into a single document: up to 5 at once without an account, 50 on Pro.',
   'Reorder files before merging with simple up and down controls.',
   'Files are processed in your browser, so nothing is uploaded to a server.',
   'No watermarks added to your merged PDF, ever.',
-  'Completely free with no signup or daily limits.',
+  'Free to use without signing up, 3 times a day. Unlimited on Pro.',
   'Works on desktop, tablet, and mobile browsers.',
 ];
 
 const faqs = [
   ['How do I merge PDF files for free?', 'Add two or more PDF files above, drag them into the order you want, then click merge. Your combined PDF downloads instantly. It is free with no signup and no watermarks.'],
-  ['Is Craftora Merge PDF better than iLovePDF or Smallpdf?', 'For merging, Craftora keeps your files in your browser instead of uploading them to a server like iLovePDF and Smallpdf do, so it is more private and there are no daily limits or watermarks on the free tier.'],
+  ['Is Craftora Merge PDF better than iLovePDF or Smallpdf?', 'For merging, Craftora keeps your files in your browser instead of uploading them to a server like iLovePDF and Smallpdf do, so it is more private and there are no watermarks on the free tier.'],
   ['Do my files get uploaded anywhere?', 'No. Merging runs entirely in your browser using your own device. Your PDF files never leave your computer or phone.'],
-  ['Is there a limit on how many PDFs I can combine?', 'There is no fixed limit. You can merge as many PDF files as your device can comfortably handle at once.'],
+  ['Is there a limit on how many PDFs I can combine?', 'Without an account you can merge up to 5 PDFs at a time, 3 times a day. A free account allows 10 files at a time, 5 times a day, and Pro removes the daily limit with up to 50 files per merge.'],
   ['Can I reorder pages before merging?', 'Yes. Use the up and down arrows on each file to set the order before you merge. The final PDF follows that order.'],
   ['Does merging reduce the quality of my PDF?', 'No. Merging combines the original pages as they are, so text and images keep their original quality.'],
 ];

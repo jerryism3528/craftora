@@ -3,6 +3,7 @@ import { query, queryOne } from '../../../../lib/db';
 import { paypal, paypalMode, paypalConfigured } from '../../../../lib/paypal';
 import { checkCanSubscribe, saveSubscription } from '../../../../lib/billing';
 import { SITE } from '../../../../lib/company';
+import { checkPromo, promoPaypalPlan, recordRedemption, subscriptionPromoPrice } from '../../../../lib/promo';
 
 export const dynamic = 'force-dynamic';
 const j = (data, status = 200) => Response.json(data, { status });
@@ -24,12 +25,20 @@ export async function POST(req) {
   const can = await checkCanSubscribe(user.id, planKey);
   if (!can.ok) return j({ ok: false, error: can.error }, 409);
 
+  let promo = null, planId = bp.paypal_plan_id;
+  if (b.code) {
+    const pc = await checkPromo(b.code, user.id);
+    if (!pc.ok) return j({ ok: false, error: pc.error, promoError: true }, 400);
+    promo = pc.promo;
+  }
+
   const recent = await queryOne("SELECT count(*)::int AS n FROM subscriptions WHERE user_id = $1 AND status = 'APPROVAL_PENDING' AND created_at > now() - interval '1 hour'", [user.id]);
   if ((recent?.n || 0) >= 10) return j({ ok: false, error: 'Too many checkout attempts. Please wait a few minutes and try again.' }, 429);
 
   try {
+    if (promo) planId = (await promoPaypalPlan(bp, promo)).paypal_plan_id;
     const sub = await paypal('POST', '/v1/billing/subscriptions', {
-      plan_id: bp.paypal_plan_id,
+      plan_id: planId,
       custom_id: user.id,
       subscriber: user.email ? { email_address: user.email } : undefined,
       application_context: {
@@ -42,6 +51,11 @@ export async function POST(req) {
       },
     });
     await saveSubscription(sub);
+    if (promo) {
+      const pp = subscriptionPromoPrice(bp.price_cents, interval, promo);
+      await query('UPDATE subscriptions SET promo_code = $2 WHERE paypal_subscription_id = $1', [sub.id, promo.code]);
+      await recordRedemption({ code: promo.code, userId: user.id, kind: 'subscription', ref: sub.id, baseCents: bp.price_cents * pp.cycles, discountCents: (bp.price_cents - pp.cents) * pp.cycles });
+    }
     const approve = (sub.links || []).find((l) => l.rel === 'approve')?.href;
     if (!approve) throw new Error('PayPal did not return an approval link.');
     return j({ ok: true, id: sub.id, approveUrl: approve });

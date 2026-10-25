@@ -37,7 +37,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="font-bold text-xl mb-2">Files you process</h2>
             <p className="muted">
-              Browser-based tools (most PDF, image, text, and developer tools) process your files on your own device. The files are not uploaded to Craftora. Server-based tools (such as large file conversion and email verification) temporarily receive your file to do the job, then delete it automatically within one hour.
+              Browser-based tools (most PDF, image, text, and developer tools) process your files on your own device. The files are not uploaded to Craftora. To count free daily uses of PDF and image tools, the page sends us only the tool name, the number of files and their sizes, never the files or their contents. Server-based tools (such as large file conversion and email verification) temporarily receive your file to do the job, then delete it automatically within one hour.
             </p>
           </section>
 
@@ -61,7 +61,7 @@ export default function PrivacyPage() {
           <section>
             <h2 className="font-bold text-xl mb-2">Abuse prevention</h2>
             <p className="muted">
-              To keep free daily limits fair and protect the service, we record your IP address and basic device information when you use server-based tools or sign in. We use this only to enforce limits and stop abuse, never for advertising.
+              To keep free daily limits fair and protect the service, we record your IP address and basic device information (a random device ID saved in your browser) when you use server-based tools, use a PDF or image tool, or sign in. We use this only to enforce limits and stop abuse, never for advertising.
             </p>
           </section>
 

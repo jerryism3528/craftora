@@ -2,8 +2,10 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 export default function OrganizePdfTool() {
+  const gate = useUsageGate('organize-pdf');
   const [srcBytes, setSrcBytes] = useState(null);
   const [fileName, setFileName] = useState('');
   const [pages, setPages] = useState([]); // { origIndex, rotation, thumb }
@@ -80,6 +82,8 @@ export default function OrganizePdfTool() {
   }
 
   async function save() {
+
+    if (!(await gate.check(srcBytes))) return;
     if (!pages.length) { setError('There are no pages left to save.'); return; }
     setBusy(true);
     setError('');
@@ -158,6 +162,7 @@ export default function OrganizePdfTool() {
               </button>
             </div>
           </div>
+          {gate.notice && <div className="mb-5">{gate.notice}</div>}
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {pages.map((p, i) => (

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 const LANGS = [
   ['eng', 'English'],
@@ -13,6 +14,7 @@ const LANGS = [
 ];
 
 export default function ImageToTextTool() {
+  const gate = useUsageGate('image-to-text');
   const [file, setFile] = useState(null);
   const [imgUrl, setImgUrl] = useState('');
   const [lang, setLang] = useState('eng');
@@ -42,6 +44,8 @@ export default function ImageToTextTool() {
   }
 
   async function run() {
+
+    if (!(await gate.check(file))) return;
     if (!file) { setError('Add an image first.'); return; }
     setBusy(true);
     setError('');
@@ -133,6 +137,7 @@ export default function ImageToTextTool() {
           <button onClick={run} disabled={busy} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
             {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> {progress || 'Reading...'}</>) : (<><Lucide.ScanText className="w-4 h-4" /> Extract text</>)}
           </button>
+          {gate.notice}
 
           {busy && (
             <p className="muted text-xs mt-3">The first scan loads the language data, which can take a few seconds. Later scans are faster.</p>

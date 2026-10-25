@@ -12,6 +12,8 @@ import { priceTable } from '../../lib/billing';
 import { currentUser } from '../../lib/current-user';
 import { tools } from '../../lib/tools';
 import { SITE, COMPANY } from '../../lib/company';
+import PromoBox from '../../components/PromoCode';
+import { isLimitedBrowserTool } from '../../lib/browser-limits';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,6 +59,7 @@ export default async function PricingPage() {
   let limitsRows = [];
   try { limitsRows = await query('SELECT tool_slug, daily_limit, batch_limit FROM tool_limits WHERE enabled'); } catch { limitsRows = []; }
   const rows = limitsRows
+    .filter((r) => !isLimitedBrowserTool(r.tool_slug))
     .filter((r) => LABELS[r.tool_slug] || tools.find((t) => t.slug === r.tool_slug))
     .sort((a, b) => idx(a.tool_slug) - idx(b.tool_slug))
     .map((r) => ({
@@ -76,7 +79,9 @@ export default async function PricingPage() {
   const biz = prices.business || {};
   const dollars = (c) => (Number(c || 0) / 100).toFixed(2);
   const FAQS = [
-    ['Is Craftora still free?', `Yes. All ${browserTools}+ browser tools are free with no daily limits, and server tools like the SEO audit and Email Verifier have a free daily allowance. Paid plans only raise the limits.`],
+    ['Is Craftora still free?', `Yes. Every tool has a free daily allowance. PDF and image tools can be used 3 times a day per tool without an account and 5 times with a free account. Text, developer and generator tools stay unlimited. Pro and Business remove the daily limit on PDF and image tools and raise the limits on server tools like the SEO audit and Email Verifier.`],
+    ['Do my files stay private on the free plan?', 'Yes, on every plan. PDF and image tools like merge, compress, protect and sign run in your browser, so your files are never uploaded. To count your daily uses, only the tool name, the number of files and their sizes are sent to Craftora, never the files themselves.'],
+    ['I have a launch code. How do I use it?', 'Enter it in the "Have a launch code?" box on this page, or open the link from your email and it is applied for you. Launch codes take 50% off your first 3 months of Pro or Business, on monthly plans, yearly plans and one-time plans. Each account can use one launch code.'],
     ['How do I pay?', `Monthly and yearly plans: pay with a debit or credit card (Visa, Mastercard, American Express, Discover) as a guest, no PayPal account needed, or with PayPal. One-time plans (1 month or 1 year, no auto-renewal) also accept Apple Pay, Google Pay${usdc ? ', and USDC through Coinbase' : ''}. Card payments are processed by PayPal. We never see or store your card details.`],
     ['Can I cancel any time?', 'Yes. Cancel from your Billing page or from your PayPal account. Your plan stays active until the end of the period you already paid for, and you will not be charged again.'],
     ['Can I pay once instead of subscribing?', `Yes. Choose Pro or Business for 1 month or 1 year with a single payment. It does not renew, and we email you a week before it ends. You can pay with Apple Pay, Google Pay, PayPal, or a card${usdc || process.env.PAYPAL_CRYPTO === 'on' ? ', or crypto (USDC)' : ''}.`],
@@ -114,8 +119,10 @@ export default async function PricingPage() {
         </nav>
         <div className="text-center max-w-3xl mx-auto">
           <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white">Simple pricing. Free tools stay free.</h1>
-          <p className="text-lg text-slate-600 dark:text-slate-300 mt-4">Every browser tool is free forever. Upgrade only if you need more SEO audits, email checks, or e-signatures each day.</p>
+          <p className="text-lg text-slate-600 dark:text-slate-300 mt-4">Start free every day. Upgrade for unlimited PDF and image tools, bigger files, and more SEO audits, email checks and e-signatures. Your files stay in your browser on every plan.</p>
         </div>
+
+        <PromoBox />
 
         <PricingPlans
           prices={prices}
@@ -153,7 +160,11 @@ export default async function PricingPage() {
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-slate-700/60 text-slate-800 dark:text-slate-100">
                 <tr>
-                  <td className="py-3 px-4">{browserTools}+ browser tools (PDF, image, text, developer)</td>
+                  <td className="py-3 px-4">PDF and image tools (merge, compress, sign, convert and more), per tool<span className="block text-xs text-slate-500 dark:text-slate-400">Files stay in your browser on every plan</span></td>
+                  <td className="py-3 px-4">5 uses, files up to 25 MB<span className="block text-xs text-slate-500 dark:text-slate-400">Without an account: 3 uses, 10 MB</span></td><td className="py-3 px-4 font-semibold">Unlimited<span className="block text-xs font-normal text-slate-500 dark:text-slate-400">files up to 200 MB</span></td><td className="py-3 px-4 font-semibold">Unlimited<span className="block text-xs font-normal text-slate-500 dark:text-slate-400">files up to 500 MB</span></td>
+                </tr>
+                <tr>
+                  <td className="py-3 px-4">Text, developer and generator tools</td>
                   <td className="py-3 px-4">Unlimited</td><td className="py-3 px-4">Unlimited</td><td className="py-3 px-4">Unlimited</td>
                 </tr>
                 {rows.map((r) => (

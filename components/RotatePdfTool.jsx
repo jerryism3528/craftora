@@ -2,8 +2,10 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 export default function RotatePdfTool() {
+  const gate = useUsageGate('rotate-pdf');
   const [file, setFile] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [angle, setAngle] = useState(90); // 90 | -90 | 180
@@ -56,6 +58,8 @@ export default function RotatePdfTool() {
   }
 
   async function run() {
+
+    if (!(await gate.check(file?.file))) return;
     if (!file) { setError('Add a PDF file first.'); return; }
     setBusy(true);
     setError('');
@@ -185,6 +189,7 @@ export default function RotatePdfTool() {
           <button onClick={run} disabled={busy} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
             {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> Rotating...</>) : (<><Lucide.RotateCw className="w-4 h-4" /> Rotate and download</>)}
           </button>
+          {gate.notice}
         </div>
       )}
     </div>

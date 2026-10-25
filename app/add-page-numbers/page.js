@@ -29,12 +29,12 @@ const features = [
   'Set the starting number, useful when a document begins after a cover page.',
   'Files are processed in your browser, so nothing is uploaded to a server.',
   'No watermarks added to your PDF, ever.',
-  'Completely free with no signup and no daily limits.',
+  'Free to use without signing up, 3 times a day. Unlimited on Pro.',
 ];
 
 const faqs = [
   ['How do I add page numbers to a PDF for free?', 'Add your PDF above, choose a position, format, and starting number, then click Add page numbers. Your numbered PDF downloads instantly. It is free with no signup and no watermarks.'],
-  ['How is Craftora different from iLovePDF or Smallpdf?', 'iLovePDF and Smallpdf upload your PDF to their servers to add page numbers. Craftora adds them directly in your browser, so your document never leaves your device, with no daily limits or watermarks on the free tier.'],
+  ['How is Craftora different from iLovePDF or Smallpdf?', 'iLovePDF and Smallpdf upload your PDF to their servers to add page numbers. Craftora adds them directly in your browser, so your document never leaves your device, with no watermarks on the free tier.'],
   ['Can I start numbering from a page other than the first?', 'Yes. Set the starting number to control what the first page shows. For example, start at 0 or 2 if your document has a cover page you do not want counted as page 1.'],
   ['Can I choose where the page number appears?', 'Yes. You can place the number at the top or bottom, aligned left, center, or right, so it fits your document layout.'],
   ['Do my files get uploaded anywhere?', 'No. Page numbers are added entirely in your browser on your own device. Your PDF is never sent to any server.'],

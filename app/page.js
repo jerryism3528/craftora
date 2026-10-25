@@ -17,7 +17,7 @@ const POPULAR = ['Merge PDF', 'Compress Image', 'QR Code Generator', 'JSON Forma
 const FAQS = [
   [
     'Is Craftora really free?',
-    'Yes. Every tool on Craftora is free to use, with no signup for the browser-based tools, no watermarks, and no forced upgrades. Sites like iLovePDF and Smallpdf put daily limits and watermarks behind a paid plan. Craftora keeps the core tools genuinely free.',
+    'Yes. Every tool on Craftora is free to use every day, with no signup needed for the browser-based tools and no watermarks. PDF and image tools include 3 free uses a day per tool (5 with a free account), text and developer tools are unlimited, and Pro removes the daily limits for $5 a month.',
   ],
   [
     'Craftora vs iLovePDF and Smallpdf, what is the difference?',

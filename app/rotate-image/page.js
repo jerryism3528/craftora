@@ -29,14 +29,14 @@ const features = [
   'See a live preview of every change before you download.',
   'Works with JPG, PNG, and WebP images.',
   'Images are edited in your browser, so nothing is uploaded to a server.',
-  'Completely free with no signup, no watermarks, and no daily limits.',
+  'Free without signing up (3 uses a day) and no watermarks. Unlimited on Pro.',
 ];
 
 const faqs = [
   ['How do I rotate an image for free?', 'Add your image above, click Left 90, Right 90, or 180 to rotate it, and watch the live preview. When it looks right, click Apply and download. It is free with no signup and no watermarks.'],
   ['How do I flip an image?', 'Use Flip horizontal to mirror the image left to right, or Flip vertical to mirror it top to bottom. You can flip and rotate together, then download the result.'],
   ['What is the difference between rotate and flip?', 'Rotating turns the whole image by an angle, like turning a photo sideways. Flipping mirrors it, so text and faces face the other way. Craftora does both on this page.'],
-  ['How is Craftora different from other image editors?', 'Many online editors upload your photo to their servers. Craftora rotates and flips the image right in your browser, so your file never leaves your device, with no daily limits or watermarks.'],
+  ['How is Craftora different from other image editors?', 'Many online editors upload your photo to their servers. Craftora rotates and flips the image right in your browser, so your file never leaves your device, with no watermarks.'],
   ['Can I fix a sideways photo from my phone?', 'Yes. Phone photos often come out sideways or upside down. Rotate left or right by 90 degrees, or use 180, until it reads the right way, then download.'],
   ['Do my images get uploaded anywhere?', 'No. Rotating and flipping run entirely in your browser on your own device. Your image is never sent to any server.'],
 ];

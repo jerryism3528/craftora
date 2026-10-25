@@ -2,8 +2,10 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 export default function JpgToPdfTool() {
+  const gate = useUsageGate('jpg-to-pdf');
   const [images, setImages] = useState([]);
   const [pageSize, setPageSize] = useState('fit'); // 'fit' | 'a4'
   const [busy, setBusy] = useState(false);
@@ -46,6 +48,8 @@ export default function JpgToPdfTool() {
   }
 
   async function convert() {
+
+    if (!(await gate.check(images.map((i) => i.file)))) return;
     if (!images.length) { setError('Add at least one image.'); return; }
     setBusy(true);
     setError('');
@@ -157,6 +161,7 @@ export default function JpgToPdfTool() {
           <button onClick={convert} disabled={busy} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
             {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> Creating PDF...</>) : (<><Lucide.FileText className="w-4 h-4" /> Convert to PDF and download</>)}
           </button>
+          {gate.notice}
         </div>
       )}
     </div>

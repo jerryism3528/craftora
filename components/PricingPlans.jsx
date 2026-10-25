@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { Check, Loader2, Sparkles, ShieldCheck, Lock, X, CheckCircle2, AlertTriangle, ExternalLink } from 'lucide-react';
 import PaymentMethods, { SUB_METHODS } from './PaymentMethods';
+import { usePromo, promoOff } from './PromoCode';
 
 let subSdk = null;
 function loadSubSdk(clientId, mode) {
@@ -22,11 +23,12 @@ function loadSubSdk(clientId, mode) {
   return subSdk;
 }
 
-function SubscribeModal({ planKey, planName, interval, cents, clientId, mode, usdc, onceProduct, onClose, onRedirect }) {
+function SubscribeModal({ planKey, planName, interval, cents, promo, clientId, mode, usdc, onceProduct, onClose, onRedirect }) {
   const ref = useRef(null);
   const lastErr = useRef('');
   const [state, setState] = useState({ step: 'loading' });
   const price = dollars(cents);
+  const promoCents = promo ? cents - (interval === 'year' ? promoOff(cents, 12, promo) : promoOff(cents, 1, { ...promo, months: 1 })) : null;
 
   useEffect(() => {
     let dead = false;
@@ -38,7 +40,7 @@ function SubscribeModal({ planKey, planName, interval, cents, clientId, mode, us
           style: { layout: 'vertical', shape: 'rect', label: 'subscribe', height: 45 },
           createSubscription: async () => {
             lastErr.current = '';
-            const r = await fetch('/api/billing/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: planKey, interval }) });
+            const r = await fetch('/api/billing/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: planKey, interval, code: promo?.code || undefined }) });
             const d = await r.json().catch(() => ({}));
             if (r.status === 401) { window.location.href = `/login?callbackUrl=${encodeURIComponent('/pricing')}`; throw new Error('Please sign in first.'); }
             if (!d.ok || !d.id) { lastErr.current = d.error || 'Could not start checkout.'; throw new Error(lastErr.current); }
@@ -65,7 +67,7 @@ function SubscribeModal({ planKey, planName, interval, cents, clientId, mode, us
       }
     })();
     return () => { dead = true; };
-  }, [planKey, interval, clientId, mode]);
+  }, [planKey, interval, clientId, mode, promo?.code]);
 
   const busy = state.step === 'working';
   return (
@@ -74,7 +76,7 @@ function SubscribeModal({ planKey, planName, interval, cents, clientId, mode, us
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 id="sub-title" className="text-xl font-extrabold text-slate-900 dark:text-white">{planName}, {interval === 'year' ? 'yearly' : 'monthly'}</h2>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">{price} per {interval}. Renews automatically. Cancel any time.</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">{promo ? <>{interval === 'year' ? `${dollars(promoCents)} for the first year` : `${dollars(promoCents)} a month for ${promo.months} months`} with code <b>{promo.code}</b>, then {price} per {interval}. Cancel any time.</> : <>{price} per {interval}. Renews automatically. Cancel any time.</>}</p>
           </div>
           {!busy && <button type="button" onClick={onClose} aria-label="Close" className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700"><X className="w-5 h-5" /></button>}
         </div>
@@ -110,7 +112,7 @@ function SubscribeModal({ planKey, planName, interval, cents, clientId, mode, us
                   onClick={() => { onClose(); window.dispatchEvent(new CustomEvent('craftora:pay-once', { detail: { product: onceProduct } })); }}
                   className="mt-2 w-full rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-bold px-4 py-2.5 text-sm hover:opacity-90 disabled:opacity-60"
                 >
-                  Pay {price} once for {interval === 'year' ? '1 year' : '1 month'}
+                  Pay {promo ? dollars(cents - promoOff(cents, interval === 'year' ? 12 : 1, promo)) : price} once for {interval === 'year' ? '1 year' : '1 month'}
                 </button>
               </div>
             )}
@@ -134,6 +136,7 @@ export default function PricingPlans({ prices, plans, rows, browserTools, logged
   const [busy, setBusy] = useState('');
   const [msg, setMsg] = useState(null);
   const [checkout, setCheckout] = useState(null);
+  const promo = usePromo();
 
   useEffect(() => {
     try {
@@ -159,7 +162,7 @@ export default function PricingPlans({ prices, plans, rows, browserTools, logged
     if (!loggedIn) { window.location.href = `/login?callbackUrl=${encodeURIComponent('/pricing')}`; return; }
     setBusy(planKey);
     try {
-      const r = await fetch('/api/billing/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: planKey, interval }) });
+      const r = await fetch('/api/billing/subscribe', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan: planKey, interval, code: promo?.code || undefined }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 401) { window.location.href = `/login?callbackUrl=${encodeURIComponent('/pricing')}`; return; }
       if (!d.ok || !d.approveUrl) { setMsg({ text: d.error || 'Could not start checkout. Please try again.', error: true }); setBusy(''); return; }
@@ -172,13 +175,15 @@ export default function PricingPlans({ prices, plans, rows, browserTools, logged
 
   const bullets = (k) => {
     if (k === 'free') return [
-      `All ${browserTools}+ browser tools, unlimited`,
-      'No signup for browser tools, no watermarks',
+      'PDF and image tools: 5 uses a day each (3 without an account)',
+      'Files up to 25 MB, always processed in your browser',
+      'Unlimited text, developer and generator tools',
       ...rows.slice(0, 3).map((r) => `${r.free.toLocaleString()} ${r.short} a day`),
     ];
     const mult = plans[k]?.multiplier || 1;
     return [
       k === 'pro' ? 'Everything in Free' : 'Everything in Pro',
+      `Unlimited PDF and image tools, files up to ${k === 'business' ? 500 : 200} MB`,
       `Up to ${mult}x the free daily limits on server tools`,
       ...rows.map((r) => `${r[k].toLocaleString()} ${r.short} a day`),
       'Priority email support',
@@ -190,16 +195,21 @@ export default function PricingPlans({ prices, plans, rows, browserTools, logged
     const isCurrent = current?.key === k;
     const ready = k === 'free' || !!p?.ready;
     const perMonth = k === 'free' ? '$0' : p ? dollars(period === 'year' ? Math.round(p.cents / 12) : p.cents) : '';
+    const promoFirst = k !== 'free' && p && promo ? p.cents - (period === 'year' ? promoOff(p.cents, 12, promo) : promoOff(p.cents, 1, { ...promo, months: 1 })) : null;
+    const promoPerMonth = promoFirst != null ? dollars(period === 'year' ? Math.round(promoFirst / 12) : promoFirst) : null;
     return (
       <section key={k} aria-labelledby={`plan-${k}`} className={`relative rounded-2xl border bg-white dark:bg-slate-800 p-6 flex flex-col ${featured ? 'border-indigo-500 ring-2 ring-indigo-500/30 shadow-lg' : 'border-slate-200 dark:border-slate-700'}`}>
         {featured && <span className="absolute -top-3 left-6 inline-flex items-center gap-1 rounded-full bg-indigo-600 text-white text-xs font-bold px-3 py-1"><Sparkles className="w-3.5 h-3.5" />Most popular</span>}
         <h2 id={`plan-${k}`} className="text-xl font-extrabold text-slate-900 dark:text-white">{plans[k]?.name}</h2>
         <div className="mt-3 flex items-end gap-1">
-          <span className="text-4xl font-extrabold text-slate-900 dark:text-white">{perMonth}</span>
+          {promoPerMonth && <span className="text-xl font-bold text-slate-400 line-through mb-1 mr-1">{perMonth}</span>}
+          <span className="text-4xl font-extrabold text-slate-900 dark:text-white">{promoPerMonth || perMonth}</span>
           <span className="text-slate-500 dark:text-slate-400 mb-1">/month</span>
         </div>
-        <p className="text-sm text-slate-500 dark:text-slate-400 h-5">
-          {k === 'free' ? 'Free forever' : p ? (period === 'year' ? `Billed ${dollars(p.cents)} once a year` : 'Billed monthly') : ''}
+        <p className={`text-sm h-5 ${promoPerMonth ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-slate-500 dark:text-slate-400'}`}>
+          {k === 'free' ? 'Free forever' : p ? (promoPerMonth
+            ? (period === 'year' ? `First year ${dollars(promoFirst)}, then ${dollars(p.cents)} a year` : `For ${promo.months} months, then ${dollars(p.cents)} a month`)
+            : (period === 'year' ? `Billed ${dollars(p.cents)} once a year` : 'Billed monthly')) : ''}
         </p>
         <ul className="mt-5 space-y-2 text-sm text-slate-700 dark:text-slate-200 flex-1">
           {bullets(k).map((b) => <li key={b} className="flex gap-2"><Check className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />{b}</li>)}
@@ -255,6 +265,7 @@ export default function PricingPlans({ prices, plans, rows, browserTools, logged
           planName={plans[checkout.planKey]?.name}
           interval={checkout.interval}
           cents={prices[checkout.planKey]?.[checkout.interval]?.cents}
+          promo={promo}
           clientId={clientId}
           mode={mode}
           usdc={usdc}

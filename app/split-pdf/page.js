@@ -28,13 +28,13 @@ const features = [
   'Split every page of a PDF into separate files, delivered in one zip.',
   'Files are processed in your browser, so nothing is uploaded to a server.',
   'No watermarks added to your split PDF files, ever.',
-  'Completely free with no signup and no daily limits.',
+  'Free to use without signing up, 3 times a day. Unlimited on Pro.',
   'Works on desktop, tablet, and mobile browsers.',
 ];
 
 const faqs = [
   ['How do I split a PDF for free?', 'Add your PDF above, choose extract pages (enter something like 1-3, 5) or split every page, then click the button. Your files download instantly. It is free with no signup and no watermarks.'],
-  ['How is Craftora different from iLovePDF or Smallpdf for splitting?', 'iLovePDF and Smallpdf upload your PDF to their servers to split it. Craftora splits the file right in your browser, so your document never leaves your device, and there are no daily limits or watermarks on the free tier.'],
+  ['How is Craftora different from iLovePDF or Smallpdf for splitting?', 'iLovePDF and Smallpdf upload your PDF to their servers to split it. Craftora splits the file right in your browser, so your document never leaves your device, and there are no watermarks on the free tier.'],
   ['Can I extract just one page from a PDF?', 'Yes. Choose extract pages and enter a single page number, like 4. You will get a new PDF containing just that page.'],
   ['Can I split a PDF into individual pages?', 'Yes. Choose split every page and Craftora creates a separate PDF for each page, then bundles them into a single zip file you can download.'],
   ['Do my files get uploaded anywhere?', 'No. Splitting runs entirely in your browser on your own device. Your PDF never gets sent to any server.'],

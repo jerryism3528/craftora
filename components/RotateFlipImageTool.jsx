@@ -2,8 +2,10 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 export default function RotateFlipImageTool() {
+  const gate = useUsageGate('rotate-image');
   const [file, setFile] = useState(null);
   const [imgUrl, setImgUrl] = useState('');
   const [rotation, setRotation] = useState(0); // 0, 90, 180, 270
@@ -43,6 +45,8 @@ export default function RotateFlipImageTool() {
   }
 
   async function run() {
+
+    if (!(await gate.check(file))) return;
     if (!file) { setError('Add an image first.'); return; }
     setBusy(true);
     setError('');
@@ -141,6 +145,7 @@ export default function RotateFlipImageTool() {
           <button onClick={run} disabled={busy} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
             {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> Saving...</>) : (<><Lucide.Download className="w-4 h-4" /> Apply and download</>)}
           </button>
+          {gate.notice}
         </div>
       )}
     </div>

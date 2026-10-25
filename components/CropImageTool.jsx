@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 export default function CropImageTool() {
+  const gate = useUsageGate('crop-image');
   const [file, setFile] = useState(null);
   const [imgUrl, setImgUrl] = useState('');
   const [natural, setNatural] = useState({ w: 0, h: 0 });
@@ -108,6 +110,8 @@ export default function CropImageTool() {
   }
 
   async function run() {
+
+    if (!(await gate.check(file))) return;
     if (!file) { setError('Add an image first.'); return; }
     setBusy(true);
     setError('');
@@ -209,6 +213,7 @@ export default function CropImageTool() {
             <button onClick={run} disabled={busy} className="rounded-xl px-6 py-3 font-bold text-sm inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
               {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> Cropping...</>) : (<><Lucide.Crop className="w-4 h-4" /> Crop and download</>)}
             </button>
+          {gate.notice}
             <p className="muted text-xs mt-3">Drag the box to move it, or drag the bottom-right handle to resize.</p>
           </div>
         </div>

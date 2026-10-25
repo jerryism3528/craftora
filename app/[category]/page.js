@@ -44,8 +44,8 @@ function Icon({ name, className }) {
 // Short FAQ per category, with competitor mentions for SEO.
 const CATEGORY_FAQS = {
   pdf: [
-    ['Are these PDF tools free?', 'Yes. Every Craftora PDF tool is free with no watermarks and no daily limits, unlike the paid tiers on iLovePDF and Smallpdf.'],
-    ['Do my PDF files get uploaded?', 'Most Craftora PDF tools run right in your browser, so your files never leave your device. That is more private than tools that upload every file to a server.'],
+    ['Are these PDF tools free?', 'Yes. Every Craftora PDF tool is free to use every day with no watermarks: 3 uses per tool a day without an account and 5 with a free account. Pro removes the daily limit for less than the paid tiers on iLovePDF and Smallpdf.'],
+    ['Do my PDF files get uploaded?', 'Merge, split, compress, rotate, organize, protect, unlock, watermark, page numbers and sign run right in your browser, so your files never leave your device. Conversions to and from Word, Excel and PowerPoint, and OCR, run on our server and the file is not kept. See the full list on our private PDF tools page.'],
     ['Can I use these on mobile?', 'Yes. Every PDF tool works in modern mobile browsers on Android and iPhone.'],
   ],
   image: [

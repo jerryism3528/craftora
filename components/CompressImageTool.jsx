@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 const QUALITY = {
   small: { label: 'Smaller file', q: 0.5 },
@@ -10,6 +11,7 @@ const QUALITY = {
 };
 
 export default function CompressImageTool() {
+  const gate = useUsageGate('compress-image');
   const [items, setItems] = useState([]); // { id, file, url, status, outBlob, outUrl, outSize }
   const [quality, setQuality] = useState('balanced');
   const [busy, setBusy] = useState(false);
@@ -68,6 +70,8 @@ export default function CompressImageTool() {
   }
 
   async function compressAll() {
+
+    if (!(await gate.check(items.map((i) => i.file)))) return;
     if (!items.length) { setError('Add at least one image.'); return; }
     setBusy(true);
     setError('');
@@ -188,6 +192,7 @@ export default function CompressImageTool() {
             <button onClick={compressAll} disabled={busy} className="rounded-xl px-6 py-3 font-bold text-sm inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
               {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> Compressing...</>) : (<><Lucide.Minimize2 className="w-4 h-4" /> Compress {items.length > 1 ? 'all' : 'image'}</>)}
             </button>
+            {gate.notice && <div className="basis-full">{gate.notice}</div>}
             {anyDone && items.filter((i) => i.outBlob).length > 1 && (
               <button onClick={downloadZip} className="rounded-xl px-6 py-3 font-bold text-sm border surface inline-flex items-center gap-2" style={{ color: 'var(--ink)' }}>
                 <Lucide.FileArchive className="w-4 h-4" /> Download all as zip

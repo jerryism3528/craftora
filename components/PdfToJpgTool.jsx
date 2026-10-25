@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 const QUALITY = {
   standard: { label: 'Standard', scale: 1.5, jpeg: 0.8 },
@@ -9,6 +10,7 @@ const QUALITY = {
 };
 
 export default function PdfToJpgTool() {
+  const gate = useUsageGate('pdf-to-jpg');
   const [file, setFile] = useState(null);
   const [quality, setQuality] = useState('standard');
   const [busy, setBusy] = useState(false);
@@ -44,6 +46,8 @@ export default function PdfToJpgTool() {
   }
 
   async function convert() {
+
+    if (!(await gate.check(file))) return;
     if (!file) { setError('Add a PDF file first.'); return; }
     setBusy(true);
     setError('');
@@ -147,6 +151,7 @@ export default function PdfToJpgTool() {
           <button onClick={convert} disabled={busy} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
             {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> {progress || 'Converting...'}</>) : (<><Lucide.FileImage className="w-4 h-4" /> Convert to JPG</>)}
           </button>
+          {gate.notice}
           <p className="muted text-xs mt-3">A multi-page PDF downloads as a zip of JPG images. A single page downloads as one JPG.</p>
         </div>
       )}

@@ -2,8 +2,10 @@
 
 import { useState, useRef, useEffect } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 export default function ResizeImageTool() {
+  const gate = useUsageGate('resize-image');
   const [file, setFile] = useState(null);
   const [imgUrl, setImgUrl] = useState('');
   const [natural, setNatural] = useState({ w: 0, h: 0 });
@@ -66,6 +68,8 @@ export default function ResizeImageTool() {
   }
 
   async function run() {
+
+    if (!(await gate.check(file))) return;
     if (!file) { setError('Add an image first.'); return; }
     const w = parseInt(width, 10);
     const h = parseInt(height, 10);
@@ -181,6 +185,7 @@ export default function ResizeImageTool() {
           <button onClick={run} disabled={busy} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
             {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> Resizing...</>) : (<><Lucide.Expand className="w-4 h-4" /> Resize and download</>)}
           </button>
+          {gate.notice}
         </div>
       )}
     </div>

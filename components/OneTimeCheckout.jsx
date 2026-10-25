@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { X, Loader2, CheckCircle2, Zap, AlertTriangle, Bitcoin, ArrowRight } from 'lucide-react';
 import PaymentMethods, { ONCE_METHODS } from './PaymentMethods';
+import { usePromo, promoOff } from './PromoCode';
 
 const scripts = {};
 function loadScript(src, attrs = {}) {
@@ -22,8 +23,8 @@ function loadScript(src, attrs = {}) {
 
 const dollars = (c) => (Number(c || 0) / 100).toFixed(2);
 
-async function apiCreate(product) {
-  const r = await fetch('/api/billing/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ product }) });
+async function apiCreate(product, code) {
+  const r = await fetch('/api/billing/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ product, code: code || undefined }) });
   const d = await r.json().catch(() => ({}));
   if (r.status === 401) { window.location.href = '/login?callbackUrl=%2Fpricing'; throw new Error('Please sign in first.'); }
   if (!d.ok) throw new Error(d.error || 'Could not start checkout.');
@@ -36,7 +37,7 @@ async function apiCapture(orderId) {
   return d;
 }
 
-function CryptoOption({ product, disabled }) {
+function CryptoOption({ product, disabled, code }) {
   const [open, setOpen] = useState(false);
   const [first, setFirst] = useState('');
   const [last, setLast] = useState('');
@@ -46,7 +47,7 @@ function CryptoOption({ product, disabled }) {
     e.preventDefault();
     setBusy(true); setErr('');
     try {
-      const r = await fetch('/api/billing/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ product: product.key, method: 'crypto', firstName: first, lastName: last }) });
+      const r = await fetch('/api/billing/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ product: product.key, method: 'crypto', firstName: first, lastName: last, code: code || undefined }) });
       const d = await r.json().catch(() => ({}));
       if (!d.ok || !d.redirect) throw new Error(d.error || 'Crypto payment is not available right now.');
       try { sessionStorage.setItem('craftora-crypto-order', d.id); } catch {}
@@ -77,13 +78,13 @@ function CryptoOption({ product, disabled }) {
   );
 }
 
-function UsdcOption({ product, disabled }) {
+function UsdcOption({ product, disabled, code }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState('');
   async function go() {
     setBusy(true); setErr('');
     try {
-      const r = await fetch('/api/billing/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ product: product.key, method: 'usdc' }) });
+      const r = await fetch('/api/billing/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ product: product.key, method: 'usdc', code: code || undefined }) });
       const d = await r.json().catch(() => ({}));
       if (r.status === 401) { window.location.href = '/login?callbackUrl=%2Fpricing'; return; }
       if (!d.ok || !d.redirect) throw new Error(d.error || 'USDC payments are not available right now.');
@@ -102,11 +103,14 @@ function UsdcOption({ product, disabled }) {
   );
 }
 
-function Modal({ product, clientId, mode, crypto, usdc, onClose }) {
+function Modal({ product: base, promo, clientId, mode, crypto, usdc, onClose }) {
   const ppRef = useRef(null);
   const gpRef = useRef(null);
   const apRef = useRef(null);
   const [state, setState] = useState({ step: 'loading' });
+  const off = promoOff(base.price_cents, base.months, promo);
+  const code = off > 0 ? promo.code : '';
+  const product = { ...base, price_cents: base.price_cents - off };
   const price = dollars(product.price_cents);
 
   useEffect(() => {
@@ -125,7 +129,7 @@ function Modal({ product, clientId, mode, crypto, usdc, onClose }) {
         // 1. PayPal, Venmo, Pay Later, and debit or credit card.
         await paypal.Buttons({
           style: { layout: 'vertical', shape: 'rect', label: 'pay', height: 45 },
-          createOrder: () => apiCreate(product.key),
+          createOrder: () => apiCreate(product.key, code),
           onApprove: async (data) => { setState({ step: 'working' }); try { done(await apiCapture(data.orderID)); } catch (e) { fail(e); } },
           onError: (e) => fail(e),
         }).render(ppRef.current);
@@ -145,7 +149,7 @@ function Modal({ product, clientId, mode, crypto, usdc, onClose }) {
             paymentDataCallbacks: {
               onPaymentAuthorized: async (paymentData) => {
                 try {
-                  const orderId = await apiCreate(product.key);
+                  const orderId = await apiCreate(product.key, code);
                   const { status } = await gp.confirmOrder({ orderId, paymentMethodData: paymentData.paymentMethodData });
                   if (status === 'PAYER_ACTION_REQUIRED') { setTimeout(() => after(orderId), 0); return { transactionState: 'SUCCESS' }; }
                   if (status !== 'APPROVED') throw new Error('Google Pay could not approve this payment.');
@@ -202,7 +206,7 @@ function Modal({ product, clientId, mode, crypto, usdc, onClose }) {
                 };
                 session.onpaymentauthorized = async (ev) => {
                   try {
-                    const orderId = await apiCreate(product.key);
+                    const orderId = await apiCreate(product.key, code);
                     await ap.confirmOrder({ orderId, token: ev.payment.token, billingContact: ev.payment.billingContact });
                     const d = await apiCapture(orderId);
                     session.completePayment(window.ApplePaySession.STATUS_SUCCESS);
@@ -223,7 +227,7 @@ function Modal({ product, clientId, mode, crypto, usdc, onClose }) {
       }
     })();
     return () => { dead = true; };
-  }, [product, clientId, mode, price]);
+  }, [base.key, code, clientId, mode, price]);
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/60 p-0 sm:p-4" role="dialog" aria-modal="true" aria-labelledby="otc-title" onClick={(e) => e.target === e.currentTarget && state.step !== 'working' && onClose()}>
@@ -231,7 +235,7 @@ function Modal({ product, clientId, mode, crypto, usdc, onClose }) {
         <div className="flex items-start justify-between gap-3">
           <div>
             <h2 id="otc-title" className="text-xl font-extrabold text-slate-900 dark:text-white">{product.name}</h2>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">${price} one-time payment. Does not renew.</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300 mt-0.5">{code ? <><span className="line-through text-slate-400 mr-1">${dollars(base.price_cents)}</span>${price} with code <b>{code}</b>. One-time payment, does not renew.</> : <>${price} one-time payment. Does not renew.</>}</p>
           </div>
           {state.step !== 'working' && <button type="button" onClick={onClose} aria-label="Close" className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700"><X className="w-5 h-5" /></button>}
         </div>
@@ -258,8 +262,8 @@ function Modal({ product, clientId, mode, crypto, usdc, onClose }) {
               <div ref={apRef} />
               <div ref={gpRef} className="h-[45px] empty:hidden" />
               <div ref={ppRef} className="rounded-lg bg-white p-1" />
-              {usdc && state.step !== 'loading' && <UsdcOption product={product} disabled={state.step === 'working'} />}
-              {crypto && state.step !== 'loading' && <CryptoOption product={product} disabled={state.step === 'working'} />}
+              {usdc && state.step !== 'loading' && <UsdcOption product={product} code={code} disabled={state.step === 'working'} />}
+              {crypto && state.step !== 'loading' && <CryptoOption product={product} code={code} disabled={state.step === 'working'} />}
             </div>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-4">Card, PayPal, Apple Pay and Google Pay are processed securely by PayPal{usdc ? ', USDC by Coinbase' : ''}. No PayPal account needed to pay by card. Apple Pay shows in Safari and Google Pay in Chrome when your device supports them. We email you 7 days before your plan ends.</p>
           </>
@@ -271,6 +275,7 @@ function Modal({ product, clientId, mode, crypto, usdc, onClose }) {
 
 export default function OneTimeCheckout({ products, clientId, mode, loggedIn, crypto = false, usdc = false }) {
   const [open, setOpen] = useState(null);
+  const promo = usePromo();
   useEffect(() => {
     const onPay = (e) => {
       const p = (products || []).find((x) => x.key === e.detail?.product);
@@ -294,7 +299,7 @@ export default function OneTimeCheckout({ products, clientId, mode, loggedIn, cr
           <div key={p.key} className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 p-5 flex items-center justify-between gap-4">
             <div>
               <div className="font-extrabold text-slate-900 dark:text-white">{p.name}</div>
-              <div className="text-sm text-slate-600 dark:text-slate-300"><span className="font-bold text-slate-900 dark:text-white">${dollars(p.price_cents).replace(/\.00$/, '')}</span> once{p.months ? `, ${p.months} month${p.months === 1 ? '' : 's'} of access` : ', never expires'}</div>
+              <div className="text-sm text-slate-600 dark:text-slate-300">{promoOff(p.price_cents, p.months, promo) > 0 && <span className="line-through text-slate-400 mr-1">${dollars(p.price_cents).replace(/\.00$/, '')}</span>}<span className="font-bold text-slate-900 dark:text-white">${dollars(p.price_cents - promoOff(p.price_cents, p.months, promo)).replace(/\.00$/, '')}</span> once{p.months ? `, ${p.months} month${p.months === 1 ? '' : 's'} of access` : ', never expires'}</div>
             </div>
             <button
               type="button"
@@ -306,7 +311,7 @@ export default function OneTimeCheckout({ products, clientId, mode, loggedIn, cr
           </div>
         ))}
       </div>
-      {open && <Modal product={open} clientId={clientId} mode={mode} crypto={crypto} usdc={usdc} onClose={() => setOpen(null)} />}
+      {open && <Modal product={open} promo={promo} clientId={clientId} mode={mode} crypto={crypto} usdc={usdc} onClose={() => setOpen(null)} />}
     </section>
   );
 }

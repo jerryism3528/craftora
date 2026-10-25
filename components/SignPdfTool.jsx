@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 const POSITIONS = [
   { key: 'bottom-right', label: 'Bottom right' },
@@ -13,6 +14,7 @@ const POSITIONS = [
 ];
 
 export default function SignPdfTool() {
+  const gate = useUsageGate('sign-pdf');
   const [file, setFile] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [mode, setMode] = useState('draw'); // 'draw' | 'type'
@@ -112,6 +114,8 @@ export default function SignPdfTool() {
   }
 
   async function run() {
+
+    if (!(await gate.check(file?.file))) return;
     if (!file) { setError('Add a PDF file first.'); return; }
     const sigPng = await getSignaturePng();
     if (!sigPng) { setError(mode === 'draw' ? 'Draw your signature first.' : 'Type your signature first.'); return; }
@@ -244,6 +248,7 @@ export default function SignPdfTool() {
           <button onClick={run} disabled={busy} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
             {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> Signing...</>) : (<><Lucide.PenTool className="w-4 h-4" /> Sign PDF and download</>)}
           </button>
+          {gate.notice}
         </div>
       )}
     </div>

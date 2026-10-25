@@ -12,6 +12,8 @@ const PRIVATE = [
   '/img/', '/go/', '/dl/', '/uploads/', '/login', '/signup', '/forgot-password', '/profile',
 ];
 const KEEP_QUERY = { '/all-tools': ['q'] };
+// Campaign tags (for example from outreach emails) are kept on every public page so GA can attribute visits.
+const UTM = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'];
 
 const isPrivate = (p) => PRIVATE.some((x) => p === x.replace(/\/$/, '') || p.startsWith(x));
 
@@ -34,7 +36,7 @@ export default function GoogleAnalytics() {
 
   useEffect(() => {
     if (isPrivate(pathname)) return;
-    const keep = KEEP_QUERY[pathname] || [];
+    const keep = [...(KEEP_QUERY[pathname] || []), ...UTM];
     const q = new URLSearchParams();
     keep.forEach((k) => { const v = search?.get(k); if (v) q.set(k, v.slice(0, 100)); });
     const path = pathname + (q.toString() ? `?${q}` : '');

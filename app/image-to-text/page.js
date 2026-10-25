@@ -29,13 +29,13 @@ const features = [
   'Copy the text or download it as a .txt file.',
   'Edit the recognized text right on the page before saving.',
   'OCR runs in your browser, so your image is never uploaded to a server.',
-  'Completely free with no signup, no watermarks, and no daily limits.',
+  'Free without signing up (3 uses a day) and no watermarks. Unlimited on Pro.',
 ];
 
 const faqs = [
   ['How do I extract text from an image for free?', 'Add your image above, pick the language, and click Extract text. Craftora reads the text with OCR in your browser, then you can copy it or download it as a file. It is free with no signup.'],
   ['What is OCR?', 'OCR stands for optical character recognition. It is the technology that looks at an image of text, like a photo or scan, and turns it into real, editable text you can copy and edit.'],
-  ['How is Craftora different from other OCR tools?', 'Many OCR sites upload your image to their servers to read it. Craftora runs the OCR right in your browser, so your image never leaves your device, with no daily limits or watermarks.'],
+  ['How is Craftora different from other OCR tools?', 'Many OCR sites upload your image to their servers to read it. Craftora runs the OCR right in your browser, so your image never leaves your device, with no watermarks.'],
   ['How accurate is the text extraction?', 'Accuracy is high on clear, printed text and screenshots. Handwriting, blurry photos, and low contrast images are harder for any free OCR, so a sharper image gives a better result.'],
   ['Why does the first scan take a few seconds?', 'The first time you extract text, Craftora loads the language data needed to read it. That happens once per visit, and later scans are faster.'],
   ['Do my images get uploaded anywhere?', 'No. The OCR runs entirely in your browser on your own device. Your image is never sent to any server.'],

@@ -2,8 +2,10 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 export default function ProtectPdfTool() {
+  const gate = useUsageGate('protect-pdf');
   const [file, setFile] = useState(null);
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -29,6 +31,8 @@ export default function ProtectPdfTool() {
   }
 
   async function run() {
+
+    if (!(await gate.check(file))) return;
     if (!file) { setError('Add a PDF file first.'); return; }
     if (!password) { setError('Enter a password.'); return; }
     if (password.length < 4) { setError('Use a password of at least 4 characters.'); return; }
@@ -126,6 +130,7 @@ export default function ProtectPdfTool() {
           <button onClick={run} disabled={busy} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
             {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> Protecting...</>) : (<><Lucide.Lock className="w-4 h-4" /> Protect PDF and download</>)}
           </button>
+          {gate.notice}
         </div>
       )}
     </div>

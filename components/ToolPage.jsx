@@ -4,7 +4,8 @@ import Header from './Header';
 import Footer from './Footer';
 import { getCategory, getRelatedTools } from '../lib/tools';
 import { getAllPosts } from '../lib/posts';
-import { query } from '../lib/db';
+import { query, queryOne } from '../lib/db';
+import { isLimitedBrowserTool, SERVER_FILE_NOTES, DEFAULT_DAILY } from '../lib/browser-limits';
 
 function Icon({ name, className }) {
   const Cmp = Lucide[name] || Lucide.Wrench;
@@ -12,6 +13,32 @@ function Icon({ name, className }) {
 }
 
 const SITE_URL = 'https://craftora.dev';
+
+function PrivacyBadge({ engine, limited, limits, serverNote }) {
+  if (engine === 'browser') {
+    return (
+      <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+        <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-semibold" style={{ background: 'rgba(24,124,111,.1)', color: '#187c6f' }}>
+          <Lucide.ShieldCheck className="w-4 h-4" />{limited ? 'Stays in your browser: your files are never uploaded' : 'Runs in your browser: nothing you enter is uploaded'}
+        </span>
+        {limited && limits && (
+          <span className="muted">Free: {limits.guest} uses a day, {limits.free} with a free account. <Link href="/pricing" className="brand-text font-semibold hover:underline">Unlimited on Pro</Link></span>
+        )}
+      </div>
+    );
+  }
+  if (!serverNote) return null;
+  const text = serverNote === 'convert'
+    ? 'Processed on Craftora\'s server and sent straight back. Your file is not kept.'
+    : serverNote === 'transcribe'
+      ? 'Processed on Craftora\'s server. Your file and transcript are deleted within an hour after the job finishes.'
+      : 'Your document is stored securely on Craftora\'s server so others can sign it.';
+  return (
+    <p className="mt-5 flex gap-1.5 text-sm muted max-w-3xl">
+      <Lucide.Server className="w-4 h-4 mt-0.5 shrink-0" /><span>{text}{serverNote === 'convert' && <> Need files to stay on your device? See our <Link href="/private-pdf-tools" className="brand-text font-semibold hover:underline">private PDF tools</Link>.</>}</span>
+    </p>
+  );
+}
 
 async function getRecentPosts() {
   let dbPosts = [];
@@ -28,6 +55,13 @@ export default async function ToolPage({ tool, howItWorks = [], features = [], f
   const category = getCategory(tool.category);
   const related = getRelatedTools(tool.slug, 4);
   const recentPosts = await getRecentPosts();
+  const limited = isLimitedBrowserTool(tool.slug);
+  let limits = null;
+  if (limited) {
+    const r = await queryOne('SELECT daily_limit, anon_limit FROM tool_limits WHERE tool_slug = $1', [tool.slug]).catch(() => null);
+    limits = { guest: r ? r.anon_limit : DEFAULT_DAILY.guest, free: r ? r.daily_limit : DEFAULT_DAILY.free };
+  }
+  const serverNote = SERVER_FILE_NOTES[tool.slug];
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -78,6 +112,7 @@ export default async function ToolPage({ tool, howItWorks = [], features = [], f
           <p className="brand-text text-xs font-extrabold tracking-[.16em] uppercase mb-3">{category.name}</p>
           <h1 className="font-extrabold tracking-tight text-4xl" style={{ color: 'var(--ink)', letterSpacing: '-0.03em' }}>{tool.name}</h1>
           <p className="muted mt-4 text-lg leading-8">{tool.description}</p>
+          <PrivacyBadge engine={tool.engine} limited={limited} limits={limits} serverNote={serverNote} />
         </div>
 
         <div className="mt-10">{children}</div>

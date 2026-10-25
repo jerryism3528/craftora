@@ -1,6 +1,7 @@
 import { query } from '../../../../lib/db';
 import { requireAdmin, logAction, ok, bad, forbid, readJson } from '../../../../lib/admin';
 import { tools as CATALOG } from '../../../../lib/tools';
+import { isLimitedBrowserTool } from '../../../../lib/browser-limits';
 
 export const dynamic = 'force-dynamic';
 
@@ -17,7 +18,7 @@ export async function GET() {
   const b = Object.fromEntries(blocks.map((r) => [r.tool_slug, r.n]));
   const cat = Object.fromEntries(CATALOG.map((t) => [t.slug, t]));
   const rows = limits.map((l) => ({ ...l, name: cat[l.tool_slug]?.name || l.tool_slug, status: cat[l.tool_slug]?.status || '', ...(u[l.tool_slug] || { uses24h: 0, uses7d: 0, users7d: 0 }), blocked: b[l.tool_slug] || 0 }));
-  const missing = CATALOG.filter((t) => t.engine === 'server' && !limits.some((l) => l.tool_slug === t.slug)).map((t) => ({ slug: t.slug, name: t.name, status: t.status }));
+  const missing = CATALOG.filter((t) => (t.engine === 'server' || isLimitedBrowserTool(t.slug)) && !limits.some((l) => l.tool_slug === t.slug)).map((t) => ({ slug: t.slug, name: t.name, status: t.status }));
   const catalog = CATALOG.map((t) => ({ slug: t.slug, name: t.name, engine: t.engine, status: t.status, category: t.category }));
   return ok({ rows, missing, catalog });
 }

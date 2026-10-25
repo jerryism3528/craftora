@@ -9,6 +9,7 @@ export default function sitemap() {
   const staticPages = [
     { url: `${SITE}/`, priority: 1.0, changeFrequency: 'weekly' },
     { url: `${SITE}/all-tools`, priority: 0.9, changeFrequency: 'weekly' },
+    { url: `${SITE}/private-pdf-tools`, priority: 0.9, changeFrequency: 'monthly' },
     { url: `${SITE}/insights`, priority: 0.8, changeFrequency: 'weekly' },
     { url: `${SITE}/about`, priority: 0.5, changeFrequency: 'monthly' },
     { url: `${SITE}/privacy`, priority: 0.3, changeFrequency: 'yearly' },

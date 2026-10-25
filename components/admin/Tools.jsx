@@ -43,7 +43,7 @@ export default function ToolsSection() {
   return (
     <div className="space-y-6">
       {toast}
-      <Card title="Server tool limits" action={<span className="text-xs text-slate-500 dark:text-slate-400">Base limits for Free. Pro and Business use the plan multiplier or their own limit.</span>}>
+      <Card title="Tool limits" action={<span className="text-xs text-slate-500 dark:text-slate-400">Daily = free accounts, Anonymous = visitors without an account. Server tools: Pro and Business use the plan multiplier. PDF and image browser tools: unlimited on Pro and Business.</span>}>
         <Table head={['Tool', 'Daily', 'Batch', 'Anonymous', 'On', { label: '24h', right: true }, { label: '7 days', right: true }, { label: 'Blocked users', right: true }, '']}>
           {data.rows.map((r) => <Row key={r.tool_slug} r={r} onSaved={saved} />)}
         </Table>

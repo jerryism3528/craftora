@@ -18,6 +18,7 @@ function ProductRow({ p, onSave, busy }) {
   );
 }
 import { CreditCard, Repeat, TrendingUp, Undo2, UserMinus, AlertTriangle, RefreshCw, Rocket, ExternalLink } from 'lucide-react';
+import PromoCodes from './PromoCodes';
 import { useApi, post, useToast, Card, Stat, Badge, Btn, Table, Tabs, Toolbar, Loading, ErrorBox, Empty, fmtDate, ago, inputCls, useDebounced } from './ui';
 
 const STATUS = { ACTIVE: 'emerald', APPROVAL_PENDING: 'slate', APPROVED: 'sky', SUSPENDED: 'amber', CANCELLED: 'slate', EXPIRED: 'slate' };
@@ -85,6 +86,8 @@ export default function BillingSection() {
         </Table>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-3">Products marked On sale appear under "Prefer to pay once?" on the pricing page. Keep the Lifetime ones hidden until the Kickstarter campaign ends.</p>
       </Card>
+
+      <PromoCodes />
 
       <Card>
         <Tabs value={tab} onChange={setTab} items={[['subs', 'Subscriptions', data.subscriptions.length], ['orders', 'One-time orders', (data.orders || []).length], ['payments', 'Payments', data.payments.length], ['events', 'Webhook events', data.events.length]]} />

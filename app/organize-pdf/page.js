@@ -34,7 +34,7 @@ const features = [
 
 const faqs = [
   ['How do I organize PDF pages for free?', 'Add your PDF above and every page appears as a thumbnail. Reorder, rotate, or delete pages, then click Save PDF. Your new file downloads instantly. It is free with no signup and no watermarks.'],
-  ['How is Craftora different from iLovePDF or Smallpdf?', 'iLovePDF and Smallpdf upload your PDF to their servers to edit the pages. Craftora organizes the file directly in your browser, so your document never leaves your device, with no daily limits or watermarks on the free tier.'],
+  ['How is Craftora different from iLovePDF or Smallpdf?', 'iLovePDF and Smallpdf upload your PDF to their servers to edit the pages. Craftora organizes the file directly in your browser, so your document never leaves your device, with no watermarks on the free tier.'],
   ['Can I delete pages from a PDF?', 'Yes. Each page thumbnail has a delete button. Remove any pages you do not want, and they will not appear in the saved PDF.'],
   ['Can I reorder and rotate at the same time?', 'Yes. You can move pages into any order and rotate individual pages, then save everything in one go.'],
   ['Do my files get uploaded anywhere?', 'No. Everything runs in your browser on your own device. Your PDF is never sent to any server.'],

@@ -2,6 +2,7 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 const POSITIONS = [
   { key: 'bottom-center', label: 'Bottom center' },
@@ -19,6 +20,7 @@ const FORMATS = [
 ];
 
 export default function AddPageNumbersTool() {
+  const gate = useUsageGate('add-page-numbers');
   const [file, setFile] = useState(null);
   const [pageCount, setPageCount] = useState(0);
   const [position, setPosition] = useState('bottom-center');
@@ -53,6 +55,8 @@ export default function AddPageNumbersTool() {
   }
 
   async function run() {
+
+    if (!(await gate.check(file?.file))) return;
     if (!file) { setError('Add a PDF file first.'); return; }
     setBusy(true);
     setError('');
@@ -173,6 +177,7 @@ export default function AddPageNumbersTool() {
           <button onClick={run} disabled={busy} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
             {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> Adding numbers...</>) : (<><Lucide.Hash className="w-4 h-4" /> Add page numbers and download</>)}
           </button>
+          {gate.notice}
         </div>
       )}
     </div>

@@ -2,8 +2,10 @@
 
 import { useState, useRef } from 'react';
 import * as Lucide from 'lucide-react';
+import { useUsageGate } from './UsageGate';
 
 export default function MergePdfTool() {
+  const gate = useUsageGate('merge-pdf');
   const [files, setFiles] = useState([]);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -41,6 +43,8 @@ export default function MergePdfTool() {
   }
 
   async function mergePdfs() {
+
+    if (!(await gate.check(files.map((f) => f.file)))) return;
     if (files.length < 2) {
       setError('Add at least two PDF files to merge.');
       return;
@@ -135,6 +139,7 @@ export default function MergePdfTool() {
           <button onClick={mergePdfs} disabled={busy || files.length < 2} className="w-full sm:w-auto rounded-xl px-6 py-3 font-bold text-sm mt-6 inline-flex items-center justify-center gap-2 disabled:opacity-50" style={{ background: 'var(--brand)', color: '#fff' }}>
             {busy ? (<><Lucide.Loader2 className="w-4 h-4 animate-spin" /> Merging...</>) : (<><Lucide.Combine className="w-4 h-4" /> Merge PDFs and download</>)}
           </button>
+          {gate.notice}
         </div>
       )}
     </div>

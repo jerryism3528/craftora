@@ -28,14 +28,14 @@ const features = [
   'Download a clean, unprotected copy that opens without a password.',
   'The PDF is unlocked in your browser, so nothing is uploaded to a server.',
   'No watermarks added to your unlocked PDF, ever.',
-  'Completely free with no signup and no daily limits.',
+  'Free to use without signing up, 3 times a day. Unlimited on Pro.',
   'Works on desktop, tablet, and mobile browsers.',
 ];
 
 const faqs = [
   ['How do I remove a password from a PDF for free?', 'Add your PDF above, enter the password you know, then click Unlock PDF. An unprotected copy downloads instantly. It is free with no signup and no watermarks.'],
   ['Do I need to know the password?', 'Yes. Craftora removes a password from a PDF you can already open by entering the correct password. It does not and cannot crack or guess unknown passwords.'],
-  ['How is Craftora different from iLovePDF or Smallpdf?', 'iLovePDF and Smallpdf upload your PDF to their servers to unlock it. Craftora removes the password right in your browser, so your document never leaves your device, with no daily limits.'],
+  ['How is Craftora different from iLovePDF or Smallpdf?', 'iLovePDF and Smallpdf upload your PDF to their servers to unlock it. Craftora removes the password right in your browser, so your document never leaves your device.'],
   ['Can Craftora open a PDF if I lost the password?', 'No. If you do not have the password, the file cannot be unlocked. This is by design, so PDF protection stays meaningful and your documents stay secure.'],
   ['Do my files get uploaded anywhere?', 'No. Unlocking runs entirely in your browser on your own device. Your PDF and password are never sent to any server.'],
   ['Can I add a password back later?', 'Yes. Use the Protect PDF tool to add a new password to any PDF whenever you need to.'],
