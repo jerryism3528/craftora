@@ -1,6 +1,6 @@
 import { query, queryOne } from '../../../../lib/db';
 import { requireAdmin, logAction, ok, bad, forbid, readJson } from '../../../../lib/admin';
-import { stats, settings, importLeads, sendTest, tick } from '../../../../lib/outreach';
+import { stats, settings, importLeads, sendTest, tick, leadHistory } from '../../../../lib/outreach';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 120;
@@ -10,6 +10,11 @@ const STATUSES = ['new', 'active', 'done', 'replied', 'opted_out', 'bounced', 's
 export async function GET(req) {
   if (!(await requireAdmin())) return forbid();
   const url = new URL(req.url);
+  const leadId = parseInt(url.searchParams.get('lead') || '', 10);
+  if (leadId) {
+    const h = await leadHistory(leadId);
+    return h ? ok(h) : bad('Lead not found.', 404);
+  }
   const seg = url.searchParams.get('segment') || '';
   const status = url.searchParams.get('status') || '';
   const q = (url.searchParams.get('q') || '').trim().toLowerCase();
@@ -19,7 +24,7 @@ export async function GET(req) {
   if (q) { args.push(`%${q}%`); where.push(`(email ILIKE $${args.length} OR company ILIKE $${args.length} OR first_name ILIKE $${args.length} OR last_name ILIKE $${args.length})`); }
   const leads = await query(`SELECT id, segment, email, first_name, last_name, company, country, state, status, step, verify, first_sent_at, last_sent_at, replied_at, clicked_at, stop_reason FROM outreach_leads ${where.length ? 'WHERE ' + where.join(' AND ') : ''} ORDER BY COALESCE(replied_at, last_sent_at, created_at) DESC LIMIT 100`, args);
   const replies = await query(`SELECT e.created_at, e.type, e.detail, l.email, l.first_name, l.company, l.segment FROM outreach_events e JOIN outreach_leads l ON l.id = e.lead_id WHERE e.type IN ('reply', 'optout') ORDER BY e.created_at DESC LIMIT 20`);
-  const errors = await query(`SELECT created_at, segment, detail FROM outreach_events WHERE type = 'error' ORDER BY created_at DESC LIMIT 10`);
+  const errors = await query(`SELECT created_at, segment, detail FROM outreach_events WHERE type IN ('error', 'warn') ORDER BY created_at DESC LIMIT 10`);
   const templates = await query('SELECT segment, step, delay_days, subject, body FROM outreach_templates ORDER BY segment, step');
   return ok({ segments: await stats(), settings: await settings(), leads, replies, errors, templates, secretSet: (process.env.OUTREACH_SECRET || '').length >= 24 });
 }

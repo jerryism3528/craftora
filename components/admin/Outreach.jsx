@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 import { Send, Upload, Pause, Play, FlaskConical, Save, MessageSquareReply, AlertTriangle } from 'lucide-react';
 import { useApi, post, useToast, Card, Table, Badge, Btn, Loading, ErrorBox, Empty, Toolbar, fmtDate, ago, inputCls, useDebounced } from './ui';
 
@@ -74,6 +75,49 @@ function Templates({ templates, segments, act, busy }) {
   );
 }
 
+const EV = {
+  sent: ['Email sent', 'indigo'], reply: ['Replied', 'emerald'], optout: ['Said no', 'amber'], bounce: ['Bounced', 'red'],
+  click: ['Clicked the link', 'sky'], auto: ['Auto-reply (ignored)', 'slate'], skip: ['Skipped', 'slate'], verify: ['Email check', 'slate'], error: ['Send failed', 'red'],
+};
+
+function LeadHistory({ id, onClose }) {
+  const { data, error, loading } = useApi(`/api/admin/outreach?lead=${id}`);
+  return (
+    <div className="fixed inset-0 z-[70] flex justify-end bg-slate-900/50" onClick={(e) => e.target === e.currentTarget && onClose()} role="dialog" aria-modal="true" aria-label="Lead history">
+      <div className="w-full max-w-xl h-full overflow-y-auto bg-white dark:bg-slate-900 p-5 shadow-xl">
+        <div className="flex items-start justify-between gap-3">
+          {data?.lead ? (
+            <div>
+              <h2 className="text-lg font-extrabold">{[data.lead.first_name, data.lead.last_name].filter(Boolean).join(' ') || data.lead.email}</h2>
+              <p className="text-sm text-slate-500">{data.lead.company} · {data.lead.email}</p>
+              <p className="text-xs text-slate-500 mt-1">{data.lead.segment_name} from {data.lead.inbox_email} · {[data.lead.state, data.lead.country].filter(Boolean).join(', ')} · {data.lead.tz}</p>
+              <div className="mt-2 flex flex-wrap gap-1"><Badge tone={TONE[data.lead.status] || 'slate'}>{data.lead.status.replace('_', ' ')}</Badge>{data.lead.verify && <Badge>email check: {data.lead.verify}</Badge>}{data.lead.batch && <Badge>{data.lead.batch}</Badge>}</div>
+            </div>
+          ) : <div />}
+          <button onClick={onClose} aria-label="Close" className="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"><X className="w-5 h-5" /></button>
+        </div>
+        {loading && <Loading />}
+        {error && <ErrorBox>{error}</ErrorBox>}
+        {data?.events && (
+          <ol className="mt-5 space-y-3">
+            {!data.events.length && <Empty>Nothing has happened with this lead yet.</Empty>}
+            {data.events.map((e, i) => (
+              <li key={i} className="rounded-xl border border-slate-200 dark:border-slate-700 p-3">
+                <div className="flex flex-wrap items-center gap-2 text-sm">
+                  <Badge tone={EV[e.type]?.[1] || 'slate'}>{EV[e.type]?.[0] || e.type}{e.type === 'sent' && e.step ? ` (email ${e.step})` : ''}</Badge>
+                  <span className="text-xs text-slate-500 ml-auto">{fmtDate(e.created_at, true)}</span>
+                </div>
+                {e.type === 'sent' && <p className="mt-2 text-sm font-semibold">Subject: {e.detail}</p>}
+                {e.body ? <pre className="mt-2 whitespace-pre-wrap font-sans text-sm text-slate-700 dark:text-slate-200">{e.body}</pre> : e.detail && e.type !== 'sent' && <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 whitespace-pre-line">{e.detail}</p>}
+              </li>
+            ))}
+          </ol>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function OutreachSection() {
   const [segF, setSegF] = useState('');
   const [status, setStatus] = useState('');
@@ -85,6 +129,7 @@ export default function OutreachSection() {
   const [set, setSet] = useState(null);
   const [imp, setImp] = useState({ segment: 'law', csv: '', name: '', batch: '' });
   const [dry, setDry] = useState(null);
+  const [open, setOpen] = useState(null);
 
   useEffect(() => { if (data?.settings) setSet(data.settings); }, [data?.settings]);
 
@@ -157,12 +202,12 @@ export default function OutreachSection() {
       </Card>
 
       {data.errors.length > 0 && (
-        <Card title="Sending errors">
-          {data.errors.map((e, i) => <p key={i} className="text-xs text-red-700 dark:text-red-300 flex gap-1.5"><AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />{fmtDate(e.created_at, true)} · {e.segment}: {e.detail}</p>)}
+        <Card title="Sending errors and warnings">
+          {data.errors.map((e, i) => <p key={i} className="text-xs text-red-700 dark:text-red-300 flex gap-1.5"><AlertTriangle className="w-3.5 h-3.5 shrink-0 mt-0.5" />{fmtDate(e.created_at, true)} · {e.segment ? `${e.segment}: ` : ''}{e.detail}</p>)}
         </Card>
       )}
 
-      <Card title="Leads">
+      <Card title="Leads" action={<span className="text-xs text-slate-500 dark:text-slate-400">Click a name to see every email sent and every reply</span>}>
         <Toolbar>
           <input className={inputCls + ' sm:max-w-xs'} placeholder="Search email, name or company" value={q} onChange={(e) => setQ(e.target.value)} />
           <select className={inputCls + ' sm:max-w-[200px]'} value={segF} onChange={(e) => setSegF(e.target.value)}><option value="">All inboxes</option>{data.segments.map((x) => <option key={x.key} value={x.key}>{x.name}</option>)}</select>
@@ -171,7 +216,7 @@ export default function OutreachSection() {
         <Table head={['Person', 'Inbox', 'Status', 'Emails sent', 'Last activity', '']} empty={!data.leads.length && <Empty>No leads match.</Empty>}>
           {data.leads.map((l) => (
             <tr key={l.id}>
-              <td className="py-2 px-3"><div className="font-semibold">{[l.first_name, l.last_name].filter(Boolean).join(' ') || l.email}</div><div className="text-xs text-slate-500">{l.company} · {l.email}</div></td>
+              <td className="py-2 px-3"><button type="button" onClick={() => setOpen(l.id)} className="text-left font-semibold text-indigo-600 dark:text-indigo-400 hover:underline">{[l.first_name, l.last_name].filter(Boolean).join(' ') || l.email}</button><div className="text-xs text-slate-500">{l.company} · {l.email}</div></td>
               <td className="py-2 px-3 text-xs">{l.segment}<div className="text-slate-500">{[l.state, l.country].filter(Boolean).join(', ')}</div></td>
               <td className="py-2 px-3"><Badge tone={TONE[l.status] || 'slate'}>{l.status.replace('_', ' ')}</Badge>{l.clicked_at && <Badge tone="indigo" className="ml-1">clicked</Badge>}{l.stop_reason && <div className="text-[11px] text-slate-500 mt-0.5 max-w-[220px] truncate" title={l.stop_reason}>{l.stop_reason}</div>}</td>
               <td className="py-2 px-3">{l.step}</td>
@@ -185,6 +230,7 @@ export default function OutreachSection() {
           ))}
         </Table>
       </Card>
+      {open && <LeadHistory id={open} onClose={() => setOpen(null)} />}
       <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5"><Send className="w-3.5 h-3.5" />n8n calls the sender every 10 minutes and forwards new mail from the four inboxes. Replies stop the emails to that person for good.</p>
     </div>
   );

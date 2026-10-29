@@ -6,6 +6,8 @@ const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   compress: true,
+  // Mail libraries run only on the server; load them from node_modules instead of bundling.
+  experimental: { serverComponentsExternalPackages: ['imapflow'] },
   async redirects() {
     return [
       { source: '/verify', destination: '/email-verifier', permanent: true },

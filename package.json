@@ -33,7 +33,8 @@
     "@tiptap/extension-underline": "2.10.3",
     "@tiptap/extension-placeholder": "2.10.3",
     "sharp": "0.33.5",
-    "@fontsource/dancing-script": "5.1.0"
+    "@fontsource/dancing-script": "5.1.0",
+    "imapflow": "1.7.8"
   },
   "devDependencies": {
     "autoprefixer": "10.4.20",
