@@ -1,6 +1,6 @@
 import { query, queryOne } from '../../../../lib/db';
 import { requireAdmin, logAction, ok, bad, forbid, readJson } from '../../../../lib/admin';
-import { stats, settings, importLeads, sendTest, tick, leadHistory } from '../../../../lib/outreach';
+import { stats, settings, importLeads, sendTest, leadHistory, preview } from '../../../../lib/outreach';
 
 export const dynamic = 'force-dynamic';
 export const maxDuration = 120;
@@ -74,8 +74,8 @@ export async function POST(req) {
         return ok({ message: `Test sent to ${to}: "${r.subject}".` });
       }
       case 'dry_run': {
-        const r = await tick({ dryRun: true });
-        return ok({ message: 'Dry run finished. Nothing was sent.', result: r });
+        const r = await preview(5);
+        return ok({ message: 'Preview ready. Nothing was sent.', result: r });
       }
       case 'lead': {
         const id = parseInt(b.id, 10);

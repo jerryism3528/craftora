@@ -80,6 +80,45 @@ const EV = {
   click: ['Clicked the link', 'sky'], auto: ['Auto-reply (ignored)', 'slate'], skip: ['Skipped', 'slate'], verify: ['Email check', 'slate'], error: ['Send failed', 'red'],
 };
 
+function DryRun({ r, onClose }) {
+  return (
+    <div className="rounded-xl border border-indigo-200 dark:border-indigo-800 bg-indigo-50/40 dark:bg-indigo-950/20 p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="font-bold text-sm">Preview: who gets the next emails</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Nothing was sent. Emails go out {r.window} in each person&apos;s own time zone, one at a time per inbox.{r.paused ? ' All sending is paused right now.' : ''}</p>
+        </div>
+        <button type="button" onClick={onClose} aria-label="Close preview" className="p-1 rounded-lg hover:bg-white dark:hover:bg-slate-800"><X className="w-4 h-4" /></button>
+      </div>
+      <div className="mt-3 space-y-4">
+        {r.segments.map((g) => (
+          <div key={g.key}>
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <b>{g.name}</b>
+              {g.active ? <Badge tone="emerald">on, up to {g.cap} a day</Badge> : <Badge>off: turn it on to start</Badge>}
+              <span className="text-xs text-slate-500">{g.waiting} waiting · {g.sent24h} sent in the last 24 hours</span>
+            </div>
+            {g.next.length ? (
+              <ol className="mt-1.5 space-y-1">
+                {g.next.map((n, i) => (
+                  <li key={n.email} className="text-xs flex flex-wrap gap-x-2 gap-y-0.5 items-baseline">
+                    <span className="text-slate-400 w-4">{i + 1}.</span>
+                    <span className="font-semibold">{n.name}</span>
+                    <span className="text-slate-500">{n.company ? `${n.company} · ` : ''}{n.email}</span>
+                    <span>email {n.step}: &quot;{n.subject}&quot;</span>
+                    <span className={n.in_window ? 'text-emerald-600 font-semibold' : 'text-slate-500'}>{n.in_window ? `in their send window now (${n.local_now})` : n.opens ? `their time now ${n.local_now}, window opens ${n.opens}${n.opens_in_hours ? ` (in about ${n.opens_in_hours}h)` : ''}` : 'no send window found'}</span>
+                    {n.needs_check && <span className="text-slate-400">address checked before sending</span>}
+                  </li>
+                ))}
+              </ol>
+            ) : <p className="text-xs text-slate-500 mt-1">Nobody is due. Import leads or wait for follow-up days.</p>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function LeadHistory({ id, onClose }) {
   const { data, error, loading } = useApi(`/api/admin/outreach?lead=${id}`);
   return (
@@ -155,12 +194,12 @@ export default function OutreachSection() {
         {!data.secretSet && <Badge tone="red">OUTREACH_SECRET missing in .env, n8n cannot connect</Badge>}
       </div>
 
-      <Card title="Inboxes" action={<Btn busy={busy === 'dry_run'} onClick={() => act({ action: 'dry_run' })}><FlaskConical className="w-4 h-4" />Dry run (send nothing)</Btn>}>
+      <Card title="Inboxes" action={<Btn busy={busy === 'dry_run'} onClick={() => act({ action: 'dry_run' })}><FlaskConical className="w-4 h-4" />Preview next emails</Btn>}>
+        {dry && <div className="mb-4"><DryRun r={dry} onClose={() => setDry(null)} /></div>}
         <Table head={['Inbox', 'Code', 'Per day', 'On', 'Sending', 'Responses', 'Results', '']}>
           {data.segments.map((x) => <SegmentRow key={x.key} s={x} busy={busy === 'segment' + x.key} onSave={(b) => act(b, 'segment' + x.key)} />)}
         </Table>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-3">Start each inbox at 10 a day after warm-up and raise slowly toward 30. Every new address is checked with the email verifier before the first email; only safe ones are sent. Signed up counts contacted people who later made a Craftora account with the same email.</p>
-        {dry && <pre className="mt-3 text-xs bg-slate-50 dark:bg-slate-900 rounded-lg p-3 overflow-x-auto">{JSON.stringify(dry, null, 2)}</pre>}
       </Card>
 
       <Card title="Schedule">
