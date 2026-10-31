@@ -77,7 +77,7 @@ function Templates({ templates, segments, act, busy }) {
 
 const EV = {
   sent: ['Email sent', 'indigo'], reply: ['Replied', 'emerald'], optout: ['Said no', 'amber'], bounce: ['Bounced', 'red'],
-  click: ['Clicked the link', 'sky'], auto: ['Auto-reply (ignored)', 'slate'], skip: ['Skipped', 'slate'], verify: ['Email check', 'slate'], error: ['Send failed', 'red'],
+  click: ['Clicked the link', 'sky'], scan: ['Link checked by a mail filter (not a person)', 'slate'], auto: ['Auto-reply (ignored)', 'slate'], skip: ['Skipped', 'slate'], verify: ['Email check', 'slate'], error: ['Send failed', 'red'],
 };
 
 function DryRun({ r, onClose }) {
